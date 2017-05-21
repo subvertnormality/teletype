@@ -13,6 +13,7 @@
 #include "spi.h"
 #include "sysclk.h"
 #include "usb_protocol_hid.h"
+#include "conf_tc_irq.h"
 
 // system
 #include "adc.h"
@@ -316,7 +317,7 @@ void handler_MscConnect(int32_t data) {
     assign_msc_event_handlers();
 
     // disable timers
-    timers_pause();
+    irqs_pause();
 
     // clear screen
     for (size_t i = 0; i < 8; i++) {
@@ -330,7 +331,7 @@ void handler_MscConnect(int32_t data) {
     // renable teletype
     set_mode(M_LIVE);
     assign_main_event_handlers();
-    timers_resume();
+    irqs_resume();
 }
 
 void handler_Trigger(int32_t data) {
