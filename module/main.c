@@ -317,7 +317,7 @@ void handler_MscConnect(int32_t data) {
     assign_msc_event_handlers();
 
     // disable timers
-    irqflags_t irq_flags = irqs_pause();
+    u8 irq_flags = irqs_pause();
 
     // clear screen
     for (size_t i = 0; i < 8; i++) {
