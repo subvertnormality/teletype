@@ -96,7 +96,6 @@ CSRCS = \
 	../src/ops/telex.c					\
 	../src/ops/variables.c					\
 	../src/ops/whitewhale.c					\
-	../libavr32/conf/conf_tc_irq.c				\
 	../libavr32/src/adc.c					\
 	../libavr32/src/events.c				\
 	../libavr32/src/euclidean/euclidean.c			\
@@ -106,6 +105,7 @@ CSRCS = \
 	../libavr32/src/i2c.c					\
 	../libavr32/src/init_teletype.c				\
 	../libavr32/src/init_common.c				\
+	../libavr32/src/interrupts.c				\
 	../libavr32/src/kbd.c					\
 	../libavr32/src/region.c				\
 	../libavr32/src/screen.c				\

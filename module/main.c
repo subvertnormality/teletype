@@ -13,7 +13,7 @@
 #include "spi.h"
 #include "sysclk.h"
 #include "usb_protocol_hid.h"
-#include "conf_tc_irq.h"
+#include "interrupts.h"
 
 // system
 #include "adc.h"
@@ -87,7 +87,8 @@ typedef struct {
 static aout_t aout[4];
 static bool metro_timer_enabled;
 static uint8_t front_timer;
-static uint8_t mod_key = 0, hold_key, hold_key_count = 0;
+static uint8_t mod_key = 0, hold_key, hold_key_count = 0, keyboard_connected = 0;
+static u32 key_ticks = 0, screen_ticks = 0, hid_ticks = 0;
 
 // timers
 static softTimer_t clockTimer = {.next = NULL, .prev = NULL };
@@ -105,10 +106,7 @@ static softTimer_t metroTimer = {.next = NULL, .prev = NULL };
 // timer callback prototypes
 static void cvTimer_callback(void* o);
 static void clockTimer_callback(void* o);
-static void refreshTimer_callback(void* o);
-static void keyTimer_callback(void* o);
 static void adcTimer_callback(void* o);
-static void hidTimer_callback(void* o);
 static void metroTimer_callback(void* o);
 
 // event handler prototypes
@@ -164,6 +162,7 @@ void cvTimer_callback(void* o) {
     set_slew_icon(slewing);
 
     if (updated) {
+        u8 irq_flags = irqs_pause();
         uint16_t a0 = aout[0].now >> 2;
         uint16_t a1 = aout[1].now >> 2;
         uint16_t a2 = aout[2].now >> 2;
@@ -186,6 +185,7 @@ void cvTimer_callback(void* o) {
         spi_write(DAC_SPI, a1 >> 4);
         spi_write(DAC_SPI, a1 << 4);
         spi_unselectChip(DAC_SPI, DAC_SPI_NPCS);
+        irqs_resume(irq_flags);
     }
 }
 
@@ -194,23 +194,8 @@ void clockTimer_callback(void* o) {
     event_post(&e);
 }
 
-void refreshTimer_callback(void* o) {
-    event_t e = {.type = kEventScreenRefresh, .data = 0 };
-    event_post(&e);
-}
-
-void keyTimer_callback(void* o) {
-    event_t e = {.type = kEventKeyTimer, .data = 0 };
-    event_post(&e);
-}
-
 void adcTimer_callback(void* o) {
     event_t e = {.type = kEventPollADC, .data = 0 };
-    event_post(&e);
-}
-
-void hidTimer_callback(void* o) {
-    event_t e = {.type = kEventHidTimer, .data = 0 };
     event_post(&e);
 }
 
@@ -277,11 +262,11 @@ void handler_KeyTimer(int32_t data) {
 }
 
 void handler_HidConnect(int32_t data) {
-    timer_add(&hidTimer, 47, &hidTimer_callback, NULL);
+    keyboard_connected = 1;
 }
 
 void handler_HidDisconnect(int32_t data) {
-    timer_remove(&hidTimer);
+    keyboard_connected = 0;
 }
 
 void handler_HidTimer(int32_t data) {
@@ -385,13 +370,10 @@ void assign_main_event_handlers() {
 
     app_event_handlers[kEventFront] = &handler_Front;
     app_event_handlers[kEventPollADC] = &handler_PollADC;
-    app_event_handlers[kEventKeyTimer] = &handler_KeyTimer;
     app_event_handlers[kEventHidConnect] = &handler_HidConnect;
     app_event_handlers[kEventHidDisconnect] = &handler_HidDisconnect;
-    app_event_handlers[kEventHidTimer] = &handler_HidTimer;
     app_event_handlers[kEventMscConnect] = &handler_MscConnect;
     app_event_handlers[kEventTrigger] = &handler_Trigger;
-    app_event_handlers[kEventScreenRefresh] = &handler_ScreenRefresh;
     app_event_handlers[kEventTimer] = &handler_EventTimer;
     app_event_handlers[kEventAppCustom] = &handler_AppCustom;
 }
@@ -405,6 +387,20 @@ static void assign_msc_event_handlers(void) {
 
 // app event loop
 void check_events(void) {
+	u64 ticks = get_ticks();
+	if (ticks - key_ticks > 71) {
+		handler_KeyTimer(0);
+		key_ticks = ticks;
+	}
+	if (ticks - screen_ticks > 63) {
+		handler_ScreenRefresh(0);
+		screen_ticks = ticks;
+	}
+	if (keyboard_connected && (ticks - hid_ticks > 47)) {
+		handler_HidTimer(0);
+		hid_ticks = ticks;
+	}
+	
     event_t e;
     if (event_next(&e)) { (app_event_handlers)[e.type](e.data); }
 }
@@ -714,9 +710,7 @@ int main(void) {
 
     timer_add(&clockTimer, RATE_CLOCK, &clockTimer_callback, NULL);
     timer_add(&cvTimer, RATE_CV, &cvTimer_callback, NULL);
-    timer_add(&keyTimer, 71, &keyTimer_callback, NULL);
     timer_add(&adcTimer, 61, &adcTimer_callback, NULL);
-    timer_add(&refreshTimer, 63, &refreshTimer_callback, NULL);
 
     // manually call tele_metro_updated to sync metro to scene_state
     metro_timer_enabled = false;
@@ -734,5 +728,6 @@ int main(void) {
 
     run_script(&scene_state, INIT_SCRIPT);
 
+	
     while (true) { check_events(); }
 }
