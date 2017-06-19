@@ -18,6 +18,7 @@
 #define PATTERN_LENGTH 64
 #define SCRIPT_MAX_COMMANDS 6
 #define SCRIPT_COUNT 10
+#define LED_COUNT 512
 
 #define METRO_SCRIPT 8
 #define INIT_SCRIPT 9
@@ -100,12 +101,15 @@ typedef struct {
     scene_stack_op_t stack_op;
     int16_t tr_pulse_timer[TR_COUNT];
     scene_script_t scripts[SCRIPT_COUNT];
+    int8_t grid_leds[LED_COUNT];
+    uint8_t grid_refresh;
 } scene_state_t;
 
 extern void ss_init(scene_state_t *ss);
 extern void ss_variables_init(scene_state_t *ss);
 extern void ss_patterns_init(scene_state_t *ss);
 extern void ss_pattern_init(scene_state_t *ss, size_t pattern_no);
+extern void ss_grid_init(scene_state_t *ss);
 
 extern void ss_set_in(scene_state_t *ss, int16_t value);
 extern void ss_set_param(scene_state_t *ss, int16_t value);

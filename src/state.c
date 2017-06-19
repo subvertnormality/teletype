@@ -13,6 +13,7 @@
 void ss_init(scene_state_t *ss) {
     ss_variables_init(ss);
     ss_patterns_init(ss);
+    ss_grid_init(ss);
     ss->delay.count = 0;
     for (size_t i = 0; i < TR_COUNT; i++) { ss->tr_pulse_timer[i] = 0; }
     ss->stack_op.top = 0;
@@ -58,6 +59,11 @@ void ss_pattern_init(scene_state_t *ss, size_t pattern_no) {
     p->start = 0;
     p->end = 63;
     for (size_t i = 0; i < PATTERN_LENGTH; i++) { p->val[i] = 0; }
+}
+
+void ss_grid_init(scene_state_t *ss) {
+    for (size_t i = 0; i < LED_COUNT; i++) { ss->grid_leds[i] = 0; }
+    ss->grid_refresh = true;
 }
 
 // external variable setting

@@ -9,6 +9,7 @@
 #include "ops/controlflow.h"
 #include "ops/delay.h"
 #include "ops/earthsea.h"
+#include "ops/grid_ops.h"
 #include "ops/hardware.h"
 #include "ops/justfriends.h"
 #include "ops/maths.h"
@@ -142,7 +143,10 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_TI_PARAM_INIT, &op_TI_IN_INIT, &op_TI_INIT,
 
     &op_TI_PRM, &op_TI_PRM_QT, &op_TI_PRM_N, &op_TI_PRM_SCALE, &op_TI_PRM_MAP,
-    &op_TI_PRM_INIT
+    &op_TI_PRM_INIT,
+
+    // grid
+    &op_LED
 };
 
 /////////////////////////////////////////////////////////////////

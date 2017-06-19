@@ -387,6 +387,9 @@
         "TI.PRM.MAP"       => { MATCH_OP(E_OP_TI_PRM_MAP); };
         "TI.PRM.INIT"      => { MATCH_OP(E_OP_TI_PRM_INIT); };
 
+        # grid
+        "LED"              => { MATCH_OP(E_OP_LED); };
+
         # MODS
         # controlflow
         "IF"          => { MATCH_MOD(E_MOD_IF); };

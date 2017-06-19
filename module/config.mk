@@ -73,6 +73,7 @@ CSRCS = \
 	../module/preset_w_mode.c   				\
 	../module/usb_disk_mode.c   				\
 	../src/command.c					\
+	../src/grid.c						\
 	../src/helpers.c					\
 	../src/match_token.c					\
 	../src/scanner.c					\
@@ -84,6 +85,7 @@ CSRCS = \
 	../src/ops/controlflow.c				\
 	../src/ops/delay.c					\
 	../src/ops/earthsea.c					\
+	../src/ops/grid_ops.c      					\
 	../src/ops/hardware.c					\
 	../src/ops/justfriends.c				\
 	../src/ops/maths.c					\
@@ -107,6 +109,7 @@ CSRCS = \
 	../libavr32/src/init_common.c				\
 	../libavr32/src/interrupts.c				\
 	../libavr32/src/kbd.c					\
+	../libavr32/src/monome.c				\
 	../libavr32/src/region.c				\
 	../libavr32/src/screen.c				\
 	../libavr32/src/timers.c				\
