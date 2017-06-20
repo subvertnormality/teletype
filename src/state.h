@@ -18,7 +18,9 @@
 #define PATTERN_LENGTH 64
 #define SCRIPT_MAX_COMMANDS 6
 #define SCRIPT_COUNT 10
+
 #define LED_COUNT 512
+#define GRID_PUSH_COUNT 16
 
 #define METRO_SCRIPT 8
 #define INIT_SCRIPT 9
@@ -95,14 +97,28 @@ typedef struct {
 } scene_script_t;
 
 typedef struct {
+	uint8_t enabled;
+	uint8_t x, y;
+	uint8_t w, h;
+	uint8_t background;
+	uint8_t state;
+	int8_t script;
+} grid_push_t;
+
+typedef struct {
+    int8_t leds[LED_COUNT];
+    uint8_t refresh;
+	grid_push_t push[GRID_PUSH_COUNT];
+} scene_grid_t;
+
+typedef struct {
     scene_variables_t variables;
     scene_pattern_t patterns[PATTERN_COUNT];
     scene_delay_t delay;
     scene_stack_op_t stack_op;
     int16_t tr_pulse_timer[TR_COUNT];
     scene_script_t scripts[SCRIPT_COUNT];
-    int8_t grid_leds[LED_COUNT];
-    uint8_t grid_refresh;
+	scene_grid_t grid;
 } scene_state_t;
 
 extern void ss_init(scene_state_t *ss);

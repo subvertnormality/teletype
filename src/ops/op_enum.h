@@ -332,6 +332,8 @@ typedef enum {
     E_OP_TI_PRM_MAP,
     E_OP_TI_PRM_INIT,
     E_OP_LED,
+    E_OP_GPUSH,
+    E_OP_GPUSH_ON,
     E_OP__LENGTH,
 } tele_op_idx_t;
 

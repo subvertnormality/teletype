@@ -4,5 +4,7 @@
 #include "ops/op.h"
 
 extern const tele_op_t op_LED;
+extern const tele_op_t op_GPUSH;
+extern const tele_op_t op_GPUSH_ON;
 
 #endif

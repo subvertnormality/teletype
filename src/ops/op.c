@@ -146,7 +146,7 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_TI_PRM_INIT,
 
     // grid
-    &op_LED
+    &op_LED, &op_GPUSH, &op_GPUSH_ON
 };
 
 /////////////////////////////////////////////////////////////////

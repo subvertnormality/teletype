@@ -389,6 +389,8 @@
 
         # grid
         "LED"              => { MATCH_OP(E_OP_LED); };
+        "GPUSH"            => { MATCH_OP(E_OP_GPUSH); };
+        "GPUSH.ON"         => { MATCH_OP(E_OP_GPUSH_ON); };
 
         # MODS
         # controlflow

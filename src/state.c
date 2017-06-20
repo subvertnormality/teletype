@@ -62,8 +62,18 @@ void ss_pattern_init(scene_state_t *ss, size_t pattern_no) {
 }
 
 void ss_grid_init(scene_state_t *ss) {
-    for (size_t i = 0; i < LED_COUNT; i++) { ss->grid_leds[i] = 0; }
-    ss->grid_refresh = true;
+    for (size_t i = 0; i < LED_COUNT; i++) { ss->grid.leds[i] = -1; }
+	for (size_t i = 0; i < GRID_PUSH_COUNT; i++) {
+		ss->grid.push[i].enabled = false;
+		ss->grid.push[i].x = 0;
+		ss->grid.push[i].y = 0;
+		ss->grid.push[i].w = 1;
+		ss->grid.push[i].h = 1;
+		ss->grid.push[i].background = 8;
+		ss->grid.push[i].state = 0;
+		ss->grid.push[i].script = -2;
+	}
+    ss->grid.refresh = true;
 }
 
 // external variable setting

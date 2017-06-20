@@ -224,7 +224,7 @@ static void monome_poll_timer_callback(void* obj) {
 
 // monome refresh callback
 static void monome_refresh_timer_callback(void* obj) {
-	if (scene_state.grid_refresh) {
+	if (scene_state.grid.refresh) {
 		static event_t e;
 		e.type = kEventMonomeRefresh;
 		event_post(&e);
