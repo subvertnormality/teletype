@@ -20,7 +20,10 @@
 #define SCRIPT_COUNT 10
 
 #define LED_COUNT 512
-#define GRID_PUSH_COUNT 16
+#define GRID_PUSH_COUNT 64
+#define GRID_FADER_COUNT 64
+#define LED_OFF -1
+#define LED_DIM -2
 
 #define METRO_SCRIPT 8
 #define INIT_SCRIPT 9
@@ -97,18 +100,33 @@ typedef struct {
 } scene_script_t;
 
 typedef struct {
-	uint8_t enabled;
-	uint8_t x, y;
-	uint8_t w, h;
-	uint8_t background;
-	uint8_t state;
-	int8_t script;
+    uint8_t enabled;
+    uint8_t group;
+    uint8_t x, y;
+    uint8_t w, h;
+} grid_common_t;
+
+typedef struct {
+    grid_common_t common;
+    uint8_t background;
+    uint8_t state;
+    int8_t script;
 } grid_push_t;
+
+typedef struct {
+    grid_common_t common;
+    uint8_t background;
+    uint8_t dir;  // 0 - horiz 1 - vert
+    uint8_t gradient;
+    uint16_t value;
+    int8_t script;
+} grid_fader_t;
 
 typedef struct {
     int8_t leds[LED_COUNT];
     uint8_t refresh;
-	grid_push_t push[GRID_PUSH_COUNT];
+    grid_push_t push[GRID_PUSH_COUNT];
+    grid_fader_t fader[GRID_FADER_COUNT];
 } scene_grid_t;
 
 typedef struct {
@@ -118,7 +136,7 @@ typedef struct {
     scene_stack_op_t stack_op;
     int16_t tr_pulse_timer[TR_COUNT];
     scene_script_t scripts[SCRIPT_COUNT];
-	scene_grid_t grid;
+    scene_grid_t grid;
 } scene_state_t;
 
 extern void ss_init(scene_state_t *ss);
@@ -126,6 +144,7 @@ extern void ss_variables_init(scene_state_t *ss);
 extern void ss_patterns_init(scene_state_t *ss);
 extern void ss_pattern_init(scene_state_t *ss, size_t pattern_no);
 extern void ss_grid_init(scene_state_t *ss);
+extern void ss_grid_common_init(grid_common_t *gc);
 
 extern void ss_set_in(scene_state_t *ss, int16_t value);
 extern void ss_set_param(scene_state_t *ss, int16_t value);

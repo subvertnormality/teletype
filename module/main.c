@@ -7,13 +7,13 @@
 #include "delay.h"
 #include "gpio.h"
 #include "intc.h"
+#include "interrupts.h"
 #include "pm.h"
 #include "preprocessor.h"
 #include "print_funcs.h"
 #include "spi.h"
 #include "sysclk.h"
 #include "usb_protocol_hid.h"
-#include "interrupts.h"
 
 // system
 #include "adc.h"
@@ -89,7 +89,8 @@ typedef struct {
 static aout_t aout[4];
 static bool metro_timer_enabled;
 static uint8_t front_timer;
-static uint8_t mod_key = 0, hold_key, hold_key_count = 0, keyboard_connected = 0;
+static uint8_t mod_key = 0, hold_key, hold_key_count = 0,
+               keyboard_connected = 0;
 static u32 key_ticks = 0, screen_ticks = 0, hid_ticks = 0;
 
 // timers
@@ -100,8 +101,8 @@ static softTimer_t cvTimer = {.next = NULL, .prev = NULL };
 static softTimer_t adcTimer = {.next = NULL, .prev = NULL };
 static softTimer_t hidTimer = {.next = NULL, .prev = NULL };
 static softTimer_t metroTimer = {.next = NULL, .prev = NULL };
-static softTimer_t monomePollTimer = { .next = NULL, .prev = NULL };
-static softTimer_t monomeRefreshTimer  = { .next = NULL, .prev = NULL };
+static softTimer_t monomePollTimer = {.next = NULL, .prev = NULL };
+static softTimer_t monomeRefreshTimer = {.next = NULL, .prev = NULL };
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,30 +218,30 @@ void metroTimer_callback(void* o) {
 
 // monome polling callback
 static void monome_poll_timer_callback(void* obj) {
-  // asynchronous, non-blocking read
-  // UHC callback spawns appropriate events
-	ftdi_read();
+    // asynchronous, non-blocking read
+    // UHC callback spawns appropriate events
+    ftdi_read();
 }
 
 // monome refresh callback
 static void monome_refresh_timer_callback(void* obj) {
-	if (scene_state.grid.refresh) {
-		static event_t e;
-		e.type = kEventMonomeRefresh;
-		event_post(&e);
-	}
+    if (scene_state.grid.refresh) {
+        static event_t e;
+        e.type = kEventMonomeRefresh;
+        event_post(&e);
+    }
 }
 
 // monome: start polling
 void timers_set_monome(void) {
-	timer_add(&monomePollTimer, 20, &monome_poll_timer_callback, NULL );
-	timer_add(&monomeRefreshTimer, 30, &monome_refresh_timer_callback, NULL );
+    timer_add(&monomePollTimer, 20, &monome_poll_timer_callback, NULL);
+    timer_add(&monomeRefreshTimer, 30, &monome_refresh_timer_callback, NULL);
 }
 
 // monome stop polling
 void timers_unset_monome(void) {
-	timer_remove( &monomePollTimer );
-	timer_remove( &monomeRefreshTimer ); 
+    timer_remove(&monomePollTimer);
+    timer_remove(&monomeRefreshTimer);
 }
 
 
@@ -395,29 +396,34 @@ void handler_AppCustom(int32_t data) {
 }
 
 
-static void handler_FtdiConnect(s32 data) { ftdi_setup(); }
-static void handler_FtdiDisconnect(s32 data) { 
-	timers_unset_monome();
+static void handler_FtdiConnect(s32 data) {
+    ftdi_setup();
+}
+static void handler_FtdiDisconnect(s32 data) {
+    timers_unset_monome();
 }
 
 static void handler_MonomeConnect(s32 data) {
-	timers_set_monome();
+    timers_set_monome();
+    scene_state.grid.refresh = true;
 }
 
-static void handler_MonomePoll(s32 data) { monome_read_serial(); }
+static void handler_MonomePoll(s32 data) {
+    monome_read_serial();
+}
 static void handler_MonomeRefresh(s32 data) {
-	grid_refresh(&scene_state);
-	monomeFrameDirty = 0b1111;
-	(*monome_refresh)();
+    grid_refresh(&scene_state);
+    monomeFrameDirty = 0b1111;
+    (*monome_refresh)();
 }
 
 static void handler_MonomeGridKey(s32 data) {
-	u8 x, y, z;
-	monome_grid_key_parse_event_data(data, &x, &y, &z);
-	grid_process_key(&scene_state, x, y, z);
+    u8 x, y, z;
+    monome_grid_key_parse_event_data(data, &x, &y, &z);
+    grid_process_key(&scene_state, x, y, z);
 }
 
-	
+
 ////////////////////////////////////////////////////////////////////////////////
 // event queue
 
@@ -456,20 +462,20 @@ static void assign_msc_event_handlers(void) {
 
 // app event loop
 void check_events(void) {
-	u64 ticks = get_ticks();
-	if (ticks - key_ticks > 71) {
-		handler_KeyTimer(0);
-		key_ticks = ticks;
-	}
-	if (ticks - screen_ticks > 63) {
-		handler_ScreenRefresh(0);
-		screen_ticks = ticks;
-	}
-	if (keyboard_connected && (ticks - hid_ticks > 47)) {
-		handler_HidTimer(0);
-		hid_ticks = ticks;
-	}
-	
+    u64 ticks = get_ticks();
+    if (ticks - key_ticks > 71) {
+        handler_KeyTimer(0);
+        key_ticks = ticks;
+    }
+    if (ticks - screen_ticks > 63) {
+        handler_ScreenRefresh(0);
+        screen_ticks = ticks;
+    }
+    if (keyboard_connected && (ticks - hid_ticks > 47)) {
+        handler_HidTimer(0);
+        hid_ticks = ticks;
+    }
+
     event_t e;
     if (event_next(&e)) { (app_event_handlers)[e.type](e.data); }
 }
@@ -798,6 +804,6 @@ int main(void) {
 
     run_script(&scene_state, INIT_SCRIPT);
 
-	
+
     while (true) { check_events(); }
 }

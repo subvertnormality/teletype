@@ -63,17 +63,27 @@ void ss_pattern_init(scene_state_t *ss, size_t pattern_no) {
 
 void ss_grid_init(scene_state_t *ss) {
     for (size_t i = 0; i < LED_COUNT; i++) { ss->grid.leds[i] = -1; }
-	for (size_t i = 0; i < GRID_PUSH_COUNT; i++) {
-		ss->grid.push[i].enabled = false;
-		ss->grid.push[i].x = 0;
-		ss->grid.push[i].y = 0;
-		ss->grid.push[i].w = 1;
-		ss->grid.push[i].h = 1;
-		ss->grid.push[i].background = 8;
-		ss->grid.push[i].state = 0;
-		ss->grid.push[i].script = -2;
-	}
+    for (size_t i = 0; i < GRID_PUSH_COUNT; i++) {
+        ss_grid_common_init(&(ss->grid.push[i].common));
+        ss->grid.push[i].background = 8;
+        ss->grid.push[i].state = 0;
+        ss->grid.push[i].script = 0;
+    }
+    for (size_t i = 0; i < GRID_FADER_COUNT; i++) {
+        ss_grid_common_init(&(ss->grid.fader[i].common));
+        ss->grid.fader[i].background = 8;
+        ss->grid.fader[i].dir = 0;
+        ss->grid.fader[i].gradient = 1;
+        ss->grid.fader[i].value = 0;
+        ss->grid.fader[i].script = 0;
+    }
     ss->grid.refresh = true;
+}
+
+void ss_grid_common_init(grid_common_t *gc) {
+    gc->enabled = false;
+    gc->group = 0;
+    gc->x = gc->y = gc->w = gc->h = 0;
 }
 
 // external variable setting
