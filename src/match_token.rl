@@ -391,6 +391,8 @@
         "LED"              => { MATCH_OP(E_OP_LED); };
         "GPUSH"            => { MATCH_OP(E_OP_GPUSH); };
         "GPUSH.ON"         => { MATCH_OP(E_OP_GPUSH_ON); };
+        "GFDR"             => { MATCH_OP(E_OP_GFDR); };
+        "GFDR.VAL"         => { MATCH_OP(E_OP_GFDR_VAL); };
 
         # MODS
         # controlflow

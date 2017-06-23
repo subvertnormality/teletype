@@ -334,6 +334,8 @@ typedef enum {
     E_OP_LED,
     E_OP_GPUSH,
     E_OP_GPUSH_ON,
+    E_OP_GFDR,
+    E_OP_GFDR_VAL,
     E_OP__LENGTH,
 } tele_op_idx_t;
 

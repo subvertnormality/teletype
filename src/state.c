@@ -65,15 +65,14 @@ void ss_grid_init(scene_state_t *ss) {
     for (size_t i = 0; i < LED_COUNT; i++) { ss->grid.leds[i] = -1; }
     for (size_t i = 0; i < GRID_PUSH_COUNT; i++) {
         ss_grid_common_init(&(ss->grid.push[i].common));
-        ss->grid.push[i].background = 8;
+        ss->grid.push[i].background = 5;
         ss->grid.push[i].state = 0;
         ss->grid.push[i].script = 0;
     }
     for (size_t i = 0; i < GRID_FADER_COUNT; i++) {
         ss_grid_common_init(&(ss->grid.fader[i].common));
-        ss->grid.fader[i].background = 8;
+        ss->grid.fader[i].background = 5;
         ss->grid.fader[i].dir = 0;
-        ss->grid.fader[i].gradient = 1;
         ss->grid.fader[i].value = 0;
         ss->grid.fader[i].script = 0;
     }

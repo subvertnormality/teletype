@@ -117,8 +117,7 @@ typedef struct {
     grid_common_t common;
     uint8_t background;
     uint8_t dir;  // 0 - horiz 1 - vert
-    uint8_t gradient;
-    uint16_t value;
+    uint8_t value;
     int8_t script;
 } grid_fader_t;
 

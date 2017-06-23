@@ -6,5 +6,7 @@
 extern const tele_op_t op_LED;
 extern const tele_op_t op_GPUSH;
 extern const tele_op_t op_GPUSH_ON;
+extern const tele_op_t op_GFDR;
+extern const tele_op_t op_GFDR_VAL;
 
 #endif
