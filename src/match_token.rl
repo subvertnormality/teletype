@@ -388,7 +388,10 @@
         "TI.PRM.INIT"      => { MATCH_OP(E_OP_TI_PRM_INIT); };
 
         # grid
-        "LED"              => { MATCH_OP(E_OP_LED); };
+        "G.LED"            => { MATCH_OP(E_OP_G_LED); };
+        "G.LEDN"           => { MATCH_OP(E_OP_G_LEDN); };
+        "G.RECT"           => { MATCH_OP(E_OP_G_RECT); };
+        "G.CLR"            => { MATCH_OP(E_OP_G_CLR); };
         "GPUSH"            => { MATCH_OP(E_OP_GPUSH); };
         "GPUSH.ON"         => { MATCH_OP(E_OP_GPUSH_ON); };
         "GFDR"             => { MATCH_OP(E_OP_GFDR); };

@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "command.h"
+#include "types.h"
 
 #define STACK_SIZE 8
 #define CV_COUNT 4
@@ -19,7 +20,8 @@
 #define SCRIPT_MAX_COMMANDS 6
 #define SCRIPT_COUNT 10
 
-#define LED_COUNT 512
+#define GRID_GROUP_COUNT 8
+#define GRID_LED_COUNT 512
 #define GRID_PUSH_COUNT 64
 #define GRID_FADER_COUNT 64
 #define LED_OFF -1
@@ -100,30 +102,41 @@ typedef struct {
 } scene_script_t;
 
 typedef struct {
-    uint8_t enabled;
-    uint8_t group;
-    uint8_t x, y;
-    uint8_t w, h;
+    u8 enabled;
+    u8 group;
+    u8 x, y;
+    u8 w, h;
+    u8 background;
+    u8 script;
 } grid_common_t;
 
 typedef struct {
     grid_common_t common;
-    uint8_t background;
-    uint8_t state;
-    int8_t script;
+    u8 state;
 } grid_push_t;
 
 typedef struct {
     grid_common_t common;
-    uint8_t background;
-    uint8_t dir;  // 0 - horiz 1 - vert
-    uint8_t value;
-    int8_t script;
+    u8 dir; // 0 - horiz 1 - vert
+    u8 value;
 } grid_fader_t;
 
 typedef struct {
-    int8_t leds[LED_COUNT];
-    uint8_t refresh;
+    u8 refresh;
+    u8 dim;
+    s16 fader_min;
+    s16 fader_max;
+    u8 group_scripts[GRID_GROUP_COUNT];
+
+    u8 current_group;
+    u8 latest_defined_push;
+    u8 latest_defined_fader;
+
+    u8 latest_group;
+    u8 latest_push;
+    u8 latest_fader;
+    
+    s8 leds[GRID_LED_COUNT];
     grid_push_t push[GRID_PUSH_COUNT];
     grid_fader_t fader[GRID_FADER_COUNT];
 } scene_grid_t;

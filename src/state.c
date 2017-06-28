@@ -62,27 +62,42 @@ void ss_pattern_init(scene_state_t *ss, size_t pattern_no) {
 }
 
 void ss_grid_init(scene_state_t *ss) {
-    for (size_t i = 0; i < LED_COUNT; i++) { ss->grid.leds[i] = -1; }
-    for (size_t i = 0; i < GRID_PUSH_COUNT; i++) {
-        ss_grid_common_init(&(ss->grid.push[i].common));
-        ss->grid.push[i].background = 5;
-        ss->grid.push[i].state = 0;
-        ss->grid.push[i].script = 0;
+    ss->grid.dim = 0;
+    ss->grid.fader_min = 0;
+    ss->grid.fader_max = 16383;
+    for (u8 i = 0; i < GRID_GROUP_COUNT; i++) ss->grid.group_scripts[i] = 0;
+    
+    ss->grid.current_group = 0;
+    ss->grid.latest_defined_push = 0;
+    ss->grid.latest_defined_fader = 0;
+
+    ss->grid.latest_group = 0;
+    ss->grid.latest_push = 0;
+    ss->grid.latest_fader = 0;
+    
+    for (u16 i = 0; i < GRID_LED_COUNT; i++) {
+        ss->grid.leds[i] = -1;
     }
-    for (size_t i = 0; i < GRID_FADER_COUNT; i++) {
+    for (u8 i = 0; i < GRID_PUSH_COUNT; i++) {
+        ss_grid_common_init(&(ss->grid.push[i].common));
+        ss->grid.push[i].state = 0;
+    }
+    for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
         ss_grid_common_init(&(ss->grid.fader[i].common));
-        ss->grid.fader[i].background = 5;
         ss->grid.fader[i].dir = 0;
         ss->grid.fader[i].value = 0;
-        ss->grid.fader[i].script = 0;
     }
+    
     ss->grid.refresh = true;
 }
 
 void ss_grid_common_init(grid_common_t *gc) {
     gc->enabled = false;
     gc->group = 0;
-    gc->x = gc->y = gc->w = gc->h = 0;
+    gc->x = gc->y = 0;
+    gc->w = gc->h = 1;
+    gc->background = 5;
+    gc->script = 0;
 }
 
 // external variable setting
