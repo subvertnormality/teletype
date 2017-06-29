@@ -34,19 +34,24 @@ const tele_op_t op_GFDR_VAL = MAKE_GET_SET_OP(GFDR.VAL, op_GFDR_VAL_get, op_GFDR
 // clang-format on
 
 static void op_G_LED_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    int16_t x = cs_pop(cs) - 1;
-    int16_t y = cs_pop(cs) - 1;
-    int16_t level = cs_pop(cs);
+    s16 x = cs_pop(cs) - 1;
+    s16 y = cs_pop(cs) - 1;
+    GET_LEVEL(level);
 
-    SG.leds[x + (y << 4)] = level;
+    if (x < 0 || x > monome_size_x()) return;
+    if (y < 0 || y > monome_size_y()) return;
+    
+    SG.leds[x + y * monome_size_x()] = level;
     SG.refresh = true;
 }
 
 static void op_G_LEDN_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    int16_t i = cs_pop(cs);
-    int16_t level = cs_pop(cs);
+    s16 i = cs_pop(cs) - 1;
+    GET_LEVEL(level);
+    
+    if (i < 0 || i > GRID_LED_COUNT) return;
 
-    SG.leds[i - 1] = level;
+    SG.leds[i] = level;
     SG.refresh = true;
 }
 
@@ -56,18 +61,38 @@ static void op_G_CLR_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
 }
 
 static void op_G_RECT_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    int16_t x = cs_pop(cs);
-    int16_t y = cs_pop(cs);
-    int16_t w = cs_pop(cs);
-    int16_t h = cs_pop(cs);
-    int16_t fill = cs_pop(cs);
-    int16_t border = cs_pop(cs);
+    s16 x = cs_pop(cs) - 1;
+    s16 y = cs_pop(cs) - 1;
+    s16 w = cs_pop(cs);
+    s16 h = cs_pop(cs);
+    GET_LEVEL(fill);
+    GET_LEVEL(border);
+    
+    s16 n;
+    s16 size_x = monome_size_x();
+    for (s16 col = x + 1; col < x + w - 1; col++)
+        for (s16 row = y + 1; row < y + h - 1; row++) {
+            n = col + row * size_x;
+            if (n >= 0 && n < GRID_LED_COUNT) SG.leds[n] = fill;
+        }
 
-    /*
-    for (u16 i = 0; i < 
-    SG.leds[i] = level;
+    s16 row1 = y * size_x;
+    s16 row2 = (y + h - 1) * size_x;
+    for (s16 col = x; col < x + w; col++) {
+        n = col + row1;
+        if (n >= 0 && n < GRID_LED_COUNT) SG.leds[n] = border;
+        n = col + row2;
+        if (n >= 0 && n < GRID_LED_COUNT) SG.leds[n] = border;
+    }
+
+    for (s16 row = y; row < y + h; row++) {
+        n = x + row * size_x;
+        if (n >= 0 && n < GRID_LED_COUNT) SG.leds[n] = border;
+        n = x + w - 1 + row * size_x;
+        if (n >= 0 && n < GRID_LED_COUNT) SG.leds[n] = border;
+    }
+
     SG.refresh = true;
-    */
 }
 
 // in progress
@@ -138,4 +163,3 @@ static void op_GFDR_VAL_set(const void *NOTUSED(data), scene_state_t *ss,
     GF.value = value;
     SG.refresh = 1;
 }
-

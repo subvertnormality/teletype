@@ -10,6 +10,8 @@
 #define GF  ss->grid.fader[i]
 #define GFC ss->grid.fader[i].common
 
+#define GET_LEVEL(level) s16 level = cs_pop(cs); if (level < -2) level = -2; if (level > 15) level = 15
+
 extern void grid_refresh(scene_state_t *ss);
 extern void grid_process_key(scene_state_t *ss, u8 x, u8 y, u8 z);
 
