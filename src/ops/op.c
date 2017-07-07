@@ -146,8 +146,13 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_TI_PRM_INIT,
 
     // grid
-    &op_G_LED, &op_G_LEDN, &op_G_RECT, &op_G_CLR,
-    &op_GPUSH, &op_GPUSH_ON, &op_GFDR, &op_GFDR_VAL
+    &op_G_RST, &op_G_CLR, &op_G_DIM, &op_G_GRP, &op_G_GRP_EN, &op_G_GRP_C,
+    &op_G_GRP_SW, &op_G_GRP_SC, &op_G_GRPI, &op_G_LED, &op_G_LED_C, &op_G_LEDN,
+    &op_G_LEDN_C, &op_G_REC, &op_G_BTN, &op_G_GBTN, &op_G_BTNX, &op_G_BTN_EN,
+    &op_G_BTN_V, &op_G_BTN_L, &op_G_BTNI, &op_G_BTNV, &op_G_BTNL, &op_G_BTN_SW,
+    &op_G_GBTN_V, &op_G_GBTN_L,
+
+    &op_GFDR, &op_GFDR_VAL
 };
 
 /////////////////////////////////////////////////////////////////

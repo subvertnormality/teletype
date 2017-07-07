@@ -22,10 +22,11 @@
 
 #define GRID_GROUP_COUNT 8
 #define GRID_LED_COUNT 512
-#define GRID_PUSH_COUNT 64
+#define GRID_BUTTON_COUNT 128
 #define GRID_FADER_COUNT 64
-#define LED_OFF -1
-#define LED_DIM -2
+#define LED_DIM -1
+#define LED_BRI -2
+#define LED_OFF -3
 
 #define METRO_SCRIPT 8
 #define INIT_SCRIPT 9
@@ -107,13 +108,14 @@ typedef struct {
     u8 x, y;
     u8 w, h;
     u8 background;
-    u8 script;
+    s8 script;
 } grid_common_t;
 
 typedef struct {
     grid_common_t common;
+    u8 latch;
     u8 state;
-} grid_push_t;
+} grid_button_t;
 
 typedef struct {
     grid_common_t common;
@@ -122,22 +124,28 @@ typedef struct {
 } grid_fader_t;
 
 typedef struct {
+    u8 enabled;
+    s8 script;
+} grid_group_t;
+
+typedef struct {
     u8 refresh;
     u8 dim;
     s16 fader_min;
     s16 fader_max;
-    u8 group_scripts[GRID_GROUP_COUNT];
 
     u8 current_group;
-    u8 latest_defined_push;
-    u8 latest_defined_fader;
+    u8 last_defined_button;
+    u8 last_defined_fader;
 
     u8 latest_group;
-    u8 latest_push;
+    u8 latest_button;
     u8 latest_fader;
     
     s8 leds[GRID_LED_COUNT];
-    grid_push_t push[GRID_PUSH_COUNT];
+    grid_group_t group[GRID_GROUP_COUNT];
+    
+    grid_button_t button[GRID_BUTTON_COUNT];
     grid_fader_t fader[GRID_FADER_COUNT];
 } scene_grid_t;
 

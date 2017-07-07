@@ -6,17 +6,16 @@ static bool grid_within_area(u8 x, u8 y, grid_common_t *gc);
 static void grid_fill_area(u8 x, u8 y, u8 w, u8 h, u8 level);
 
 void grid_refresh(scene_state_t *ss) {
-    grid_fill_area(0, 0, 16, 16, 0);
+    s16 size_x = monome_size_x();
+    s16 size_y = monome_size_y();
 
-    for (u8 i = 0; i < GRID_PUSH_COUNT; i++) {
-        if (GPC.enabled) grid_fill_area(GPC.x, GPC.y, GPC.w, GPC.h, GP.state ? 15 : GPC.background);
-    }
-        
+    grid_fill_area(0, 0, size_x, size_y, 0);
+
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
-        if (GFC.enabled) {
+        if (GFC.enabled && SG.group[GFC.group].enabled) {
             if (GF.dir) {
-                grid_fill_area(GFC.x, GFC.y + GFC.w - GF.value - 1, GFC.w, GF.value + 1, 15);
-                grid_fill_area(GFC.x, GFC.y, GFC.w, GFC.h - GF.value - 1, GFC.background);
+                grid_fill_area(GFC.x, GFC.y, GFC.w, GFC.h - GF.value, GFC.background);
+                grid_fill_area(GFC.x, GFC.y + GFC.h - GF.value, GFC.w, GF.value + 1, 15);
             } else {
                 grid_fill_area(GFC.x, GFC.y, GF.value + 1, GFC.h, 15);
                 grid_fill_area(GFC.x + GF.value + 1, GFC.y, GFC.w - GF.value - 1, GFC.h, GFC.background);
@@ -24,29 +23,64 @@ void grid_refresh(scene_state_t *ss) {
         }
     }
 
-    for (u16 i = 0; i < monome_size_x() * monome_size_y(); i++) if (SG.leds[i] >= 0) monomeLedBuffer[i] = SG.leds[i];
+    for (u8 i = 0; i < GRID_BUTTON_COUNT; i++)
+        if (GBC.enabled && SG.group[GBC.group].enabled) grid_fill_area(GBC.x, GBC.y, GBC.w, GBC.h, GB.state ? 15 : GBC.background);
+        
+    for (u16 i = 0; i < size_x * size_y; i++) {
+        if (SG.leds[i] >= 0)
+            monomeLedBuffer[i] = SG.leds[i];
+        else if (SG.leds[i] == LED_DIM)
+            monomeLedBuffer[i] >>= 1;
+        else if (SG.leds[i] == LED_BRI) {
+            monomeLedBuffer[i] <<= 1;
+            if (monomeLedBuffer[i] > 15) monomeLedBuffer[i] = 15;
+        }
+        
+        if (monomeLedBuffer[i] < SG.dim)
+            monomeLedBuffer[i] = 0;
+        else
+            monomeLedBuffer[i] -= SG.dim;
+    }
     SG.refresh = 0;
 }
 
 void grid_process_key(scene_state_t *ss, u8 x, u8 y, u8 z) {
     u8 refresh = 0;
-    
-    for (u8 i = 0; i < GRID_PUSH_COUNT; i++) {
-        if (GPC.enabled && grid_within_area(x, y, &GPC)) {
-            GP.state = z;
-            if (GPC.script) run_script(ss, GPC.script - 1);
-            refresh = 1;
-        }
-    }
+    u8 scripts[SCRIPT_COUNT];
+    for (u8 i = 0; i < SCRIPT_COUNT; i++) scripts[i] = 0;
     
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
-        if (GFC.enabled && grid_within_area(x, y, &GFC)) {
-            GF.value = GF.dir ? y - GFC.y : x - GFC.x;
-            if (GFC.script) run_script(ss, GFC.script - 1);
+        if (GFC.enabled && SG.group[GFC.group].enabled && grid_within_area(x, y, &GFC)) {
+            GF.value = GF.dir ? GFC.h - GFC.y : x - GFC.x + 1;
+            if (GFC.script != -1) scripts[GFC.script] = 1;
+            SG.latest_fader = i;
+            SG.latest_group = GBC.group;
+            if (SG.group[GBC.group].script != -1) scripts[SG.group[GBC.group].script] = 1;
+            refresh = 1;
+        }
+    }
+
+    for (u8 i = 0; i < GRID_BUTTON_COUNT; i++) {
+        if (GBC.enabled && SG.group[GBC.group].enabled && grid_within_area(x, y, &GBC)) {
+            if (GB.latch) {
+                if (z) {
+                    GB.state = !GB.state;
+                    if (GBC.script != -1) scripts[GBC.script] = 1;
+                }
+            } else {
+                GB.state = z;
+                if (GBC.script != -1) scripts[GBC.script] = 1;
+            }
+            SG.latest_button = i;
+            SG.latest_group = GBC.group;
+            if (SG.group[GBC.group].script != -1) scripts[SG.group[GBC.group].script] = 1;
             refresh = 1;
         }
     }
     
+    for (u8 i = 0; i < SCRIPT_COUNT; i++)
+        if (scripts[i]) run_script(ss, i);
+
     SG.refresh = refresh;
 }
 
@@ -55,11 +89,26 @@ bool grid_within_area(u8 x, u8 y, grid_common_t *gc) {
 }
 
 void grid_fill_area(u8 x, u8 y, u8 w, u8 h, u8 level) {
-    u16 led_count = monome_size_x() * monome_size_y();
-    u16 led;
-    for (u16 _x = x; _x < x + w; _x++)
-        for (u16 _y = y; _y < y + h; _y++) {
-            led = _x + (_y << 4);
-            if (led < led_count) monomeLedBuffer[led] = level;
-        }
+    s16 size_x = monome_size_x();
+    s16 size_y = monome_size_y();
+
+    if (level == LED_OFF) return;
+    
+    if (level == LED_DIM) {
+        for (u16 _x = max(0, x); _x < min(size_x, x + w); _x++)
+            for (u16 _y = max(0, y); _y < min(size_y, y + h); _y++)
+                monomeLedBuffer[_x + _y * size_x] >>= 1;
+
+    } else if (level == LED_BRI) {
+        for (u16 _x = max(0, x); _x < min(size_x, x + w); _x++)
+            for (u16 _y = max(0, y); _y < min(size_y, y + h); _y++) {
+                monomeLedBuffer[_x + _y * size_x] <<= 1; 
+                if (monomeLedBuffer[_x + _y * size_x] > 15) monomeLedBuffer[_x + _y * size_x] = 15;
+            }
+        
+    } else {
+        for (u16 _x = max(0, x); _x < min(size_x, x + w); _x++)
+            for (u16 _y = max(0, y); _y < min(size_y, y + h); _y++)
+                monomeLedBuffer[_x + _y * size_x] = level;
+    }
 }

@@ -4,13 +4,25 @@
 #include "monome.h"
 #include "state.h"
 
-#define SG  ss->grid
-#define GP  ss->grid.push[i]
-#define GPC ss->grid.push[i].common
-#define GF  ss->grid.fader[i]
+#define SG ss->grid
+#define GB ss->grid.button[i]
+#define GBC ss->grid.button[i].common
+#define GF ss->grid.fader[i]
 #define GFC ss->grid.fader[i].common
 
-#define GET_LEVEL(level) s16 level = cs_pop(cs); if (level < -2) level = -2; if (level > 15) level = 15
+#define GET_AND_CLAMP(value, min, max) \
+    s16 value = cs_pop(cs);            \
+    if (value < (min))                 \
+        value = (min);                 \
+    else if (value > (max))            \
+        value = (max);
+
+#define GET_LEVEL(level)    \
+    s16 level = cs_pop(cs); \
+    if (level < LED_OFF)    \
+        level = LED_OFF;    \
+    else if (level > 15)    \
+        level = 15;
 
 extern void grid_refresh(scene_state_t *ss);
 extern void grid_process_key(scene_state_t *ss, u8 x, u8 y, u8 z);

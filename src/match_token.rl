@@ -388,12 +388,36 @@
         "TI.PRM.INIT"      => { MATCH_OP(E_OP_TI_PRM_INIT); };
 
         # grid
-        "G.LED"            => { MATCH_OP(E_OP_G_LED); };
-        "G.LEDN"           => { MATCH_OP(E_OP_G_LEDN); };
-        "G.RECT"           => { MATCH_OP(E_OP_G_RECT); };
+        "G.RST"            => { MATCH_OP(E_OP_G_RST); };
         "G.CLR"            => { MATCH_OP(E_OP_G_CLR); };
-        "GPUSH"            => { MATCH_OP(E_OP_GPUSH); };
-        "GPUSH.ON"         => { MATCH_OP(E_OP_GPUSH_ON); };
+        "G.DIM"            => { MATCH_OP(E_OP_G_DIM); };
+
+        "G.GRP"            => { MATCH_OP(E_OP_G_GRP); };
+        "G.GRP.EN"         => { MATCH_OP(E_OP_G_GRP_EN); };
+        "G.GRP.C"          => { MATCH_OP(E_OP_G_GRP_C); };
+        "G.GRP.SW"         => { MATCH_OP(E_OP_G_GRP_SW); };
+        "G.GRP.SC"         => { MATCH_OP(E_OP_G_GRP_SC); };
+        "G.GRPI"           => { MATCH_OP(E_OP_G_GRPI); };
+
+        "G.LED"            => { MATCH_OP(E_OP_G_LED); };
+        "G.LED.C"          => { MATCH_OP(E_OP_G_LED_C); };
+        "G.LEDN"           => { MATCH_OP(E_OP_G_LEDN); };
+        "G.LEDN.C"         => { MATCH_OP(E_OP_G_LEDN_C); };
+        "G.REC"            => { MATCH_OP(E_OP_G_REC); };
+
+        "G.BTN"            => { MATCH_OP(E_OP_G_BTN); };
+        "G.GBTN"           => { MATCH_OP(E_OP_G_GBTN); };
+        "G.BTNX"           => { MATCH_OP(E_OP_G_BTNX); };
+        "G.BTN.EN"         => { MATCH_OP(E_OP_G_BTN_EN); };
+        "G.BTN.V"          => { MATCH_OP(E_OP_G_BTN_V); };
+        "G.BTN.L"          => { MATCH_OP(E_OP_G_BTN_L); };
+        "G.BTNI"           => { MATCH_OP(E_OP_G_BTNI); };
+        "G.BTNV"           => { MATCH_OP(E_OP_G_BTNV); };
+        "G.BTNL"           => { MATCH_OP(E_OP_G_BTNL); };
+        "G.BTN.SW"         => { MATCH_OP(E_OP_G_BTN_SW); };
+        "G.GBTN.V"         => { MATCH_OP(E_OP_G_GBTN_V); };
+        "G.GBTN.L"         => { MATCH_OP(E_OP_G_GBTN_L); };
+
         "GFDR"             => { MATCH_OP(E_OP_GFDR); };
         "GFDR.VAL"         => { MATCH_OP(E_OP_GFDR_VAL); };
 
