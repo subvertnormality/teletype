@@ -40,6 +40,10 @@ static void op_G_BTN_SW_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_G_GBTN_V_get(const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_GBTN_L_get(const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 
+static void op_G_XYP_get   (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
+static void op_G_XYP_X_get (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
+static void op_G_XYP_Y_get (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
+
 const tele_op_t op_G_RST    = MAKE_GET_OP(G.DIM, op_G_RST_get, 0, false);
 const tele_op_t op_G_DIM    = MAKE_GET_OP(G.DIM, op_G_DIM_get, 1, false);
 const tele_op_t op_G_CLR    = MAKE_GET_OP(G.CLR, op_G_CLR_get, 0, false);
@@ -70,6 +74,10 @@ const tele_op_t op_G_BTN_SW = MAKE_GET_OP(G.BTN.SW, op_G_BTN_SW_get, 1, false);
 const tele_op_t op_G_GBTN_V = MAKE_GET_OP(G.GBTN.V, op_G_GBTN_V_get, 2, false);
 const tele_op_t op_G_GBTN_L = MAKE_GET_OP(G.GBTN.L, op_G_GBTN_L_get, 3, false);
 
+const tele_op_t op_G_XYP    = MAKE_GET_OP(G.XYP, op_G_XYP_get, 7, false);
+const tele_op_t op_G_XYP_X  = MAKE_GET_OP(G.XYP.X, op_G_XYP_X_get, 1, true);
+const tele_op_t op_G_XYP_Y  = MAKE_GET_OP(G.XYP.Y, op_G_XYP_Y_get, 1, true);
+
 // in progress
 
 static void op_GFDR_VAL_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *es, command_state_t *cs);
@@ -99,20 +107,26 @@ static void op_G_RST_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     }
 
     for (u8 i = 0; i < GRID_GROUP_COUNT; i++) {
-        ss->grid.group[i].enabled = true;
-        ss->grid.group[i].script = -1;
+        SG.group[i].enabled = true;
+        SG.group[i].script = -1;
     }
     
     for (u8 i = 0; i < GRID_BUTTON_COUNT; i++) {
-        grid_common_init(&(SG.button[i].common));
-        SG.button[i].latch = 0;
-        SG.button[i].state = 0;
+        grid_common_init(&(GBC));
+        GB.latch = 0;
+        GB.state = 0;
     }
 
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
-        grid_common_init(&(SG.fader[i].common));
-        SG.fader[i].dir = 0;
-        SG.fader[i].value = 0;
+        grid_common_init(&(GFC));
+        GF.dir = 0;
+        GF.value = 0;
+    }
+    
+    for (u8 i = 0; i < GRID_XYPAD_COUNT; i++) {
+        grid_common_init(&(GXYC));
+        GXY.value_x = 0;
+        GXY.value_y = 0;
     }
     
     SG.refresh = true;
@@ -149,16 +163,23 @@ static void op_G_GRP_C_get(const void *NOTUSED(data), scene_state_t *ss, exec_st
     
     for (u8 i = 0; i < GRID_BUTTON_COUNT; i++)
         if (GBC.group == group) {
-            grid_common_init(&(SG.button[i].common));
-            SG.button[i].latch = 0;
-            SG.button[i].state = 0;
+            grid_common_init(&(GBC));
+            GB.latch = 0;
+            GB.state = 0;
         }
 
     for (u8 i = 0; i < GRID_FADER_COUNT; i++)
         if (GFC.group == group) {
-            grid_common_init(&(SG.fader[i].common));
-            SG.fader[i].dir = 0;
-            SG.fader[i].value = 0;
+            grid_common_init(&(GFC));
+            GF.dir = 0;
+            GF.value = 0;
+        }
+    
+    for (u8 i = 0; i < GRID_XYPAD_COUNT; i++)
+        if (GXYC.group == group) {
+            grid_common_init(&(GXYC));
+            GXY.value_x = 0;
+            GXY.value_y = 0;
         }
     
     SG.refresh = true;
@@ -430,6 +451,42 @@ static void op_G_GBTN_L_get(const void *NOTUSED(data), scene_state_t *ss, exec_s
             is_odd = !is_odd;
         }
     SG.refresh = 1;
+}
+
+static void op_G_XYP_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
+    s16 i = cs_pop(cs) - 1;
+    s16 x = cs_pop(cs) - 1;
+    s16 y = cs_pop(cs) - 1;
+    s16 w = cs_pop(cs);
+    s16 h = cs_pop(cs);
+    GET_LEVEL(level);
+    s16 script = cs_pop(cs) - 1;
+    
+    if (i < 0 || i >= GRID_XYPAD_COUNT) return;
+    if (script < 0 || script > INIT_SCRIPT) script = -1;
+    
+    GXYC.enabled = true;
+    GXYC.group = SG.current_group;
+    GXYC.x = x;
+    GXYC.y = y;
+    GXYC.w = w;
+    GXYC.h = h;
+    GXYC.background = level;
+    GXYC.script = script;
+    GXY.value_x = 0;
+    GXY.value_y = 0;
+    
+    SG.refresh = 1;
+}
+
+static void op_G_XYP_X_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
+    s16 i = cs_pop(cs) - 1;
+    cs_push(cs, i < 0 || i >= GRID_XYPAD_COUNT ? 0 : GXY.value_x);
+}
+
+static void op_G_XYP_Y_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
+    s16 i = cs_pop(cs) - 1;
+    cs_push(cs, i < 0 || i >= GRID_XYPAD_COUNT ? 0 : GXY.value_y);
 }
 
 // in progress

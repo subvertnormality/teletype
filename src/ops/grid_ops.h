@@ -36,4 +36,8 @@ extern const tele_op_t op_G_GBTN_L;
 extern const tele_op_t op_GFDR;
 extern const tele_op_t op_GFDR_VAL;
 
+extern const tele_op_t op_G_XYP;
+extern const tele_op_t op_G_XYP_X;
+extern const tele_op_t op_G_XYP_Y;
+
 #endif

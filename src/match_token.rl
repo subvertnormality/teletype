@@ -418,6 +418,10 @@
         "G.GBTN.V"         => { MATCH_OP(E_OP_G_GBTN_V); };
         "G.GBTN.L"         => { MATCH_OP(E_OP_G_GBTN_L); };
 
+        "G.XYP"            => { MATCH_OP(E_OP_G_XYP); };
+        "G.XYP.X"          => { MATCH_OP(E_OP_G_XYP_X); };
+        "G.XYP.Y"          => { MATCH_OP(E_OP_G_XYP_Y); };
+
         "GFDR"             => { MATCH_OP(E_OP_GFDR); };
         "GFDR.VAL"         => { MATCH_OP(E_OP_GFDR_VAL); };
 

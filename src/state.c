@@ -95,6 +95,12 @@ void ss_grid_init(scene_state_t *ss) {
         ss->grid.fader[i].value = 0;
     }
     
+    for (u8 i = 0; i < GRID_XYPAD_COUNT; i++) {
+        ss_grid_common_init(&(ss->grid.xypad[i].common));
+        ss->grid.xypad[i].value_x = 0;
+        ss->grid.xypad[i].value_y = 0;
+    }
+    
     ss->grid.refresh = true;
 }
 

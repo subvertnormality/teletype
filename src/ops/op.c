@@ -150,7 +150,7 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_G_GRP_SW, &op_G_GRP_SC, &op_G_GRPI, &op_G_LED, &op_G_LED_C, &op_G_LEDN,
     &op_G_LEDN_C, &op_G_REC, &op_G_BTN, &op_G_GBTN, &op_G_BTNX, &op_G_BTN_EN,
     &op_G_BTN_V, &op_G_BTN_L, &op_G_BTNI, &op_G_BTNV, &op_G_BTNL, &op_G_BTN_SW,
-    &op_G_GBTN_V, &op_G_GBTN_L,
+    &op_G_GBTN_V, &op_G_GBTN_L, &op_G_XYP, &op_G_XYP_X, &op_G_XYP_Y,
 
     &op_GFDR, &op_GFDR_VAL
 };

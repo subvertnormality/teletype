@@ -9,6 +9,8 @@
 #define GBC ss->grid.button[i].common
 #define GF ss->grid.fader[i]
 #define GFC ss->grid.fader[i].common
+#define GXY ss->grid.xypad[i]
+#define GXYC ss->grid.xypad[i].common
 
 #define GET_AND_CLAMP(value, min, max) \
     s16 value = cs_pop(cs);            \

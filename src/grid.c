@@ -11,6 +11,19 @@ void grid_refresh(scene_state_t *ss) {
 
     grid_fill_area(0, 0, size_x, size_y, 0);
 
+    u16 x, y;
+    for (u8 i = 0; i < GRID_XYPAD_COUNT; i++) {
+        if (GXYC.enabled && SG.group[GXYC.group].enabled) {
+            if (GXY.value_x || GXY.value_y) {
+                x = GXYC.x + GXY.value_x - 1;
+                y = GXYC.y + GXY.value_y - 1;
+                grid_fill_area(GXYC.x, y, GXYC.w, 1, GXYC.background);
+                grid_fill_area(x, GXYC.y, 1, GXYC.h, GXYC.background);
+                grid_fill_area(x, y, 1, 1, 15);
+            }
+        }
+    }
+
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
         if (GFC.enabled && SG.group[GFC.group].enabled) {
             if (GF.dir) {
@@ -34,6 +47,7 @@ void grid_refresh(scene_state_t *ss) {
         else if (SG.leds[i] == LED_BRI) {
             monomeLedBuffer[i] <<= 1;
             if (monomeLedBuffer[i] > 15) monomeLedBuffer[i] = 15;
+            else if (monomeLedBuffer[i] == 0) monomeLedBuffer[i] = 1;
         }
         
         if (monomeLedBuffer[i] < SG.dim)
@@ -49,13 +63,24 @@ void grid_process_key(scene_state_t *ss, u8 x, u8 y, u8 z) {
     u8 scripts[SCRIPT_COUNT];
     for (u8 i = 0; i < SCRIPT_COUNT; i++) scripts[i] = 0;
     
+    for (u8 i = 0; i < GRID_XYPAD_COUNT; i++) {
+        if (GXYC.enabled && SG.group[GXYC.group].enabled && grid_within_area(x, y, &GXYC)) {
+            GXY.value_x = x - GXYC.x + 1;
+            GXY.value_y = y - GXYC.y + 1;
+            if (GXYC.script != -1) scripts[GXYC.script] = 1;
+            SG.latest_group = GXYC.group;
+            if (SG.group[GXYC.group].script != -1) scripts[SG.group[GXYC.group].script] = 1;
+            refresh = 1;
+        }
+    }
+
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
         if (GFC.enabled && SG.group[GFC.group].enabled && grid_within_area(x, y, &GFC)) {
             GF.value = GF.dir ? GFC.h - GFC.y : x - GFC.x + 1;
             if (GFC.script != -1) scripts[GFC.script] = 1;
             SG.latest_fader = i;
-            SG.latest_group = GBC.group;
-            if (SG.group[GBC.group].script != -1) scripts[SG.group[GBC.group].script] = 1;
+            SG.latest_group = GFC.group;
+            if (SG.group[GFC.group].script != -1) scripts[SG.group[GFC.group].script] = 1;
             refresh = 1;
         }
     }

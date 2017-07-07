@@ -24,6 +24,7 @@
 #define GRID_LED_COUNT 512
 #define GRID_BUTTON_COUNT 128
 #define GRID_FADER_COUNT 64
+#define GRID_XYPAD_COUNT 8
 #define LED_DIM -1
 #define LED_BRI -2
 #define LED_OFF -3
@@ -112,6 +113,11 @@ typedef struct {
 } grid_common_t;
 
 typedef struct {
+    u8 enabled;
+    s8 script;
+} grid_group_t;
+
+typedef struct {
     grid_common_t common;
     u8 latch;
     u8 state;
@@ -124,9 +130,10 @@ typedef struct {
 } grid_fader_t;
 
 typedef struct {
-    u8 enabled;
-    s8 script;
-} grid_group_t;
+    grid_common_t common;
+    u8 value_x;
+    u8 value_y;
+} grid_xypad_t;
 
 typedef struct {
     u8 refresh;
@@ -147,6 +154,7 @@ typedef struct {
     
     grid_button_t button[GRID_BUTTON_COUNT];
     grid_fader_t fader[GRID_FADER_COUNT];
+    grid_xypad_t xypad[GRID_XYPAD_COUNT];
 } scene_grid_t;
 
 typedef struct {
