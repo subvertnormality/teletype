@@ -62,9 +62,8 @@ void ss_pattern_init(scene_state_t *ss, size_t pattern_no) {
 }
 
 void ss_grid_init(scene_state_t *ss) {
+    ss->grid.rotate = 0;
     ss->grid.dim = 0;
-    ss->grid.fader_min = 0;
-    ss->grid.fader_max = 16383;
     
     ss->grid.current_group = 0;
     ss->grid.last_defined_button = 0;
@@ -81,6 +80,8 @@ void ss_grid_init(scene_state_t *ss) {
     for (u8 i = 0; i < GRID_GROUP_COUNT; i++) {
         ss->grid.group[i].enabled = true;
         ss->grid.group[i].script = -1;
+        ss->grid.group[i].fader_min = 0;
+        ss->grid.group[i].fader_max = 16383;
     }
     
     for (u8 i = 0; i < GRID_BUTTON_COUNT; i++) {

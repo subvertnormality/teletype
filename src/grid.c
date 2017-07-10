@@ -27,9 +27,9 @@ void grid_refresh(scene_state_t *ss) {
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
         if (GFC.enabled && SG.group[GFC.group].enabled) {
             if (GF.dir) {
-                grid_fill_area(GFC.x, GFC.y, GFC.w, GFC.h - GF.value, GFC.background);
-                grid_fill_area(GFC.x, GFC.y + GFC.h - GF.value, GFC.w, GF.value + 1, 15);
-            } else {
+                grid_fill_area(GFC.x, GFC.y, GFC.w, GFC.h - GF.value - 1, GFC.background);
+                grid_fill_area(GFC.x, GFC.y + GFC.h - GF.value - 1, GFC.w, GF.value + 1, 15);
+            } else { 
                 grid_fill_area(GFC.x, GFC.y, GF.value + 1, GFC.h, 15);
                 grid_fill_area(GFC.x + GF.value + 1, GFC.y, GFC.w - GF.value - 1, GFC.h, GFC.background);
             }
@@ -55,10 +55,24 @@ void grid_refresh(scene_state_t *ss) {
         else
             monomeLedBuffer[i] -= SG.dim;
     }
+    
+    if (SG.rotate) {
+        u16 total = size_x * size_y;
+        u8 temp;
+        for (u16 i = 0; i < (total >> 1); i++) {
+            temp = monomeLedBuffer[i];
+            monomeLedBuffer[i] = monomeLedBuffer[total - i - 1];
+            monomeLedBuffer[total - i - 1] = temp;
+        }
+    }
+        
+    
     SG.refresh = 0;
 }
 
-void grid_process_key(scene_state_t *ss, u8 x, u8 y, u8 z) {
+void grid_process_key(scene_state_t *ss, u8 _x, u8 _y, u8 z) {
+    u8 x = SG.rotate ? monome_size_x() - _x - 1 : _x;
+    u8 y = SG.rotate ? monome_size_y() - _y - 1 : _y;
     u8 refresh = 0;
     u8 scripts[SCRIPT_COUNT];
     for (u8 i = 0; i < SCRIPT_COUNT; i++) scripts[i] = 0;
@@ -76,7 +90,7 @@ void grid_process_key(scene_state_t *ss, u8 x, u8 y, u8 z) {
 
     for (u8 i = 0; i < GRID_FADER_COUNT; i++) {
         if (GFC.enabled && SG.group[GFC.group].enabled && grid_within_area(x, y, &GFC)) {
-            GF.value = GF.dir ? GFC.h - GFC.y : x - GFC.x + 1;
+            GF.value = GF.dir ? GFC.h + GFC.y - y - 1 : x - GFC.x;
             if (GFC.script != -1) scripts[GFC.script] = 1;
             SG.latest_fader = i;
             SG.latest_group = GFC.group;

@@ -390,11 +390,12 @@
         # grid
         "G.RST"            => { MATCH_OP(E_OP_G_RST); };
         "G.CLR"            => { MATCH_OP(E_OP_G_CLR); };
+        "G.ROTATE"         => { MATCH_OP(E_OP_G_ROTATE); };
         "G.DIM"            => { MATCH_OP(E_OP_G_DIM); };
 
         "G.GRP"            => { MATCH_OP(E_OP_G_GRP); };
         "G.GRP.EN"         => { MATCH_OP(E_OP_G_GRP_EN); };
-        "G.GRP.C"          => { MATCH_OP(E_OP_G_GRP_C); };
+        "G.GRP.RST"        => { MATCH_OP(E_OP_G_GRP_RST); };
         "G.GRP.SW"         => { MATCH_OP(E_OP_G_GRP_SW); };
         "G.GRP.SC"         => { MATCH_OP(E_OP_G_GRP_SC); };
         "G.GRPI"           => { MATCH_OP(E_OP_G_GRPI); };
@@ -418,12 +419,25 @@
         "G.GBTN.V"         => { MATCH_OP(E_OP_G_GBTN_V); };
         "G.GBTN.L"         => { MATCH_OP(E_OP_G_GBTN_L); };
 
+        "G.FDR"            => { MATCH_OP(E_OP_G_FDR); };
+        "G.GFDR"           => { MATCH_OP(E_OP_G_GFDR); };
+        "G.FDRX"           => { MATCH_OP(E_OP_G_FDRX); };
+        "G.FDR.EN"         => { MATCH_OP(E_OP_G_FDR_EN); };
+        "G.FDR.V"          => { MATCH_OP(E_OP_G_FDR_V); };
+        "G.FDR.N"          => { MATCH_OP(E_OP_G_FDR_N); };
+        "G.FDR.L"          => { MATCH_OP(E_OP_G_FDR_L); };
+        "G.FDRI"           => { MATCH_OP(E_OP_G_FDRI); };
+        "G.FDRV"           => { MATCH_OP(E_OP_G_FDRV); };
+        "G.FDRN"           => { MATCH_OP(E_OP_G_FDRN); };
+        "G.FDRL"           => { MATCH_OP(E_OP_G_FDRL); };
+        "G.GFDR.V"         => { MATCH_OP(E_OP_G_GFDR_V); };
+        "G.GFDR.N"         => { MATCH_OP(E_OP_G_GFDR_N); };
+        "G.GFDR.L"         => { MATCH_OP(E_OP_G_GFDR_L); };
+        "G.GFDR.RN"        => { MATCH_OP(E_OP_G_GFDR_RN); };
+
         "G.XYP"            => { MATCH_OP(E_OP_G_XYP); };
         "G.XYP.X"          => { MATCH_OP(E_OP_G_XYP_X); };
         "G.XYP.Y"          => { MATCH_OP(E_OP_G_XYP_Y); };
-
-        "GFDR"             => { MATCH_OP(E_OP_GFDR); };
-        "GFDR.VAL"         => { MATCH_OP(E_OP_GFDR_VAL); };
 
         # MODS
         # controlflow

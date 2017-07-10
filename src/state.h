@@ -115,6 +115,8 @@ typedef struct {
 typedef struct {
     u8 enabled;
     s8 script;
+    s16 fader_min;
+    s16 fader_max;
 } grid_group_t;
 
 typedef struct {
@@ -137,9 +139,8 @@ typedef struct {
 
 typedef struct {
     u8 refresh;
+    u8 rotate;
     u8 dim;
-    s16 fader_min;
-    s16 fader_max;
 
     u8 current_group;
     u8 last_defined_button;
