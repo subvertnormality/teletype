@@ -21,7 +21,7 @@
 #define SCRIPT_COUNT 10
 
 #define GRID_GROUP_COUNT 8
-#define GRID_LED_COUNT 512
+#define GRID_MAX_DIMENSION 16
 #define GRID_BUTTON_COUNT 128
 #define GRID_FADER_COUNT 64
 #define GRID_XYPAD_COUNT 8
@@ -150,7 +150,7 @@ typedef struct {
     u8 latest_button;
     u8 latest_fader;
     
-    s8 leds[GRID_LED_COUNT];
+    s8 leds[GRID_MAX_DIMENSION][GRID_MAX_DIMENSION];
     grid_group_t group[GRID_GROUP_COUNT];
     
     grid_button_t button[GRID_BUTTON_COUNT];

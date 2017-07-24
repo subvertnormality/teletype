@@ -39,22 +39,23 @@ void grid_refresh(scene_state_t *ss) {
     for (u8 i = 0; i < GRID_BUTTON_COUNT; i++)
         if (GBC.enabled && SG.group[GBC.group].enabled) grid_fill_area(GBC.x, GBC.y, GBC.w, GBC.h, GB.state ? 15 : GBC.background);
         
-    for (u16 i = 0; i < size_x * size_y; i++) {
-        if (SG.leds[i] >= 0)
-            monomeLedBuffer[i] = SG.leds[i];
-        else if (SG.leds[i] == LED_DIM)
-            monomeLedBuffer[i] >>= 1;
-        else if (SG.leds[i] == LED_BRI) {
-            monomeLedBuffer[i] <<= 1;
-            if (monomeLedBuffer[i] > 15) monomeLedBuffer[i] = 15;
-            else if (monomeLedBuffer[i] == 0) monomeLedBuffer[i] = 1;
+    for (u16 i = 0; i < size_x; i++)
+        for (u16 j = 0; j < size_y; j++) {
+            if (SG.leds[i][j] >= 0)
+                monomeLedBuffer[i] = SG.leds[i][j];
+            else if (SG.leds[i][j] == LED_DIM)
+                monomeLedBuffer[i] >>= 1;
+            else if (SG.leds[i][j] == LED_BRI) {
+                monomeLedBuffer[i] <<= 1;
+                if (monomeLedBuffer[i] > 15) monomeLedBuffer[i] = 15;
+                else if (monomeLedBuffer[i] < 4) monomeLedBuffer[i] = 4;
+            }
+            
+            if (monomeLedBuffer[i] < SG.dim)
+                monomeLedBuffer[i] = 0;
+            else
+                monomeLedBuffer[i] -= SG.dim;
         }
-        
-        if (monomeLedBuffer[i] < SG.dim)
-            monomeLedBuffer[i] = 0;
-        else
-            monomeLedBuffer[i] -= SG.dim;
-    }
     
     if (SG.rotate) {
         u16 total = size_x * size_y;

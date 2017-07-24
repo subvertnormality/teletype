@@ -73,9 +73,9 @@ void ss_grid_init(scene_state_t *ss) {
     ss->grid.latest_button = 0;
     ss->grid.latest_fader = 0;
     
-    for (u16 i = 0; i < GRID_LED_COUNT; i++) {
-        ss->grid.leds[i] = LED_OFF;
-    }
+    for (u8 i = 0; i < GRID_MAX_DIMENSION; i++)
+        for (u8 j = 0; j < GRID_MAX_DIMENSION; j++)
+            ss->grid.leds[i][j] = LED_OFF;
 
     for (u8 i = 0; i < GRID_GROUP_COUNT; i++) {
         ss->grid.group[i].enabled = true;

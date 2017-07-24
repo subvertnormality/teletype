@@ -24,8 +24,6 @@ static void op_G_GRPI_get   (const void *data, scene_state_t *ss, exec_state_t *
 
 static void op_G_LED_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_LED_C_get  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
-static void op_G_LEDN_get   (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
-static void op_G_LEDN_C_get (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_REC_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 
 static void op_G_BTN_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
@@ -78,8 +76,6 @@ const tele_op_t op_G_GRPI    = MAKE_GET_OP(G.GRPI, op_G_GRPI_get, 1, true);
 
 const tele_op_t op_G_LED     = MAKE_GET_OP(G.LED, op_G_LED_get, 3, false);
 const tele_op_t op_G_LED_C   = MAKE_GET_OP(G.LED.C, op_G_LED_C_get, 2, false);
-const tele_op_t op_G_LEDN    = MAKE_GET_OP(G.LEDN, op_G_LEDN_get, 2, false);
-const tele_op_t op_G_LEDN_C  = MAKE_GET_OP(G.LEDN.C, op_G_LEDN_C_get, 1, false);
 const tele_op_t op_G_REC     = MAKE_GET_OP(G.REC, op_G_REC_get, 6, false);
 
 const tele_op_t op_G_BTN     = MAKE_GET_OP(G.BTN, op_G_BTN_get, 8, false);
@@ -129,9 +125,9 @@ static void op_G_RST_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     SG.latest_button = 0;
     SG.latest_fader = 0;
     
-    for (u16 i = 0; i < GRID_LED_COUNT; i++) {
-        SG.leds[i] = LED_OFF;
-    }
+    for (u8 i = 0; i < GRID_MAX_DIMENSION; i++)
+        for (u8 j = 0; j < GRID_MAX_DIMENSION; j++)
+            SG.leds[i][j] = LED_OFF;
 
     for (u8 i = 0; i < GRID_GROUP_COUNT; i++) {
         SG.group[i].enabled = true;
@@ -162,7 +158,9 @@ static void op_G_RST_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
 }
 
 static void op_G_CLR_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *NOTUSED(cs)) {
-    for (u16 i = 0; i < GRID_LED_COUNT; i++) SG.leds[i] = -2;
+    for (u8 i = 0; i < GRID_MAX_DIMENSION; i++)
+        for (u8 j = 0; j < GRID_MAX_DIMENSION; j++)
+            SG.leds[i][j] = -2;
     SG.refresh = true;
 }
 
@@ -254,10 +252,10 @@ static void op_G_LED_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     s16 y = cs_pop(cs) - 1;
     GET_LEVEL(level);
 
-    if (x < 0 || x >= monome_size_x()) return;
-    if (y < 0 || y >= monome_size_y()) return;
+    if (x < 0 || x >= GRID_MAX_DIMENSION) return;
+    if (y < 0 || y >= GRID_MAX_DIMENSION) return;
     
-    SG.leds[x + y * monome_size_x()] = level;
+    SG.leds[x][y] = level;
     SG.refresh = true;
 }
 
@@ -265,29 +263,10 @@ static void op_G_LED_C_get(const void *NOTUSED(data), scene_state_t *ss, exec_st
     s16 x = cs_pop(cs) - 1;
     s16 y = cs_pop(cs) - 1;
 
-    if (x < 0 || x >= monome_size_x()) return;
-    if (y < 0 || y >= monome_size_y()) return;
+    if (x < 0 || x >= GRID_MAX_DIMENSION) return;
+    if (y < 0 || y >= GRID_MAX_DIMENSION) return;
     
-    SG.leds[x + y * monome_size_x()] = LED_OFF;
-    SG.refresh = true;
-}
-
-static void op_G_LEDN_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    s16 i = cs_pop(cs) - 1;
-    GET_LEVEL(level);
-
-    if (i < 0 || i >= GRID_LED_COUNT) return;
-
-    SG.leds[i] = level;
-    SG.refresh = true;
-}
-
-static void op_G_LEDN_C_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    s16 i = cs_pop(cs) - 1;
-
-    if (i < 0 || i >= GRID_LED_COUNT) return;
-
-    SG.leds[i] = LED_OFF;
+    SG.leds[x][y] = LED_OFF;
     SG.refresh = true;
 }
 
@@ -299,20 +278,17 @@ static void op_G_REC_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     GET_LEVEL(fill);
     GET_LEVEL(border);
     
-    s16 size_x = monome_size_x();
-    s16 size_y = monome_size_y();
-    
-    for (s16 col = max(0, x + 1); col < min(size_x, x + w) - 1; col++)
-        for (s16 row = max(0, y + 1); row < min(size_y, y + h) - 1; row++)
-            SG.leds[col + row * size_x] = fill;
+    for (s16 col = max(0, x + 1); col < min(GRID_MAX_DIMENSION, x + w - 1); col++)
+        for (s16 row = max(0, y + 1); row < min(GRID_MAX_DIMENSION, y + h - 1); row++)
+            SG.leds[col][row] = fill;
 
-    s16 row1 = y * size_x;
-    s16 row2 = (y + h - 1) * size_x;
-    for (s16 col = max(0, x); col < min(size_x, x + w); col++)
-        SG.leds[col + row1] = SG.leds[col + row2] = border;
+    s16 row = y + h - 1;
+    for (s16 col = max(0, x); col < min(GRID_MAX_DIMENSION, x + w); col++)
+        SG.leds[col][y] = SG.leds[col][row] = border;
 
-    for (s16 row = max(0, y); row < min(size_y, y + h); row++)
-        SG.leds[x + row * size_x] = SG.leds[x + w - 1 + row * size_x] = border;
+    s16 col = x + w - 1;
+    for (s16 row = max(0, y); row < min(GRID_MAX_DIMENSION, y + h); row++)
+        SG.leds[x][row] = SG.leds[col][row] = border;
 
     SG.refresh = true;
 }

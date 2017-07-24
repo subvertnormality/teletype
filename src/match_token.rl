@@ -402,8 +402,6 @@
 
         "G.LED"            => { MATCH_OP(E_OP_G_LED); };
         "G.LED.C"          => { MATCH_OP(E_OP_G_LED_C); };
-        "G.LEDN"           => { MATCH_OP(E_OP_G_LEDN); };
-        "G.LEDN.C"         => { MATCH_OP(E_OP_G_LEDN_C); };
         "G.REC"            => { MATCH_OP(E_OP_G_REC); };
 
         "G.BTN"            => { MATCH_OP(E_OP_G_BTN); };

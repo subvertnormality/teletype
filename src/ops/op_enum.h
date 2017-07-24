@@ -343,8 +343,6 @@ typedef enum {
     E_OP_G_GRPI,
     E_OP_G_LED,
     E_OP_G_LED_C,
-    E_OP_G_LEDN,
-    E_OP_G_LEDN_C,
     E_OP_G_REC,
     E_OP_G_BTN,
     E_OP_G_GBTN,

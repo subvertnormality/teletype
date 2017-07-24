@@ -17,8 +17,6 @@ extern const tele_op_t op_G_GRPI;
 
 extern const tele_op_t op_G_LED;
 extern const tele_op_t op_G_LED_C;
-extern const tele_op_t op_G_LEDN;
-extern const tele_op_t op_G_LEDN_C;
 extern const tele_op_t op_G_REC;
 
 extern const tele_op_t op_G_BTN;
