@@ -66,9 +66,6 @@ void ss_grid_init(scene_state_t *ss) {
     ss->grid.dim = 0;
     
     ss->grid.current_group = 0;
-    ss->grid.last_defined_button = 0;
-    ss->grid.last_defined_fader = 0;
-
     ss->grid.latest_group = 0;
     ss->grid.latest_button = 0;
     ss->grid.latest_fader = 0;

@@ -27,8 +27,7 @@ static void op_G_LED_C_get  (const void *data, scene_state_t *ss, exec_state_t *
 static void op_G_REC_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 
 static void op_G_BTN_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
-static void op_G_GBTN_get   (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
-static void op_G_BTNX_get   (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
+static void op_G_BTX_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_BTN_EN_get (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_BTN_V_get  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_BTN_V_set  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
@@ -41,8 +40,7 @@ static void op_G_GBTN_V_get (const void *data, scene_state_t *ss, exec_state_t *
 static void op_G_GBTN_L_get (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 
 static void op_G_FDR_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
-static void op_G_GFDR_get   (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
-static void op_G_FDRX_get   (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
+static void op_G_FDX_get    (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_FDR_EN_get (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_FDR_V_get  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_FDR_V_set  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
@@ -79,8 +77,7 @@ const tele_op_t op_G_LED_C   = MAKE_GET_OP(G.LED.C, op_G_LED_C_get, 2, false);
 const tele_op_t op_G_REC     = MAKE_GET_OP(G.REC, op_G_REC_get, 6, false);
 
 const tele_op_t op_G_BTN     = MAKE_GET_OP(G.BTN, op_G_BTN_get, 8, false);
-const tele_op_t op_G_GBTN    = MAKE_GET_OP(G.GBTN, op_G_GBTN_get, 9, false);
-const tele_op_t op_G_BTNX    = MAKE_GET_OP(G.BTNX, op_G_BTNX_get, 5, false);
+const tele_op_t op_G_BTX     = MAKE_GET_OP(G.BTX, op_G_BTX_get, 10, false);
 const tele_op_t op_G_BTN_EN  = MAKE_GET_OP(G.BTN.EN, op_G_BTN_EN_get, 2, false);
 const tele_op_t op_G_BTN_V   = MAKE_GET_SET_OP(G.BTN.V, op_G_BTN_V_get, op_G_BTN_V_set, 1, true);
 const tele_op_t op_G_BTN_L   = MAKE_GET_OP(G.BTN.L, op_G_BTN_L_get, 2, false);
@@ -92,8 +89,7 @@ const tele_op_t op_G_GBTN_V  = MAKE_GET_OP(G.GBTN.V, op_G_GBTN_V_get, 2, false);
 const tele_op_t op_G_GBTN_L  = MAKE_GET_OP(G.GBTN.L, op_G_GBTN_L_get, 3, false);
 
 const tele_op_t op_G_FDR     = MAKE_GET_OP(G.FDR, op_G_FDR_get, 8, false);
-const tele_op_t op_G_GFDR    = MAKE_GET_OP(G.GFDR, op_G_GFDR_get, 9, false);
-const tele_op_t op_G_FDRX    = MAKE_GET_OP(G.FDRX, op_G_FDRX_get, 5, false);
+const tele_op_t op_G_FDX     = MAKE_GET_OP(G.FDX, op_G_FDX_get, 10, false);
 const tele_op_t op_G_FDR_EN  = MAKE_GET_OP(G.FDR.EN, op_G_FDR_EN_get, 2, false);
 const tele_op_t op_G_FDR_V   = MAKE_GET_SET_OP(G.FDR.V, op_G_FDR_V_get, op_G_FDR_V_set, 1, true);
 const tele_op_t op_G_FDR_N   = MAKE_GET_SET_OP(G.FDR.N, op_G_FDR_N_get, op_G_FDR_N_set, 1, true);
@@ -118,9 +114,6 @@ static void op_G_RST_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     SG.dim = 0;
     
     SG.current_group = 0;
-    SG.last_defined_button = 0;
-    SG.last_defined_fader = 0;
-
     SG.latest_group = 0;
     SG.latest_button = 0;
     SG.latest_fader = 0;
@@ -317,13 +310,11 @@ static void op_G_BTN_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     GB.latch = latch != 0;
     GB.state = 0;
     
-    SG.last_defined_button = i;
     SG.refresh = 1;
 }
 
-static void op_G_GBTN_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    s16 group = cs_pop(cs) - 1;
-    s16 i = cs_pop(cs) - 1;
+static void op_G_BTX_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
+    s16 id = cs_pop(cs) - 1;
     s16 x = cs_pop(cs) - 1;
     s16 y = cs_pop(cs) - 1;
     s16 w = cs_pop(cs);
@@ -331,57 +322,33 @@ static void op_G_GBTN_get(const void *NOTUSED(data), scene_state_t *ss, exec_sta
     s16 latch = cs_pop(cs);
     GET_LEVEL(level);
     s16 script = cs_pop(cs) - 1;
+    s16 count_x = cs_pop(cs);
+    s16 count_y = cs_pop(cs);
     
-    if (group < 0 || group > GRID_GROUP_COUNT) return;
-    if (i < 0 || i >= GRID_BUTTON_COUNT) return;
+    if (id < 0 || id >= GRID_BUTTON_COUNT) return;
     if (script < 0 || script > INIT_SCRIPT) script = -1;
+    if (count_x <= 0) return;
+    if (count_x > 16) count_x = 16;
+    if (count_y <= 0) return;
+    if (count_y > 16) count_y = 16;
     
-    GBC.enabled = true;
-    GBC.group = group;
-    GBC.x = x;
-    GBC.y = y;
-    GBC.w = w;
-    GBC.h = h;
-    GBC.background = level;
-    GBC.script = script;
-    GB.latch = latch;
-    GB.state = 0;
+    u16 i;
+    for (u16 cy = 0; cy < count_y; cy++)
+        for (u16 cx = 0; cx < count_x; cx++) {
+            i = id + cy * count_x + cx;
+            if (i >= GRID_BUTTON_COUNT) break;
+            GBC.enabled = true;
+            GBC.group = SG.current_group;
+            GBC.x = x + w * cx;
+            GBC.y = y + h * cy;
+            GBC.w = w;
+            GBC.h = h;
+            GBC.background = level;
+            GBC.script = script;
+            GB.latch = latch != 0;
+            GB.state = 0;
+        }
     
-    SG.last_defined_button = i;
-    SG.refresh = 1;
-}
-
-static void op_G_BTNX_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    s16 count = cs_pop(cs);
-    s16 x_inc = cs_pop(cs);
-    s16 y_inc = cs_pop(cs);
-    GET_LEVEL(level);
-    s16 script_inc = cs_pop(cs);
-    
-    if (count < 1) return;
-    if (count + SG.last_defined_button >= GRID_BUTTON_COUNT) count = GRID_BUTTON_COUNT - SG.last_defined_button - 1;
-    
-    u8 script;
-    u8 inc;
-    for (u16 i = SG.last_defined_button + 1; i <= SG.last_defined_button + count; i++) {
-        inc = i - SG.last_defined_button;
-        GBC.enabled = true;
-        GBC.group = SG.button[SG.last_defined_button].common.group;
-        GBC.x = SG.button[SG.last_defined_button].common.x + x_inc * inc;
-        GBC.y = SG.button[SG.last_defined_button].common.y + y_inc * inc;
-        GBC.w = SG.button[SG.last_defined_button].common.w;
-        GBC.h = SG.button[SG.last_defined_button].common.h;
-        GBC.background = (i - SG.last_defined_button) & 1 ? level : SG.button[SG.last_defined_button].common.background;
-        GB.latch = SG.button[SG.last_defined_button].latch;
-        GB.state = SG.button[SG.last_defined_button].state;
-        GBC.script = -1;
-        script = SG.button[SG.last_defined_button].common.script;
-        if (script == -1) continue;
-        if (script_inc) script += inc;
-        if (script <= INIT_SCRIPT) GBC.script = script;
-    }
-
-    SG.last_defined_button += count;
     SG.refresh = 1;
 }
 
@@ -492,13 +459,11 @@ static void op_G_FDR_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
     GF.dir = dir != 0;
     GF.value = 0;
     
-    SG.last_defined_fader = i;
     SG.refresh = 1;
 }
 
-static void op_G_GFDR_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    s16 group = cs_pop(cs) - 1;
-    s16 i = cs_pop(cs) - 1;
+static void op_G_FDX_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
+    s16 id = cs_pop(cs) - 1;
     s16 x = cs_pop(cs) - 1;
     s16 y = cs_pop(cs) - 1;
     s16 w = cs_pop(cs);
@@ -506,57 +471,33 @@ static void op_G_GFDR_get(const void *NOTUSED(data), scene_state_t *ss, exec_sta
     s16 dir = cs_pop(cs);
     GET_LEVEL(level);
     s16 script = cs_pop(cs) - 1;
+    s16 count_x = cs_pop(cs);
+    s16 count_y = cs_pop(cs);
     
-    if (i < 0 || i >= GRID_FADER_COUNT) return;
-    if (group < 0 || group > GRID_GROUP_COUNT) return;
+    if (id < 0 || id >= GRID_FADER_COUNT) return;
     if (script < 0 || script > INIT_SCRIPT) script = -1;
+    if (count_x <= 0) return;
+    if (count_x > 16) count_x = 16;
+    if (count_y <= 0) return;
+    if (count_y > 16) count_y = 16;
     
-    GFC.enabled = true;
-    GFC.group = group;
-    GFC.x = x;
-    GFC.y = y;
-    GFC.w = w;
-    GFC.h = h;
-    GFC.background = level;
-    GFC.script = script;
-    GF.dir = dir != 0;
-    GF.value = 0;
+    u16 i;
+    for (u16 cy = 0; cy < count_y; cy++)
+        for (u16 cx = 0; cx < count_x; cx++) {
+            i = id + cy * count_x + cx;
+            if (i >= GRID_FADER_COUNT) break;
+            GFC.enabled = true;
+            GFC.group = SG.current_group;
+            GFC.x = x + w * cx;
+            GFC.y = y + h * cy;
+            GFC.w = w;
+            GFC.h = h;
+            GFC.background = level;
+            GFC.script = script;
+            GF.dir = dir != 0;
+            GF.value = 0;
+        }
     
-    SG.last_defined_fader = i;
-    SG.refresh = 1;
-}
-
-static void op_G_FDRX_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *cs) {
-    s16 count = cs_pop(cs);
-    s16 x_inc = cs_pop(cs);
-    s16 y_inc = cs_pop(cs);
-    GET_LEVEL(level);
-    s16 script_inc = cs_pop(cs);
-    
-    if (count < 1) return;
-    if (count + SG.last_defined_fader >= GRID_FADER_COUNT) count = GRID_FADER_COUNT - SG.last_defined_fader - 1;
-    
-    u8 script;
-    u8 inc;
-    for (u16 i = SG.last_defined_fader + 1; i <= SG.last_defined_fader + count; i++) {
-        inc = i - SG.last_defined_fader;
-        GFC.enabled = true;
-        GFC.group = SG.fader[SG.last_defined_fader].common.group;
-        GFC.x = SG.fader[SG.last_defined_fader].common.x + x_inc * inc;
-        GFC.y = SG.fader[SG.last_defined_fader].common.y + y_inc * inc;
-        GFC.w = SG.fader[SG.last_defined_fader].common.w;
-        GFC.h = SG.fader[SG.last_defined_fader].common.h;
-        GFC.background = (i - SG.last_defined_fader) & 1 ? level : SG.fader[SG.last_defined_fader].common.background;
-        GF.dir = SG.fader[SG.last_defined_fader].dir;
-        GF.value = SG.fader[SG.last_defined_fader].value;
-        GFC.script = -1;
-        script = SG.fader[SG.last_defined_fader].common.script;
-        if (script == -1) continue;
-        if (script_inc) script += inc;
-        if (script <= INIT_SCRIPT) GFC.script = script;
-    }
-
-    SG.last_defined_fader += count;
     SG.refresh = 1;
 }
 

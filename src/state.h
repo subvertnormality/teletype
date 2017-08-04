@@ -8,7 +8,7 @@
 #include "command.h"
 #include "types.h"
 
-#define STACK_SIZE 8
+#define STACK_SIZE 10
 #define CV_COUNT 4
 #define Q_LENGTH 16
 #define TR_COUNT 4
@@ -143,9 +143,6 @@ typedef struct {
     u8 dim;
 
     u8 current_group;
-    u8 last_defined_button;
-    u8 last_defined_fader;
-
     u8 latest_group;
     u8 latest_button;
     u8 latest_fader;

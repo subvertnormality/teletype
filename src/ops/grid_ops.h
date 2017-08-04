@@ -20,8 +20,7 @@ extern const tele_op_t op_G_LED_C;
 extern const tele_op_t op_G_REC;
 
 extern const tele_op_t op_G_BTN;
-extern const tele_op_t op_G_GBTN;
-extern const tele_op_t op_G_BTNX;
+extern const tele_op_t op_G_BTX;
 extern const tele_op_t op_G_BTN_EN;
 extern const tele_op_t op_G_BTN_V;
 extern const tele_op_t op_G_BTN_L;
@@ -33,8 +32,7 @@ extern const tele_op_t op_G_GBTN_V;
 extern const tele_op_t op_G_GBTN_L;
 
 extern const tele_op_t op_G_FDR;
-extern const tele_op_t op_G_GFDR;
-extern const tele_op_t op_G_FDRX;
+extern const tele_op_t op_G_FDX;
 extern const tele_op_t op_G_FDR_EN;
 extern const tele_op_t op_G_FDR_V;
 extern const tele_op_t op_G_FDR_N;

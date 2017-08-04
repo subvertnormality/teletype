@@ -405,8 +405,7 @@
         "G.REC"            => { MATCH_OP(E_OP_G_REC); };
 
         "G.BTN"            => { MATCH_OP(E_OP_G_BTN); };
-        "G.GBTN"           => { MATCH_OP(E_OP_G_GBTN); };
-        "G.BTNX"           => { MATCH_OP(E_OP_G_BTNX); };
+        "G.BTX"            => { MATCH_OP(E_OP_G_BTX); };
         "G.BTN.EN"         => { MATCH_OP(E_OP_G_BTN_EN); };
         "G.BTN.V"          => { MATCH_OP(E_OP_G_BTN_V); };
         "G.BTN.L"          => { MATCH_OP(E_OP_G_BTN_L); };
@@ -418,8 +417,7 @@
         "G.GBTN.L"         => { MATCH_OP(E_OP_G_GBTN_L); };
 
         "G.FDR"            => { MATCH_OP(E_OP_G_FDR); };
-        "G.GFDR"           => { MATCH_OP(E_OP_G_GFDR); };
-        "G.FDRX"           => { MATCH_OP(E_OP_G_FDRX); };
+        "G.FDX"            => { MATCH_OP(E_OP_G_FDX); };
         "G.FDR.EN"         => { MATCH_OP(E_OP_G_FDR_EN); };
         "G.FDR.V"          => { MATCH_OP(E_OP_G_FDR_V); };
         "G.FDR.N"          => { MATCH_OP(E_OP_G_FDR_N); };
