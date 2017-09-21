@@ -153,7 +153,7 @@ static void op_G_RST_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
 static void op_G_CLR_get(const void *NOTUSED(data), scene_state_t *ss, exec_state_t *NOTUSED(es), command_state_t *NOTUSED(cs)) {
     for (u8 i = 0; i < GRID_MAX_DIMENSION; i++)
         for (u8 j = 0; j < GRID_MAX_DIMENSION; j++)
-            SG.leds[i][j] = -2;
+            SG.leds[i][j] = LED_OFF;
     SG.refresh = true;
 }
 
