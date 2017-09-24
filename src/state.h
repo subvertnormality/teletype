@@ -123,6 +123,7 @@ typedef struct {
     grid_common_t common;
     u8 latch;
     u8 state;
+    u8 press_count;
 } grid_button_t;
 
 typedef struct {

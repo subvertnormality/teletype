@@ -106,8 +106,12 @@ void grid_process_key(scene_state_t *ss, u8 _x, u8 _y, u8 z) {
         if (GBC.enabled && SG.group[GBC.group].enabled && grid_within_area(x, y, &GBC)) {
             if (GB.latch) {
                 if (z) {
-                    GB.state = !GB.state;
-                    if (GBC.script != -1) scripts[GBC.script] = 1;
+                    if (++GB.press_count == 1) {
+                        GB.state = !GB.state;
+                        if (GBC.script != -1) scripts[GBC.script] = 1;
+                    }
+                } else {
+                    GB.press_count--;
                 }
             } else {
                 GB.state = z;

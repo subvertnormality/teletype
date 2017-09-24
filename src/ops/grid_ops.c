@@ -60,7 +60,7 @@ static void op_G_XYP_get    (const void *data, scene_state_t *ss, exec_state_t *
 static void op_G_XYP_X_get  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 static void op_G_XYP_Y_get  (const void *data, scene_state_t *ss, exec_state_t *es,  command_state_t *cs);
 
-const tele_op_t op_G_RST     = MAKE_GET_OP(G.DIM, op_G_RST_get, 0, false);
+const tele_op_t op_G_RST     = MAKE_GET_OP(G.RST, op_G_RST_get, 0, false);
 const tele_op_t op_G_ROTATE  = MAKE_GET_OP(G.ROTATE, op_G_ROTATE_get, 1, false);
 const tele_op_t op_G_DIM     = MAKE_GET_OP(G.DIM, op_G_DIM_get, 1, false);
 const tele_op_t op_G_CLR     = MAKE_GET_OP(G.CLR, op_G_CLR_get, 0, false);
