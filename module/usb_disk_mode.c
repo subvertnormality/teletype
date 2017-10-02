@@ -25,6 +25,12 @@
 #include "uhi_msc_mem.h"
 #include "usb_protocol_msc.h"
 
+static uint8_t grid_state = 0;
+static uint16_t grid_count = 0;
+static uint8_t grid_num = 0;
+
+static void grid_usb_write(scene_state_t *scene);
+static void grid_usb_read(scene_state_t *scene, char c);
 
 void tele_usb_disk() {
     char input_buffer[32];
@@ -186,6 +192,8 @@ void tele_usb_disk() {
                 }
             }
 
+            grid_usb_write(&scene);
+            
             file_close();
             lun_state |= (1 << lun);  // LUN test is done.
 
@@ -253,7 +261,10 @@ void tele_usb_disk() {
                                     s = 9;
                                 else if (c == 'P')
                                     s = 10;
-                                else {
+                                else if (c == 'G') {
+                                    grid_state = grid_num = grid_count = 0;
+                                    s = 11;
+                                } else {
                                     s = c - 49;
                                     if (s < 0 || s > 7) s = -1;
                                 }
@@ -376,6 +387,10 @@ void tele_usb_disk() {
                                 p++;
                             }
                         }
+                        // GRID
+                        else if (s == 11) {
+                            grid_usb_read(&scene, c);
+                        }
                     }
 
 
@@ -397,4 +412,43 @@ void tele_usb_disk() {
     }
 
     nav_exit();
+}
+
+static void grid_usb_write(scene_state_t *scene) {
+    file_putc('#');
+    file_putc('G');
+    file_putc('\n');
+    for (uint16_t i = 0; i < GRID_BUTTON_COUNT; i++) {
+        file_putc('0' + scene->grid.button[i].state);
+        if ((i & 15) == 15) file_putc('\n');
+    }
+    char input[36];
+    for (uint16_t i = 0; i < GRID_FADER_COUNT; i++) {
+        itoa(scene->grid.fader[i].value, input, 10);
+        file_write_buf((uint8_t*)input, strlen(input));
+        file_putc((i & 15) == 15 ? '\n' : '\t');
+    }
+}
+
+static void grid_usb_read(scene_state_t *scene, char c) {
+    if (grid_state == 0) {
+        if (c >= '0' && c <= '9') {
+            scene->grid.button[grid_count].state = c != '0';
+            if (++grid_count >= GRID_BUTTON_COUNT) {
+                grid_count = 0;
+                grid_state = 1;
+                if (!file_eof()) file_getc(); // eat \n
+            }
+        }
+    } else if (grid_state == 1) {
+        if (c >= '0' && c <= '9') {
+            grid_num = grid_num * 10 + c - '0';
+        } else if (c == '\t' || c == '\n') {
+            if (grid_count < GRID_FADER_COUNT) {
+                scene->grid.fader[grid_count].value = grid_num;
+                grid_num = 0;
+                grid_count++;
+            }
+        }
+    }
 }

@@ -36,7 +36,7 @@ void grid_refresh(scene_state_t *ss) {
         }
     }
 
-    for (u8 i = 0; i < GRID_BUTTON_COUNT; i++)
+    for (u16 i = 0; i < GRID_BUTTON_COUNT; i++)
         if (GBC.enabled && SG.group[GBC.group].enabled) grid_fill_area(GBC.x, GBC.y, GBC.w, GBC.h, GB.state ? 15 : GBC.background);
     
     u16 led;
@@ -102,7 +102,7 @@ void grid_process_key(scene_state_t *ss, u8 _x, u8 _y, u8 z) {
         }
     }
 
-    for (u8 i = 0; i < GRID_BUTTON_COUNT; i++) {
+    for (u16 i = 0; i < GRID_BUTTON_COUNT; i++) {
         if (GBC.enabled && SG.group[GBC.group].enabled && grid_within_area(x, y, &GBC)) {
             if (GB.latch) {
                 if (z) {
