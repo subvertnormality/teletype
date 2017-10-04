@@ -415,6 +415,7 @@ void tele_usb_disk() {
 }
 
 static void grid_usb_write(scene_state_t *scene) {
+    file_putc('\n');
     file_putc('#');
     file_putc('G');
     file_putc('\n');
@@ -422,10 +423,10 @@ static void grid_usb_write(scene_state_t *scene) {
         file_putc('0' + scene->grid.button[i].state);
         if ((i & 15) == 15) file_putc('\n');
     }
-    char input[36];
+    file_putc('\n');
     for (uint16_t i = 0; i < GRID_FADER_COUNT; i++) {
-        itoa(scene->grid.fader[i].value, input, 10);
-        file_write_buf((uint8_t*)input, strlen(input));
+        if (scene->grid.fader[i].value >= 10) file_putc('1');
+        file_putc('0' + (scene->grid.fader[i].value % 10));
         file_putc((i & 15) == 15 ? '\n' : '\t');
     }
 }
@@ -437,7 +438,8 @@ static void grid_usb_read(scene_state_t *scene, char c) {
             if (++grid_count >= GRID_BUTTON_COUNT) {
                 grid_count = 0;
                 grid_state = 1;
-                if (!file_eof()) file_getc(); // eat \n
+                if (!file_eof()) file_getc();
+                if (!file_eof()) file_getc(); // eat \n\n
             }
         }
     } else if (grid_state == 1) {

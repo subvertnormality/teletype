@@ -104,7 +104,7 @@ static void pack_grid(scene_state_t *scene) {
         }
     }
     for (uint16_t i = 0; i < GRID_FADER_COUNT; i += 2) {
-        grid_data.fader_states[i] = (scene->grid.fader[i].value << 4) + 
+        grid_data.fader_states[i >> 1] = (scene->grid.fader[i].value << 4) + 
             scene->grid.fader[i+1].value;
     }
 }
@@ -114,7 +114,7 @@ static void unpack_grid(scene_state_t *scene) {
         scene->grid.button[i].state = 0 != (grid_data.button_states[i >> 3] & (1 << (i & 7)));
     }
     for (uint16_t i = 0; i < GRID_FADER_COUNT; i += 2) {
-        scene->grid.fader[i].value = grid_data.fader_states[i] >> 4;
-        scene->grid.fader[i+1].value = grid_data.fader_states[i] & 3;
+        scene->grid.fader[i].value = grid_data.fader_states[i >> 1] >> 4;
+        scene->grid.fader[i+1].value = grid_data.fader_states[i >> 1] & 0b1111;
     }
 }
