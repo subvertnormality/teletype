@@ -15,8 +15,8 @@ void grid_refresh(scene_state_t *ss) {
     for (u8 i = 0; i < GRID_XYPAD_COUNT; i++) {
         if (GXYC.enabled && SG.group[GXYC.group].enabled) {
             if (GXY.value_x || GXY.value_y) {
-                x = GXYC.x + GXY.value_x - 1;
-                y = GXYC.y + GXY.value_y - 1;
+                x = GXYC.x + GXY.value_x;
+                y = GXYC.y + GXY.value_y;
                 grid_fill_area(GXYC.x, y, GXYC.w, 1, GXYC.background);
                 grid_fill_area(x, GXYC.y, 1, GXYC.h, GXYC.background);
                 grid_fill_area(x, y, 1, 1, 15);
@@ -81,9 +81,9 @@ void grid_process_key(scene_state_t *ss, u8 _x, u8 _y, u8 z) {
     for (u8 i = 0; i < SCRIPT_COUNT; i++) scripts[i] = 0;
     
     for (u8 i = 0; i < GRID_XYPAD_COUNT; i++) {
-        if (GXYC.enabled && SG.group[GXYC.group].enabled && grid_within_area(x, y, &GXYC)) {
-            GXY.value_x = x - GXYC.x + 1;
-            GXY.value_y = y - GXYC.y + 1;
+        if (z && GXYC.enabled && SG.group[GXYC.group].enabled && grid_within_area(x, y, &GXYC)) {
+            GXY.value_x = x - GXYC.x;
+            GXY.value_y = y - GXYC.y;
             if (GXYC.script != -1) scripts[GXYC.script] = 1;
             SG.latest_group = GXYC.group;
             if (SG.group[GXYC.group].script != -1) scripts[SG.group[GXYC.group].script] = 1;

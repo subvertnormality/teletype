@@ -297,12 +297,16 @@ static void op_G_REC_get(const void *NOTUSED(data), scene_state_t *ss, exec_stat
             SG.leds[col][row] = fill;
 
     s16 row = y + h - 1;
-    for (s16 col = max(0, x); col < min(GRID_MAX_DIMENSION, x + w); col++)
-        SG.leds[col][y] = SG.leds[col][row] = border;
+    for (s16 col = max(0, x); col < min(GRID_MAX_DIMENSION, x + w); col++) {
+        if (y >= 0 && y < GRID_MAX_DIMENSION) SG.leds[col][y] = border; 
+        if (row >= 0 && row < GRID_MAX_DIMENSION) SG.leds[col][row] = border;
+    }
 
     s16 col = x + w - 1;
-    for (s16 row = max(0, y); row < min(GRID_MAX_DIMENSION, y + h); row++)
-        SG.leds[x][row] = SG.leds[col][row] = border;
+    for (s16 row = max(0, y); row < min(GRID_MAX_DIMENSION, y + h); row++) {
+        if (x >= 0 && x < GRID_MAX_DIMENSION) SG.leds[x][row] = border;
+        if (col >= 0 && col < GRID_MAX_DIMENSION) SG.leds[col][row] = border;
+    }
 
     SG.refresh = true;
 }
