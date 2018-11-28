@@ -611,6 +611,14 @@
 
         # stack
         "S"           => { MATCH_MOD(E_MOD_S); };
+        
+        # MIDIBUS
+        "MIDI.PRG"    => { MATCH_OP(E_OP_MIDI_PRG); };
+        "MIDI.CC"     => { MATCH_OP(E_OP_MIDI_CC); };
+        "MIDI.ON"     => { MATCH_OP(E_OP_MIDI_ON); };
+        "MIDI.OFF"    => { MATCH_OP(E_OP_MIDI_OFF); };
+        "BUS.SAVE"    => { MATCH_OP(E_OP_BUS_SAVE); };
+        "BUS.LOAD"    => { MATCH_OP(E_OP_BUS_LOAD); };
     *|;
 
     write data;          # write any ragel data here

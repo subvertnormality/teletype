@@ -19,6 +19,7 @@
 #include "ops/matrixarchate.h"
 #include "ops/meadowphysics.h"
 #include "ops/metronome.h"
+#include "ops/midibus.h"
 #include "ops/orca.h"
 #include "ops/patterns.h"
 #include "ops/queue.h"
@@ -201,7 +202,10 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     // matrixarchate
     &op_MA_SELECT, &op_MA_STEP, &op_MA_RESET, &op_MA_PGM, &op_MA_ON, &op_MA_PON,
     &op_MA_OFF, &op_MA_POFF, &op_MA_SET, &op_MA_PSET, &op_MA_COL, &op_MA_PCOL,
-    &op_MA_ROW, &op_MA_PROW, &op_MA_CLR, &op_MA_PCLR
+    &op_MA_ROW, &op_MA_PROW, &op_MA_CLR, &op_MA_PCLR,
+    
+    // MIDIBUS
+    &op_MIDI_PRG, &op_MIDI_CC, &op_MIDI_ON, &op_MIDI_OFF, &op_BUS_SAVE, &op_BUS_LOAD
 };
 
 /////////////////////////////////////////////////////////////////

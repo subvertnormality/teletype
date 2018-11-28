@@ -514,6 +514,12 @@ typedef enum {
     E_OP_MA_PROW,
     E_OP_MA_CLR,
     E_OP_MA_PCLR,
+    E_OP_MIDI_PRG,
+    E_OP_MIDI_CC,
+    E_OP_MIDI_ON,
+    E_OP_MIDI_OFF,
+    E_OP_BUS_SAVE,
+    E_OP_BUS_LOAD,
     E_OP__LENGTH,
 } tele_op_idx_t;
 

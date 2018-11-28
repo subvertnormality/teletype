@@ -98,6 +98,7 @@ CSRCS = \
 	../src/ops/matrixarchate.c				\
 	../src/ops/meadowphysics.c				\
 	../src/ops/metronome.c					\
+	../src/ops/midibus.c					\
 	../src/ops/orca.c      					\
 	../src/ops/patterns.c					\
 	../src/ops/queue.c					\
