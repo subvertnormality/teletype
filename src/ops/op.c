@@ -179,7 +179,7 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_TI_PRM_INIT,
 
     // fader
-    &op_FADER, &op_FB,
+    &op_FADER, &op_FB, &op_FB_CC, &op_FB_ON, &op_FB_OFF,
 
     // ER301
     &op_SC_TR, &op_SC_TR_TOG, &op_SC_TR_PULSE, &op_SC_TR_TIME, &op_SC_TR_POL,

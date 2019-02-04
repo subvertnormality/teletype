@@ -481,6 +481,9 @@
         # fader
         "FADER"            => { MATCH_OP(E_OP_FADER); };
         "FB"               => { MATCH_OP(E_OP_FB); };
+        "FB.CC"            => { MATCH_OP(E_OP_FB_CC); };
+        "FB.ON"            => { MATCH_OP(E_OP_FB_ON); };
+        "FB.OFF"           => { MATCH_OP(E_OP_FB_OFF); };
 
         # ER301
         "SC.TR"            => { MATCH_OP(E_OP_SC_TR); };
