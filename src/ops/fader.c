@@ -25,9 +25,9 @@ const tele_op_t op_FADER = MAKE_GET_OP(FADER, op_FADER_get, 1, true);
 
 const tele_op_t op_FB = MAKE_ALIAS_OP(FB, op_FADER_get, NULL, 1, true);
 
-const tele_op_t op_FB_CC = MAKE_GET_OP(FADER, op_FB_CC_get, 2, true);
-const tele_op_t op_FB_ON = MAKE_GET_OP(FADER, op_FB_ON_get, 3, false);
-const tele_op_t op_FB_OFF = MAKE_GET_OP(FADER, op_FB_OFF_get, 2, false);
+const tele_op_t op_FB_CC = MAKE_GET_OP(FB.CC, op_FB_CC_get, 2, true);
+const tele_op_t op_FB_ON = MAKE_GET_OP(FB.ON, op_FB_ON_get, 3, false);
+const tele_op_t op_FB_OFF = MAKE_GET_OP(FB.OFF, op_FB_OFF_get, 2, false);
 
 
 static void op_FADER_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -66,7 +66,7 @@ static void op_FB_CC_get(const void *NOTUSED(data), scene_state_t *ss,
     // now read the value
     buffer[0] = 0;
     buffer[1] = 0;
-    tele_ii_rx(address, buffer, 2);
+    tele_ii_rx(FADER, buffer, 2);
     int16_t value = (buffer[0] << 8) + buffer[1];
     cs_push(cs, value);
 }
@@ -91,7 +91,6 @@ static void op_FB_OFF_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     uint16_t channel = cs_pop(cs);
     uint16_t note = cs_pop(cs);
-    uint16_t velocity = cs_pop(cs);
     // return if out of range
     if (channel < 1 || channel > 15) return;
 
