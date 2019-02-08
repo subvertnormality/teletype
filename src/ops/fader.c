@@ -77,7 +77,7 @@ static void op_FB_ON_get(const void *NOTUSED(data), scene_state_t *ss,
     uint16_t note = cs_pop(cs);
     uint16_t velocity = cs_pop(cs);
     // return if out of range
-    if (channel < 1 || channel > 15) return;
+    if (channel < 1 || channel > 32) return;
 
     uint8_t buffer[4];
     buffer[0] = FADER_NOTE_ON;
@@ -92,7 +92,7 @@ static void op_FB_OFF_get(const void *NOTUSED(data), scene_state_t *ss,
     uint16_t channel = cs_pop(cs);
     uint16_t note = cs_pop(cs);
     // return if out of range
-    if (channel < 1 || channel > 15) return;
+    if (channel < 1 || channel > 32) return;
 
     uint8_t buffer[3];
     buffer[0] = FADER_NOTE_OFF;
