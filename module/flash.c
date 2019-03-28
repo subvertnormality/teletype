@@ -106,14 +106,16 @@ void flash_write(uint8_t preset_no, scene_state_t *scene,
 }
 
 void flash_read(uint8_t preset_no, scene_state_t *scene,
-                char (*text)[SCENE_TEXT_LINES][SCENE_TEXT_CHARS]) {
+                char (*text)[SCENE_TEXT_LINES][SCENE_TEXT_CHARS], uint8_t init_grid) {
     memcpy(ss_scripts_ptr(scene), &f.scenes[preset_no].scripts,
            // Exclude size of TEMP script as above
            ss_scripts_size() - sizeof(scene_script_t));
     memcpy(ss_patterns_ptr(scene), &f.scenes[preset_no].patterns,
            ss_patterns_size());
-    memcpy(&grid_data, &f.scenes[preset_no].grid_data, sizeof(grid_data_t));
-    unpack_grid(scene);
+    if (init_grid) {
+        memcpy(&grid_data, &f.scenes[preset_no].grid_data, sizeof(grid_data_t));
+        unpack_grid(scene);
+    }
     memcpy(text, &f.scenes[preset_no].text,
            SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
     // need to reset timestamps
