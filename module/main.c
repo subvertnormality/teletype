@@ -324,7 +324,7 @@ void handler_Front(int32_t data) {
             ignore_front_press = 0;
             return;
         }
-        
+
         if (grid_connected) {
             grid_control_mode = !grid_control_mode;
             if (grid_control_mode && mode == M_HELP) set_mode(M_LIVE);
@@ -983,19 +983,19 @@ int main(void) {
         region_fill(&line[5], 0);
         font_string_region_clip(&line[5], s, 0, 0, 0x4, 0);
         region_draw(&line[5]);
-        
+
         strcpy(s, "PRESS TO CONFIRM");
         region_fill(&line[6], 0);
         font_string_region_clip(&line[6], s, 0, 0, 0x4, 0);
         region_draw(&line[6]);
-        
+
         strcpy(s, "DO NOT PRESS OTHERWISE!");
         region_fill(&line[7], 0);
         font_string_region_clip(&line[7], s, 0, 0, 0x4, 0);
         region_draw(&line[7]);
         ignore_front_press = 1;
     }
-    
+
     // prepare flash (if needed)
     flash_prepare();
 
