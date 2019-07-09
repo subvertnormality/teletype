@@ -292,8 +292,8 @@ static void op_G_KEY_get(const void *data, scene_state_t *ss, exec_state_t *es,
     s16 x = cs_pop(cs);
     s16 y = cs_pop(cs);
     s16 action = cs_pop(cs);
-    if (x < 0 || y < 0 || x >= GRID_MAX_DIMENSION || y >= GRID_MAX_DIMENSION)
-        return;
+    //if (x < 0 || y < 0 || x >= GRID_MAX_DIMENSION || y >= GRID_MAX_DIMENSION)
+    //    return;
     grid_key_press(x, y, action != 0);
 }
 

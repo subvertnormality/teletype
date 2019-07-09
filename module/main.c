@@ -24,6 +24,8 @@
 #include "init_teletype.h"
 #include "interrupts.h"
 #include "kbd.h"
+#include "midi.h"
+#include "midi_common.h"
 #include "monome.h"
 #include "region.h"
 #include "screen.h"
@@ -115,6 +117,7 @@ static bool metro_timer_enabled;
 static uint8_t front_timer;
 static uint8_t mod_key = 0, hold_key, hold_key_count = 0;
 static uint64_t last_adc_tick = 0;
+static midi_behavior_t midi_behavior;
 
 // timers
 static softTimer_t clockTimer = {.next = NULL, .prev = NULL };
@@ -127,6 +130,7 @@ static softTimer_t metroTimer = {.next = NULL, .prev = NULL };
 static softTimer_t monomePollTimer = {.next = NULL, .prev = NULL };
 static softTimer_t monomeRefreshTimer = {.next = NULL, .prev = NULL };
 static softTimer_t gridFaderTimer = {.next = NULL, .prev = NULL };
+static softTimer_t midiTimer = {.next = NULL, .prev = NULL };
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +147,7 @@ static void metroTimer_callback(void* o);
 static void monome_poll_timer_callback(void* obj);
 static void monome_refresh_timer_callback(void* obj);
 static void grid_fader_timer_callback(void* obj);
+static void midiTimer_callback(void* obj);
 
 // event handler prototypes
 static void handler_None(int32_t data);
@@ -305,6 +310,10 @@ void timers_unset_monome(void) {
 
 void grid_fader_timer_callback(void* o) {
     grid_process_fader_slew(&scene_state);
+}
+
+void midiTimer_callback(void* obj) {
+    midi_poll();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -558,6 +567,39 @@ static void handler_MonomeGridKey(s32 data) {
     grid_process_key(&scene_state, x, y, z, 0);
 }
 
+static void handler_midi_connect(s32 data) {
+}
+
+static void handler_midi_disconnect(s32 data) {
+}
+
+static void handler_standard_midi_packet(s32 data) {
+	midi_packet_parse(&midi_behavior, (u32)data);
+}
+
+static void midi_note_on(u8 ch, u8 num, u8 vel) {
+    scene_state.variables.a = ch;
+    scene_state.variables.b = num;
+    set_vars_updated();
+    run_script(&scene_state, 7);
+}
+
+static void midi_note_off(u8 ch, u8 num, u8 vel) {
+}
+
+static void midi_control_change(u8 ch, u8 num, u8 val) {
+    scene_state.variables.x = ch;
+    scene_state.variables.y = num;
+    scene_state.variables.z = val;
+    set_vars_updated();
+    run_script(&scene_state, 6);
+}
+
+u8 midiClockDiv = 0;
+static void midi_clock_tick(void) {
+    // if (midiClockDiv == 0) run_script(&scene_state, 7);
+    // midiClockDiv = (midiClockDiv + 1) % 24;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // event queue
@@ -589,6 +631,9 @@ void assign_main_event_handlers() {
     app_event_handlers[kEventMonomePoll] = &handler_MonomePoll;
     app_event_handlers[kEventMonomeRefresh] = &handler_MonomeRefresh;
     app_event_handlers[kEventMonomeGridKey] = &handler_MonomeGridKey;
+    app_event_handlers[kEventMidiConnect] = &handler_midi_connect;
+    app_event_handlers[kEventMidiDisconnect] = &handler_midi_disconnect;
+    app_event_handlers[kEventMidiPacket] = &handler_standard_midi_packet;
 }
 
 static void assign_msc_event_handlers(void) {
@@ -813,6 +858,19 @@ void update_device_config(u8 refresh) {
     flash_update_device_config(&device_config);
 }
 
+static void setup_midi(void) {
+    midi_behavior.note_on = &midi_note_on;
+    midi_behavior.note_off = &midi_note_off;
+    midi_behavior.channel_pressure = NULL;
+    midi_behavior.pitch_bend = NULL;
+    midi_behavior.control_change = &midi_control_change;
+    midi_behavior.clock_tick = &midi_clock_tick;
+    midi_behavior.seq_start = NULL;
+    midi_behavior.seq_stop = NULL;
+    midi_behavior.seq_continue = NULL;
+    midi_behavior.panic = NULL;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // teletype_io.h
@@ -935,6 +993,8 @@ void tele_save_calibration() {
 
 void grid_key_press(uint8_t x, uint8_t y, uint8_t z) {
     grid_process_key(&scene_state, x, y, z, 1);
+    u8 midi[] = { 0x90 + x, y, 127 };
+    midi_send(midi, 3);
 }
 
 void device_flip() {
@@ -964,6 +1024,7 @@ int main(void) {
     init_usb_host();
     init_monome();
     init_oled();
+    setup_midi();
 
     // wait to allow for any i2c devices to fully initalise
     delay_ms(1500);
@@ -1026,6 +1087,7 @@ int main(void) {
     timer_add(&adcTimer, 61, &adcTimer_callback, NULL);
     timer_add(&refreshTimer, 63, &refreshTimer_callback, NULL);
     timer_add(&gridFaderTimer, 25, &grid_fader_timer_callback, NULL);
+    timer_add(&midiTimer, 50, &midiTimer_callback, NULL);
 
     // update IN and PARAM in case Init uses them
     tele_update_adc(1);
