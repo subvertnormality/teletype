@@ -702,6 +702,18 @@
         "P.SEED"      => { MATCH_OP(E_OP_P_SEED); };
         "P.SD"          => { MATCH_OP(E_OP_SYM_P_SD); };
 
+        # MIDI
+        "MID.$"       => { MATCH_OP(E_OP_MID_SYM_DOLLAR); };
+        "MID.E"       => { MATCH_OP(E_OP_MID_E); };
+        "MID.CH"      => { MATCH_OP(E_OP_MID_CH); };
+        "MID.N"       => { MATCH_OP(E_OP_MID_N); };
+        "MID.NV"      => { MATCH_OP(E_OP_MID_NV); };
+        "MID.V"       => { MATCH_OP(E_OP_MID_V); };
+        "MID.VV"      => { MATCH_OP(E_OP_MID_VV); };
+        "MID.CN"      => { MATCH_OP(E_OP_MID_CN); };
+        "MID.CV"      => { MATCH_OP(E_OP_MID_CV); };
+        "MID.CVV"     => { MATCH_OP(E_OP_MID_CVV); };
+
         # MODS
         # controlflow
         "IF"          => { MATCH_MOD(E_MOD_IF); };

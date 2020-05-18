@@ -636,6 +636,16 @@ typedef enum {
     E_OP_SYM_DRUNK_SD,
     E_OP_P_SEED,
     E_OP_SYM_P_SD,
+    E_OP_MID_SYM_DOLLAR,
+    E_OP_MID_E,
+    E_OP_MID_CH,
+    E_OP_MID_N,
+    E_OP_MID_NV,
+    E_OP_MID_V,
+    E_OP_MID_VV,
+    E_OP_MID_CN,
+    E_OP_MID_CV,
+    E_OP_MID_CVV,
     E_OP__LENGTH,
 } tele_op_idx_t;
 

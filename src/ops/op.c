@@ -21,6 +21,7 @@
 #include "ops/matrixarchate.h"
 #include "ops/meadowphysics.h"
 #include "ops/metronome.h"
+#include "ops/midi.h"
 #include "ops/orca.h"
 #include "ops/patterns.h"
 #include "ops/queue.h"
@@ -235,7 +236,10 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     // seed
     &op_SEED, &op_RAND_SEED, &op_SYM_RAND_SD, &op_SYM_R_SD, &op_TOSS_SEED,
     &op_SYM_TOSS_SD, &op_PROB_SEED, &op_SYM_PROB_SD, &op_DRUNK_SEED,
-    &op_SYM_DRUNK_SD, &op_P_SEED, &op_SYM_P_SD
+    &op_SYM_DRUNK_SD, &op_P_SEED, &op_SYM_P_SD,
+
+    &op_MID_SYM_DOLLAR, &op_MID_E, &op_MID_CH, &op_MID_N, &op_MID_NV, &op_MID_V,
+    &op_MID_VV, &op_MID_CN, &op_MID_CV, &op_MID_CVV
 };
 
 /////////////////////////////////////////////////////////////////
