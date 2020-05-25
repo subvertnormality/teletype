@@ -168,12 +168,24 @@ void ss_midi_init(scene_state_t *ss) {
     ss->midi.start_script = -1;
     ss->midi.stop_script = -1;
     ss->midi.continue_script = -1;
+
     ss->midi.last_event_type = 0;
     ss->midi.last_channel = 0;
     ss->midi.last_note = 0;
     ss->midi.last_velocity = 0;
     ss->midi.last_controller = 0;
     ss->midi.last_cc = 0;
+
+    ss->midi.on_count = 0;
+    ss->midi.off_count = 0;
+    ss->midi.cc_count = 0;
+    for (u8 i = 0; i < MAX_MIDI_EVENTS; i++) {
+        ss->midi.note_on[i] = 0;
+        ss->midi.note_vel[i] = 0;
+        ss->midi.note_off[i] = 0;
+        ss->midi.cn[i] = 0;
+        ss->midi.cc[i] = 0;
+    }
 }
 
 // Hardware

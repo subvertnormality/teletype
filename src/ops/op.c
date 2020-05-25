@@ -238,8 +238,10 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_SYM_TOSS_SD, &op_PROB_SEED, &op_SYM_PROB_SD, &op_DRUNK_SEED,
     &op_SYM_DRUNK_SD, &op_P_SEED, &op_SYM_P_SD,
 
-    &op_MID_SYM_DOLLAR, &op_MID_E, &op_MID_CH, &op_MID_N, &op_MID_NV, &op_MID_V,
-    &op_MID_VV, &op_MID_CN, &op_MID_CV, &op_MID_CVV
+    &op_MI_SYM_DOLLAR, &op_MI_LN, &op_MI_LNV, &op_MI_LV, &op_MI_LVV, &op_MI_LO,
+    &op_MI_LC, &op_MI_LCC, &op_MI_LCCV, &op_MI_NL, &op_MI_N, &op_MI_NV,
+    &op_MI_V, &op_MI_VV, &op_MI_OL, &op_MI_O, &op_MI_CL, &op_MI_C, &op_MI_CC,
+    &op_MI_CCV
 };
 
 /////////////////////////////////////////////////////////////////

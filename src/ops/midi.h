@@ -3,15 +3,25 @@
 
 #include "ops/op.h"
 
-extern const tele_op_t op_MID_SYM_DOLLAR;
-extern const tele_op_t op_MID_E;
-extern const tele_op_t op_MID_CH;
-extern const tele_op_t op_MID_N;
-extern const tele_op_t op_MID_NV;
-extern const tele_op_t op_MID_V;
-extern const tele_op_t op_MID_VV;
-extern const tele_op_t op_MID_CN;
-extern const tele_op_t op_MID_CV;
-extern const tele_op_t op_MID_CVV;
+extern const tele_op_t op_MI_SYM_DOLLAR;
+extern const tele_op_t op_MI_LN;
+extern const tele_op_t op_MI_LNV;
+extern const tele_op_t op_MI_LV;
+extern const tele_op_t op_MI_LVV;
+extern const tele_op_t op_MI_LO;
+extern const tele_op_t op_MI_LC;
+extern const tele_op_t op_MI_LCC;
+extern const tele_op_t op_MI_LCCV;
+extern const tele_op_t op_MI_NL;
+extern const tele_op_t op_MI_N;
+extern const tele_op_t op_MI_NV;
+extern const tele_op_t op_MI_V;
+extern const tele_op_t op_MI_VV;
+extern const tele_op_t op_MI_OL;
+extern const tele_op_t op_MI_O;
+extern const tele_op_t op_MI_CL;
+extern const tele_op_t op_MI_C;
+extern const tele_op_t op_MI_CC;
+extern const tele_op_t op_MI_CCV;
 
 #endif

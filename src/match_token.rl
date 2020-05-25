@@ -703,16 +703,26 @@
         "P.SD"          => { MATCH_OP(E_OP_SYM_P_SD); };
 
         # MIDI
-        "MID.$"       => { MATCH_OP(E_OP_MID_SYM_DOLLAR); };
-        "MID.E"       => { MATCH_OP(E_OP_MID_E); };
-        "MID.CH"      => { MATCH_OP(E_OP_MID_CH); };
-        "MID.N"       => { MATCH_OP(E_OP_MID_N); };
-        "MID.NV"      => { MATCH_OP(E_OP_MID_NV); };
-        "MID.V"       => { MATCH_OP(E_OP_MID_V); };
-        "MID.VV"      => { MATCH_OP(E_OP_MID_VV); };
-        "MID.CN"      => { MATCH_OP(E_OP_MID_CN); };
-        "MID.CV"      => { MATCH_OP(E_OP_MID_CV); };
-        "MID.CVV"     => { MATCH_OP(E_OP_MID_CVV); };
+        "MI.$"        => { MATCH_OP(E_OP_MI_SYM_DOLLAR); };
+        "MI.LN"       => { MATCH_OP(E_OP_MI_LN); };
+        "MI.LNV"      => { MATCH_OP(E_OP_MI_LNV); };
+        "MI.LV"       => { MATCH_OP(E_OP_MI_LV); };
+        "MI.LVV"      => { MATCH_OP(E_OP_MI_LVV); };
+        "MI.LO"       => { MATCH_OP(E_OP_MI_LO); };
+        "MI.LC"       => { MATCH_OP(E_OP_MI_LC); };
+        "MI.LCC"      => { MATCH_OP(E_OP_MI_LCC); };
+        "MI.LCCV"     => { MATCH_OP(E_OP_MI_LCCV); };
+        "MI.NL"       => { MATCH_OP(E_OP_MI_NL); };
+        "MI.N"        => { MATCH_OP(E_OP_MI_N); };
+        "MI.NV"       => { MATCH_OP(E_OP_MI_NV); };
+        "MI.V"        => { MATCH_OP(E_OP_MI_V); };
+        "MI.VV"       => { MATCH_OP(E_OP_MI_VV); };
+        "MI.OL"       => { MATCH_OP(E_OP_MI_OL); };
+        "MI.O"        => { MATCH_OP(E_OP_MI_O); };
+        "MI.CL"       => { MATCH_OP(E_OP_MI_CL); };
+        "MI.C"        => { MATCH_OP(E_OP_MI_C); };
+        "MI.CC"       => { MATCH_OP(E_OP_MI_CC); };
+        "MI.CCV"      => { MATCH_OP(E_OP_MI_CCV); };
 
         # MODS
         # controlflow

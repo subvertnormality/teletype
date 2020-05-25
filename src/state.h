@@ -48,6 +48,8 @@
 #define FADER_FH_DOT 6
 #define FADER_FV_DOT 7
 
+#define MAX_MIDI_EVENTS 10
+
 #define METRO_MIN_MS 25
 #define METRO_MIN_UNSUPPORTED_MS 2
 
@@ -208,12 +210,22 @@ typedef struct {
     int8_t start_script;
     int8_t stop_script;
     int8_t continue_script;
+
     uint8_t last_event_type;
     uint8_t last_channel;
     uint8_t last_note;
     uint8_t last_velocity;
     uint8_t last_controller;
     uint8_t last_cc;
+
+    uint8_t on_count;
+    uint8_t note_on[MAX_MIDI_EVENTS];
+    uint8_t note_vel[MAX_MIDI_EVENTS];
+    uint8_t off_count;
+    uint8_t note_off[MAX_MIDI_EVENTS];
+    uint8_t cc_count;
+    uint8_t cn[MAX_MIDI_EVENTS];
+    uint8_t cc[MAX_MIDI_EVENTS];
 } scene_midi_t;
 
 typedef struct {
