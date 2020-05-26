@@ -4,6 +4,7 @@
 #include "ops/op.h"
 
 extern const tele_op_t op_MI_SYM_DOLLAR;
+extern const tele_op_t op_MI_LE;
 extern const tele_op_t op_MI_LN;
 extern const tele_op_t op_MI_LNV;
 extern const tele_op_t op_MI_LV;
@@ -23,5 +24,9 @@ extern const tele_op_t op_MI_CL;
 extern const tele_op_t op_MI_C;
 extern const tele_op_t op_MI_CC;
 extern const tele_op_t op_MI_CCV;
+extern const tele_op_t op_MI_LCH;
+extern const tele_op_t op_MI_NCH;
+extern const tele_op_t op_MI_OCH;
+extern const tele_op_t op_MI_CCH;
 
 #endif

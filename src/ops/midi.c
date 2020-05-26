@@ -8,6 +8,8 @@ static void op_MI_SYM_DOLLAR_get(const void *data, scene_state_t *ss,
                                  exec_state_t *es, command_state_t *cs);
 static void op_MI_SYM_DOLLAR_set(const void *data, scene_state_t *ss,
                                  exec_state_t *es, command_state_t *cs);
+static void op_MI_LE_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                         command_state_t *cs);
 static void op_MI_LN_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_MI_LNV_get(const void *data, scene_state_t *ss, exec_state_t *es,
@@ -46,10 +48,19 @@ static void op_MI_CC_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_MI_CCV_get(const void *data, scene_state_t *ss, exec_state_t *es,
                           command_state_t *cs);
+static void op_MI_LCH_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                          command_state_t *cs);
+static void op_MI_NCH_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                          command_state_t *cs);
+static void op_MI_OCH_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                          command_state_t *cs);
+static void op_MI_CCH_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                          command_state_t *cs);
 
 const tele_op_t op_MI_SYM_DOLLAR =
     MAKE_GET_SET_OP(MI.$, op_MI_SYM_DOLLAR_get, op_MI_SYM_DOLLAR_set, 1, true);
 
+const tele_op_t op_MI_LE   = MAKE_GET_OP(MI.LE,   op_MI_LE_get,   0, true);
 const tele_op_t op_MI_LN   = MAKE_GET_OP(MI.LN,   op_MI_LN_get,   0, true);
 const tele_op_t op_MI_LNV  = MAKE_GET_OP(MI.LNV,  op_MI_LNV_get,  0, true);
 const tele_op_t op_MI_LV   = MAKE_GET_OP(MI.LV,   op_MI_LV_get,   0, true);
@@ -69,6 +80,10 @@ const tele_op_t op_MI_CL   = MAKE_GET_OP(MI.CL,   op_MI_CL_get,   0, true);
 const tele_op_t op_MI_C    = MAKE_GET_OP(MI.C,    op_MI_C_get,    0, true);
 const tele_op_t op_MI_CC   = MAKE_GET_OP(MI.CC,   op_MI_CC_get,   0, true);
 const tele_op_t op_MI_CCV  = MAKE_GET_OP(MI.CCV,  op_MI_CCV_get,  0, true);
+const tele_op_t op_MI_LCH  = MAKE_GET_OP(MI.LCH,  op_MI_LCH_get,  0, true);
+const tele_op_t op_MI_NCH  = MAKE_GET_OP(MI.NCH,  op_MI_NCH_get,  0, true);
+const tele_op_t op_MI_OCH  = MAKE_GET_OP(MI.OCH,  op_MI_OCH_get,  0, true);
+const tele_op_t op_MI_CCH  = MAKE_GET_OP(MI.CCH,  op_MI_CCH_get,  0, true);
 
 static void op_MI_SYM_DOLLAR_get(const void *NOTUSED(data), scene_state_t *ss,
                                  exec_state_t *NOTUSED(es),
@@ -137,6 +152,11 @@ static void op_MI_SYM_DOLLAR_set(const void *NOTUSED(data), scene_state_t *ss,
         case 7: ss->midi.continue_script = script; break;
         default: break;
     }
+}
+
+static void op_MI_LE_get(const void *NOTUSED(data), scene_state_t *ss,
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
+    cs_push(cs, ss->midi.last_event_type);
 }
 
 static void op_MI_LN_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -256,4 +276,33 @@ static void op_MI_CCV_get(const void *NOTUSED(data), scene_state_t *ss,
     cs_push(cs, i < 1 || i > ss->midi.cc_count
                     ? 0
                     : ss->midi.cc[i - 1] * 129);
+}
+
+static void op_MI_LCH_get(const void *NOTUSED(data), scene_state_t *ss,
+                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+    cs_push(cs, ss->midi.last_channel);
+}
+
+static void op_MI_NCH_get(const void *NOTUSED(data), scene_state_t *ss,
+                          exec_state_t *es, command_state_t *cs) {
+    s16 i = es_variables(es)->i;
+    cs_push(cs, i < 1 || i > ss->midi.on_count
+                    ? 0
+                    : ss->midi.on_channel[i - 1]);
+}
+
+static void op_MI_OCH_get(const void *NOTUSED(data), scene_state_t *ss,
+                          exec_state_t *es, command_state_t *cs) {
+    s16 i = es_variables(es)->i;
+    cs_push(cs, i < 1 || i > ss->midi.off_count
+                    ? 0
+                    : ss->midi.off_channel[i - 1]);
+}
+
+static void op_MI_CCH_get(const void *NOTUSED(data), scene_state_t *ss,
+                          exec_state_t *es, command_state_t *cs) {
+    s16 i = es_variables(es)->i;
+    cs_push(cs, i < 1 || i > ss->midi.cc_count
+                    ? 0
+                    : ss->midi.cc_channel[i - 1]);
 }

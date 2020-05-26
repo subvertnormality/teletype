@@ -656,6 +656,11 @@ typedef enum {
     E_OP_MI_C,
     E_OP_MI_CC,
     E_OP_MI_CCV,
+    E_OP_MI_LCH,
+    E_OP_MI_NCH,
+    E_OP_MI_OCH,
+    E_OP_MI_CCH,
+    E_OP_MI_LE,
     E_OP__LENGTH,
 } tele_op_idx_t;
 

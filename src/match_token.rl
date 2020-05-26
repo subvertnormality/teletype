@@ -704,6 +704,7 @@
 
         # MIDI
         "MI.$"        => { MATCH_OP(E_OP_MI_SYM_DOLLAR); };
+        "MI.LE"       => { MATCH_OP(E_OP_MI_LE); };
         "MI.LN"       => { MATCH_OP(E_OP_MI_LN); };
         "MI.LNV"      => { MATCH_OP(E_OP_MI_LNV); };
         "MI.LV"       => { MATCH_OP(E_OP_MI_LV); };
@@ -723,6 +724,10 @@
         "MI.C"        => { MATCH_OP(E_OP_MI_C); };
         "MI.CC"       => { MATCH_OP(E_OP_MI_CC); };
         "MI.CCV"      => { MATCH_OP(E_OP_MI_CCV); };
+        "MI.LCH"      => { MATCH_OP(E_OP_MI_LCH); };
+        "MI.NCH"      => { MATCH_OP(E_OP_MI_NCH); };
+        "MI.OCH"      => { MATCH_OP(E_OP_MI_OCH); };
+        "MI.CCH"      => { MATCH_OP(E_OP_MI_CCH); };
 
         # MODS
         # controlflow

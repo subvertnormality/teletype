@@ -185,6 +185,9 @@ void ss_midi_init(scene_state_t *ss) {
         ss->midi.note_off[i] = 0;
         ss->midi.cn[i] = 0;
         ss->midi.cc[i] = 0;
+        ss->midi.on_channel[i] = 0;
+        ss->midi.off_channel[i] = 0;
+        ss->midi.cc_channel[i] = 0;
     }
 }
 
