@@ -93,7 +93,7 @@ static void op_MI_SYM_DOLLAR_get(const void *NOTUSED(data), scene_state_t *ss,
 
     switch (event) {
         case 0:
-            script = ss->midi.on_script = script;
+            script = ss->midi.on_script;
             if (script != ss->midi.off_script || script != ss->midi.cc_script ||
                 script != ss->midi.clk_script ||
                 script != ss->midi.start_script ||
