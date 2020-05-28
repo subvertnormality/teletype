@@ -8,6 +8,7 @@
 #include "ops/ansible.h"
 #include "ops/controlflow.h"
 #include "ops/delay.h"
+#include "ops/disting.h"
 #include "ops/earthsea.h"
 #include "ops/er301.h"
 #include "ops/fader.h"
@@ -218,6 +219,16 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_MA_SELECT, &op_MA_STEP, &op_MA_RESET, &op_MA_PGM, &op_MA_ON, &op_MA_PON,
     &op_MA_OFF, &op_MA_POFF, &op_MA_SET, &op_MA_PSET, &op_MA_COL, &op_MA_PCOL,
     &op_MA_ROW, &op_MA_PROW, &op_MA_CLR, &op_MA_PCLR,
+
+    // disting ex
+    &op_EX_1, &op_EX_2, &op_EX_3, &op_EX_4, &op_EX_LOAD, &op_EX_L, &op_EX_SAVE,
+    &op_EX_S, &op_EX_RESET, &op_EX_ALG, &op_EX_A, &op_EX_CTRL, &op_EX_C,
+    &op_EX_PARAM, &op_EX_P, &op_EX_REC, &op_EX_PLAY, &op_EX_AL_P, &op_EX_AL_CLK,
+    &op_EX_M_CH, &op_EX_M_N, &op_EX_M_O, &op_EX_M_PB, &op_EX_M_CC, &op_EX_M_PRG,
+    &op_EX_M_CLK, &op_EX_M_START, &op_EX_M_STOP, &op_EX_M_CONT, &op_EX_SB_CH,
+    &op_EX_SB_N, &op_EX_SB_O, &op_EX_SB_PB, &op_EX_SB_CC, &op_EX_SB_PRG,
+    &op_EX_SB_CLK, &op_EX_SB_START, &op_EX_SB_STOP, &op_EX_SB_CONT,
+    &op_EX_VOX_P, &op_EX_VP, &op_EX_VOX, &op_EX_V, &op_EX_VOX_O, &op_EX_VO,
 
     // seed
     &op_SEED, &op_RAND_SEED, &op_SYM_RAND_SD, &op_SYM_R_SD, &op_TOSS_SEED,
