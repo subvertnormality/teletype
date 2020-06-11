@@ -19,6 +19,8 @@ static void op_EX_RESET_get(const void *data, scene_state_t *ss, exec_state_t *e
                          command_state_t *cs);
 static void op_EX_ALG_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
+static void op_EX_ALG_set(const void *data, scene_state_t *ss, exec_state_t *es,
+                         command_state_t *cs);
 static void op_EX_CTRL_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_EX_PARAM_get(const void *data, scene_state_t *ss, exec_state_t *es,
@@ -87,7 +89,7 @@ const tele_op_t op_EX_4        = MAKE_GET_OP(EX.4,        op_EX_4_get,      0, f
 const tele_op_t op_EX_LOAD     = MAKE_GET_OP(EX.LOAD,     op_EX_LOAD_get,   1, false);
 const tele_op_t op_EX_SAVE     = MAKE_GET_OP(EX.SAVE,     op_EX_SAVE_get,   1, false);
 const tele_op_t op_EX_RESET    = MAKE_GET_OP(EX.RESET,    op_EX_RESET_get,  0, false);
-const tele_op_t op_EX_ALG      = MAKE_GET_OP(EX.ALG,      op_EX_ALG_get,    1, false);
+const tele_op_t op_EX_ALG      = MAKE_GET_SET_OP(EX.ALG, op_EX_ALG_get, op_EX_ALG_set, 0, true);
 const tele_op_t op_EX_CTRL     = MAKE_GET_OP(EX.CTRL,     op_EX_CTRL_get,   2, false);
 const tele_op_t op_EX_PARAM    = MAKE_GET_OP(EX.PARAM,    op_EX_PARAM_get,  2, false);
 const tele_op_t op_EX_REC      = MAKE_GET_OP(EX.REC,      op_EX_REC_get,    1, false);
@@ -123,7 +125,7 @@ const tele_op_t op_EX_VOX_O    = MAKE_GET_OP(EX.VOX.O,    op_EX_VOX_O_get,    1,
 
 const tele_op_t op_EX_L  = MAKE_ALIAS_OP(EX.L,  op_EX_LOAD_get,  NULL, 1, false);
 const tele_op_t op_EX_S  = MAKE_ALIAS_OP(EX.S,  op_EX_SAVE_get,  NULL, 1, false);
-const tele_op_t op_EX_A  = MAKE_ALIAS_OP(EX.A,  op_EX_ALG_get,   NULL, 1, false);
+const tele_op_t op_EX_A  = MAKE_ALIAS_OP(EX.A,  op_EX_ALG_get, op_EX_ALG_set, 0, true);
 const tele_op_t op_EX_C  = MAKE_ALIAS_OP(EX.C,  op_EX_CTRL_get,  NULL, 2, false);
 const tele_op_t op_EX_P  = MAKE_ALIAS_OP(EX.P,  op_EX_PARAM_get, NULL, 2, false);
 const tele_op_t op_EX_V  = MAKE_ALIAS_OP(EX.V,  op_EX_VOX_get,   NULL, 3, false);
@@ -202,8 +204,17 @@ static void op_EX_RESET_get(const void *NOTUSED(data), scene_state_t *ss,
 
 static void op_EX_ALG_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+    send1(0x45);
+    
+    data[0] = 0;
+    tele_ii_rx(DISTING_EX_1 + unit, data, 1);
+    cs_push(cs, data[0]);
+}
+
+static void op_EX_ALG_set(const void *NOTUSED(data), scene_state_t *ss,
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 algo = cs_pop(cs);
-    send2(0x43, algo);
+    send2(0x44, algo);
 }
 
 static void op_EX_CTRL_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -217,28 +228,28 @@ static void op_EX_PARAM_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 param = cs_pop(cs);
     u16 value = cs_pop(cs);
-    send4(0x44, param, value >> 8, value);
+    send4(0x46, param, value >> 8, value);
 }
 
 static void op_EX_REC_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send2(0x45, cs_pop(cs) ? 1 : 0);
+    send2(0x4B, cs_pop(cs) ? 1 : 0);
 }
 
 static void op_EX_PLAY_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send2(0x46, cs_pop(cs) ? 1 : 0);
+    send2(0x4C, cs_pop(cs) ? 1 : 0);
 }
 
 static void op_EX_AL_P_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 pitch = cs_pop(cs);
-    send3(0x47, pitch >> 8, pitch);
+    send3(0x4D, pitch >> 8, pitch);
 }
 
 static void op_EX_AL_CLK_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send1(0x48);
+    send1(0x4E);
 }
 
 static void op_EX_M_CH_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -254,20 +265,20 @@ static void op_EX_M_N_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 velocity = cs_pop(cs);
     if (note > 127) note = 127;
     if (velocity > 127) velocity = 127;
-    send4(0x49, 9 + midi_channel, note, velocity);
+    send4(0x4F, 9 + midi_channel, note, velocity);
 }
 
 static void op_EX_M_O_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 note = cs_pop(cs);
     if (note > 127) note = 127;
-    send4(0x49, 8 + midi_channel, note, 0);
+    send4(0x4F, 8 + midi_channel, note, 0);
 }
 
 static void op_EX_M_PB_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 bend = cs_pop(cs);
-    send4(0x49, 0xE + midi_channel, bend, bend >> 8);
+    send4(0x4F, 0xE + midi_channel, bend, bend >> 8);
 }
 
 static void op_EX_M_CC_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -276,34 +287,34 @@ static void op_EX_M_CC_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 value = cs_pop(cs);
     if (controller > 127) controller = 127;
     if (value > 127) value = 127;
-    send4(0x49, 0xB + midi_channel, controller, value);
+    send4(0x4F, 0xB + midi_channel, controller, value);
 }
 
 static void op_EX_M_PRG_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 program = cs_pop(cs);
     if (program > 127) program = 127;
-    send3(0x49, 0xC + midi_channel, program);
+    send3(0x4F, 0xC + midi_channel, program);
 }
 
 static void op_EX_M_CLK_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x49, 0xC + midi_channel, 0xF8);
+    send3(0x4F, 0xC + midi_channel, 0xF8);
 }
 
 static void op_EX_M_START_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x49, 0xC + midi_channel, 0xFA);
+    send3(0x4F, 0xC + midi_channel, 0xFA);
 }
 
 static void op_EX_M_STOP_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x49, 0xC + midi_channel, 0xFC);
+    send3(0x4F, 0xC + midi_channel, 0xFC);
 }
 
 static void op_EX_M_CONT_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x49, 0xC + midi_channel, 0xFB);
+    send3(0x4F, 0xC + midi_channel, 0xFB);
 }
 
 static void op_EX_SB_CH_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -319,20 +330,20 @@ static void op_EX_SB_N_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 velocity = cs_pop(cs);
     if (note > 127) note = 127;
     if (velocity > 127) velocity = 127;
-    send4(0x4A, 9 + sb_channel, note, velocity);
+    send4(0x50, 9 + sb_channel, note, velocity);
 }
 
 static void op_EX_SB_O_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 note = cs_pop(cs);
     if (note > 127) note = 127;
-    send4(0x4A, 8 + sb_channel, note, 0);
+    send4(0x50, 8 + sb_channel, note, 0);
 }
 
 static void op_EX_SB_PB_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 bend = cs_pop(cs);
-    send4(0x4A, 0xE + sb_channel, bend, bend >> 8);
+    send4(0x50, 0xE + sb_channel, bend, bend >> 8);
 }
 
 static void op_EX_SB_CC_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -341,58 +352,63 @@ static void op_EX_SB_CC_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 value = cs_pop(cs);
     if (controller > 127) controller = 127;
     if (value > 127) value = 127;
-    send4(0x4A, 0xB + sb_channel, controller, value);
+    send4(0x50, 0xB + sb_channel, controller, value);
 }
 
 static void op_EX_SB_PRG_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 program = cs_pop(cs);
     if (program > 127) program = 127;
-    send3(0x4A, 0xC + sb_channel, program);
+    send3(0x50, 0xC + sb_channel, program);
 }
 
 static void op_EX_SB_CLK_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4A, 0xC + sb_channel, 0xF8);
+    send3(0x50, 0xC + sb_channel, 0xF8);
 }
 
 static void op_EX_SB_START_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4A, 0xC + sb_channel, 0xFA);
+    send3(0x50, 0xC + sb_channel, 0xFA);
 }
 
 static void op_EX_SB_STOP_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4A, 0xC + sb_channel, 0xFC);
+    send3(0x50, 0xC + sb_channel, 0xFC);
 }
 
 static void op_EX_SB_CONT_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4A, 0xC + sb_channel, 0xFB);
+    send3(0x50, 0xC + sb_channel, 0xFB);
 }
 
 static void op_EX_VOX_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    u16 voice = cs_pop(cs);
+    s16 voice = cs_pop(cs) - 1;
     u16 pitch = cs_pop(cs);
     u16 velocity = cs_pop(cs);
-    send4(0x4B, voice, pitch >> 8, pitch);
-    send4(0x4C, voice, velocity >> 8, velocity);
+    if (voice < 0) return;
+    
+    send4(0x51, voice, pitch >> 8, pitch);
+    send4(0x52, voice, velocity >> 8, velocity);
 }
 
 static void op_EX_VOX_P_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    u16 voice = cs_pop(cs);
+    s16 voice = cs_pop(cs) - 1;
     u16 pitch = cs_pop(cs);
-    send4(0x4B, voice, pitch >> 8, pitch);
+    if (voice < 0) return;
+
+    send4(0x51, voice, pitch >> 8, pitch);
 }
 
 static void op_EX_VOX_O_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    u16 voice = cs_pop(cs);
+    s16 voice = cs_pop(cs) - 1;
+    if (voice < -1) return;
     
-    if (voice == 0)
-        send1(0x51);
+    if (voice == -1)
+        send1(0x57);
     else
-        send2(0x4D, voice);
+        send2(0x53, voice);
 }
