@@ -265,20 +265,20 @@ static void op_EX_M_N_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 velocity = cs_pop(cs);
     if (note > 127) note = 127;
     if (velocity > 127) velocity = 127;
-    send4(0x4F, 9 + midi_channel, note, velocity);
+    send4(0x4F, 0x90 + midi_channel, note, velocity);
 }
 
 static void op_EX_M_O_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 note = cs_pop(cs);
     if (note > 127) note = 127;
-    send4(0x4F, 8 + midi_channel, note, 0);
+    send4(0x4F, 0x80 + midi_channel, note, 0);
 }
 
 static void op_EX_M_PB_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 bend = cs_pop(cs);
-    send4(0x4F, 0xE + midi_channel, bend, bend >> 8);
+    send4(0x4F, 0xE0 + midi_channel, bend, bend >> 8);
 }
 
 static void op_EX_M_CC_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -287,34 +287,34 @@ static void op_EX_M_CC_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 value = cs_pop(cs);
     if (controller > 127) controller = 127;
     if (value > 127) value = 127;
-    send4(0x4F, 0xB + midi_channel, controller, value);
+    send4(0x4F, 0xB0 + midi_channel, controller, value);
 }
 
 static void op_EX_M_PRG_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 program = cs_pop(cs);
     if (program > 127) program = 127;
-    send3(0x4F, 0xC + midi_channel, program);
+    send3(0x4F, 0xC0 + midi_channel, program);
 }
 
 static void op_EX_M_CLK_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4F, 0xC + midi_channel, 0xF8);
+    send3(0x4F, 0xF8 + midi_channel, 0xF8);
 }
 
 static void op_EX_M_START_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4F, 0xC + midi_channel, 0xFA);
+    send3(0x4F, 0xFA + midi_channel, 0xFA);
 }
 
 static void op_EX_M_STOP_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4F, 0xC + midi_channel, 0xFC);
+    send3(0x4F, 0xFC + midi_channel, 0xFC);
 }
 
 static void op_EX_M_CONT_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x4F, 0xC + midi_channel, 0xFB);
+    send3(0x4F, 0xFB + midi_channel, 0xFB);
 }
 
 static void op_EX_SB_CH_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -330,20 +330,20 @@ static void op_EX_SB_N_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 velocity = cs_pop(cs);
     if (note > 127) note = 127;
     if (velocity > 127) velocity = 127;
-    send4(0x50, 9 + sb_channel, note, velocity);
+    send4(0x50, 0x90 + sb_channel, note, velocity);
 }
 
 static void op_EX_SB_O_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 note = cs_pop(cs);
     if (note > 127) note = 127;
-    send4(0x50, 8 + sb_channel, note, 0);
+    send4(0x50, 0x80 + sb_channel, note, 0);
 }
 
 static void op_EX_SB_PB_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 bend = cs_pop(cs);
-    send4(0x50, 0xE + sb_channel, bend, bend >> 8);
+    send4(0x50, 0xE0 + sb_channel, bend, bend >> 8);
 }
 
 static void op_EX_SB_CC_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -352,34 +352,34 @@ static void op_EX_SB_CC_get(const void *NOTUSED(data), scene_state_t *ss,
     u16 value = cs_pop(cs);
     if (controller > 127) controller = 127;
     if (value > 127) value = 127;
-    send4(0x50, 0xB + sb_channel, controller, value);
+    send4(0x50, 0xB0 + sb_channel, controller, value);
 }
 
 static void op_EX_SB_PRG_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 program = cs_pop(cs);
     if (program > 127) program = 127;
-    send3(0x50, 0xC + sb_channel, program);
+    send3(0x50, 0xC0 + sb_channel, program);
 }
 
 static void op_EX_SB_CLK_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x50, 0xC + sb_channel, 0xF8);
+    send3(0x50, 0xF8 + sb_channel, 0xF8);
 }
 
 static void op_EX_SB_START_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x50, 0xC + sb_channel, 0xFA);
+    send3(0x50, 0xFA + sb_channel, 0xFA);
 }
 
 static void op_EX_SB_STOP_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x50, 0xC + sb_channel, 0xFC);
+    send3(0x50, 0xFC + sb_channel, 0xFC);
 }
 
 static void op_EX_SB_CONT_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *NOTUSED(es), command_state_t *cs) {
-    send3(0x50, 0xC + sb_channel, 0xFB);
+    send3(0x50, 0xFB + sb_channel, 0xFB);
 }
 
 static void op_EX_VOX_get(const void *NOTUSED(data), scene_state_t *ss,
