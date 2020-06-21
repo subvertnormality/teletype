@@ -639,8 +639,8 @@
         "EX.2"        => { MATCH_OP(E_OP_EX_2); };
         "EX.3"        => { MATCH_OP(E_OP_EX_3); };
         "EX.4"        => { MATCH_OP(E_OP_EX_4); };
-        "EX.LOAD"     => { MATCH_OP(E_OP_EX_LOAD); };
-        "EX.L"        => { MATCH_OP(E_OP_EX_L); };
+        "EX.PRESET"   => { MATCH_OP(E_OP_EX_PRESET); };
+        "EX.PRE"      => { MATCH_OP(E_OP_EX_PRE); };
         "EX.SAVE"     => { MATCH_OP(E_OP_EX_SAVE); };
         "EX.S"        => { MATCH_OP(E_OP_EX_S); };
         "EX.RESET"    => { MATCH_OP(E_OP_EX_RESET); };
@@ -650,6 +650,9 @@
         "EX.C"        => { MATCH_OP(E_OP_EX_C); };
         "EX.PARAM"    => { MATCH_OP(E_OP_EX_PARAM); };
         "EX.P"        => { MATCH_OP(E_OP_EX_P); };
+        "EX.PV"       => { MATCH_OP(E_OP_EX_PV); };
+        "EX.MIN"      => { MATCH_OP(E_OP_EX_MIN); };
+        "EX.MAX"      => { MATCH_OP(E_OP_EX_MAX); };
         "EX.REC"      => { MATCH_OP(E_OP_EX_REC); };
         "EX.PLAY"     => { MATCH_OP(E_OP_EX_PLAY); };
         "EX.AL.P"     => { MATCH_OP(E_OP_EX_AL_P); };
@@ -680,6 +683,12 @@
         "EX.V"        => { MATCH_OP(E_OP_EX_V); };
         "EX.VOX.O"    => { MATCH_OP(E_OP_EX_VOX_O); };
         "EX.VO"       => { MATCH_OP(E_OP_EX_VO); };
+        "EX.NOTE"     => { MATCH_OP(E_OP_EX_NOTE); };
+        "EX.N"        => { MATCH_OP(E_OP_EX_N); };
+        "EX.NOTE.O"   => { MATCH_OP(E_OP_EX_NOTE_O); };
+        "EX.NO"       => { MATCH_OP(E_OP_EX_NO); };
+        "EX.ALLOFF"   => { MATCH_OP(E_OP_EX_ALLOFF); };
+        "EX.AO"       => { MATCH_OP(E_OP_EX_AO); };
 
         # seed
         "SEED"        => { MATCH_OP(E_OP_SEED); };
