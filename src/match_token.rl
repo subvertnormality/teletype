@@ -635,14 +635,10 @@
         "WS.LOOP"     => { MATCH_OP(E_OP_WS_LOOP); };
 
         # disting ex
-        "EX.1"        => { MATCH_OP(E_OP_EX_1); };
-        "EX.2"        => { MATCH_OP(E_OP_EX_2); };
-        "EX.3"        => { MATCH_OP(E_OP_EX_3); };
-        "EX.4"        => { MATCH_OP(E_OP_EX_4); };
+        "EX"          => { MATCH_OP(E_OP_EX); };
         "EX.PRESET"   => { MATCH_OP(E_OP_EX_PRESET); };
         "EX.PRE"      => { MATCH_OP(E_OP_EX_PRE); };
         "EX.SAVE"     => { MATCH_OP(E_OP_EX_SAVE); };
-        "EX.S"        => { MATCH_OP(E_OP_EX_S); };
         "EX.RESET"    => { MATCH_OP(E_OP_EX_RESET); };
         "EX.ALG"      => { MATCH_OP(E_OP_EX_ALG); };
         "EX.A"        => { MATCH_OP(E_OP_EX_A); };
@@ -659,7 +655,7 @@
         "EX.AL.CLK"   => { MATCH_OP(E_OP_EX_AL_CLK); };
         "EX.M.CH"     => { MATCH_OP(E_OP_EX_M_CH); };
         "EX.M.N"      => { MATCH_OP(E_OP_EX_M_N); };
-        "EX.M.O"      => { MATCH_OP(E_OP_EX_M_O); };
+        "EX.M.NO"     => { MATCH_OP(E_OP_EX_M_NO); };
         "EX.M.PB"     => { MATCH_OP(E_OP_EX_M_PB); };
         "EX.M.CC"     => { MATCH_OP(E_OP_EX_M_CC); };
         "EX.M.PRG"    => { MATCH_OP(E_OP_EX_M_PRG); };
@@ -669,7 +665,7 @@
         "EX.M.CONT"   => { MATCH_OP(E_OP_EX_M_CONT); };
         "EX.SB.CH"    => { MATCH_OP(E_OP_EX_SB_CH); };
         "EX.SB.N"     => { MATCH_OP(E_OP_EX_SB_N); };
-        "EX.SB.O"     => { MATCH_OP(E_OP_EX_SB_O); };
+        "EX.SB.NO"    => { MATCH_OP(E_OP_EX_SB_NO); };
         "EX.SB.PB"    => { MATCH_OP(E_OP_EX_SB_PB); };
         "EX.SB.CC"    => { MATCH_OP(E_OP_EX_SB_CC); };
         "EX.SB.PRG"   => { MATCH_OP(E_OP_EX_SB_PRG); };
@@ -689,6 +685,8 @@
         "EX.NO"       => { MATCH_OP(E_OP_EX_NO); };
         "EX.ALLOFF"   => { MATCH_OP(E_OP_EX_ALLOFF); };
         "EX.AO"       => { MATCH_OP(E_OP_EX_AO); };
+        "EX.T"        => { MATCH_OP(E_OP_EX_T); };
+        "EX.TV"       => { MATCH_OP(E_OP_EX_TV); };
 
         # seed
         "SEED"        => { MATCH_OP(E_OP_SEED); };
@@ -714,6 +712,10 @@
         "EVERY"       => { MATCH_MOD(E_MOD_EVERY); };
         "SKIP"        => { MATCH_MOD(E_MOD_SKIP); };
         "OTHER"       => { MATCH_MOD(E_MOD_OTHER); };
+        "EX1"         => { MATCH_MOD(E_MOD_EX1); };
+        "EX2"         => { MATCH_MOD(E_MOD_EX2); };
+        "EX3"         => { MATCH_MOD(E_MOD_EX3); };
+        "EX4"         => { MATCH_MOD(E_MOD_EX4); };
 
         # delay
         "PROB"        => { MATCH_MOD(E_MOD_PROB); };

@@ -3,14 +3,15 @@
 
 #include "ops/op.h"
 
-extern const tele_op_t op_EX_1;
-extern const tele_op_t op_EX_2;
-extern const tele_op_t op_EX_3;
-extern const tele_op_t op_EX_4;
+extern const tele_mod_t mod_EX1;
+extern const tele_mod_t mod_EX2;
+extern const tele_mod_t mod_EX3;
+extern const tele_mod_t mod_EX4;
+
+extern const tele_op_t op_EX;
 extern const tele_op_t op_EX_PRESET;
 extern const tele_op_t op_EX_PRE;
 extern const tele_op_t op_EX_SAVE;
-extern const tele_op_t op_EX_S;
 extern const tele_op_t op_EX_RESET;
 extern const tele_op_t op_EX_ALG;
 extern const tele_op_t op_EX_A;
@@ -27,7 +28,7 @@ extern const tele_op_t op_EX_AL_P;
 extern const tele_op_t op_EX_AL_CLK;
 extern const tele_op_t op_EX_M_CH;
 extern const tele_op_t op_EX_M_N;
-extern const tele_op_t op_EX_M_O;
+extern const tele_op_t op_EX_M_NO;
 extern const tele_op_t op_EX_M_PB;
 extern const tele_op_t op_EX_M_CC;
 extern const tele_op_t op_EX_M_PRG;
@@ -37,7 +38,7 @@ extern const tele_op_t op_EX_M_STOP;
 extern const tele_op_t op_EX_M_CONT;
 extern const tele_op_t op_EX_SB_CH;
 extern const tele_op_t op_EX_SB_N;
-extern const tele_op_t op_EX_SB_O;
+extern const tele_op_t op_EX_SB_NO;
 extern const tele_op_t op_EX_SB_PB;
 extern const tele_op_t op_EX_SB_CC;
 extern const tele_op_t op_EX_SB_PRG;
@@ -57,5 +58,7 @@ extern const tele_op_t op_EX_NOTE_O;
 extern const tele_op_t op_EX_NO;
 extern const tele_op_t op_EX_ALLOFF;
 extern const tele_op_t op_EX_AO;
+extern const tele_op_t op_EX_T;
+extern const tele_op_t op_EX_TV;
 
 #endif
