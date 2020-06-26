@@ -261,21 +261,22 @@ static void op_EX_PRESET_get(const void *NOTUSED(data), scene_state_t *ss,
                              exec_state_t *NOTUSED(es), command_state_t *cs) {
     send1(0x43);
 
-    data[0] = 0;
-    tele_ii_rx(DISTING_EX_1 + unit, data, 1);
-    cs_push(cs, data[0]);
+    data[0] = data[1] = 0;
+    tele_ii_rx(DISTING_EX_1 + unit, data, 2);
+
+    cs_push(cs, (data[0] << 8) + data[1]);
 }
 
 static void op_EX_PRESET_set(const void *NOTUSED(data), scene_state_t *ss,
                              exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 preset = cs_pop(cs);
-    send2(0x40, preset);
+    send3(0x40, preset >> 8, preset);
 }
 
 static void op_EX_SAVE_get(const void *NOTUSED(data), scene_state_t *ss,
                            exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 preset = cs_pop(cs);
-    send2(0x41, preset);
+    send3(0x41, preset >> 8, preset);
 }
 
 static void op_EX_RESET_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -544,11 +545,18 @@ static void op_EX_VOX_O_get(const void *NOTUSED(data), scene_state_t *ss,
         send2(0x53, voice);
 }
 
+static u8 calculate_note(s16 pitch) {
+    s32 note = (((s32)pitch * 120) / 16384) + 48;
+    if (note < 0) note = 0;
+    else if (note > 127) note = 127;
+    return (u8)note;
+}
+
 static void op_EX_NOTE_get(const void *NOTUSED(data), scene_state_t *ss,
                            exec_state_t *NOTUSED(es), command_state_t *cs) {
     s16 pitch = cs_pop(cs);
     u16 velocity = cs_pop(cs);
-    s8 note = pitch / 136;
+    u8 note = calculate_note(pitch);
 
     send2(0x56, note);
     send4(0x54, note, (u16)pitch >> 8, pitch);
@@ -558,7 +566,7 @@ static void op_EX_NOTE_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_EX_NOTE_O_get(const void *NOTUSED(data), scene_state_t *ss,
                              exec_state_t *NOTUSED(es), command_state_t *cs) {
     u16 pitch = cs_pop(cs);
-    s8 note = pitch / 136;
+    u8 note = calculate_note(pitch);
 
     send2(0x56, note);
 }
