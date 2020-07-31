@@ -546,7 +546,8 @@ static void op_EX_VOX_O_get(const void *NOTUSED(data), scene_state_t *ss,
 }
 
 static u8 calculate_note(s16 pitch) {
-    s32 note = (((s32)pitch * 120) / 16384) + 48;
+    s32 note = (((s32)pitch * 240) / 16384);
+    note = note / 2 + (note & 1) + 48;
     if (note < 0) note = 0;
     else if (note > 127) note = 127;
     return (u8)note;
