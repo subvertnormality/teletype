@@ -320,17 +320,23 @@ static void safely_run_script(u8 script) {
 }
 
 void midiScriptTimer_callback(void* obj) {
-    if (scene_state.midi.on_count)
+    u8 executed[SCRIPT_COUNT] = { 0 };
+    
+    if (scene_state.midi.on_count) {
         safely_run_script(scene_state.midi.on_script);
+        executed[scene_state.midi.on_script] = 1;
+    }
     
     if (scene_state.midi.off_count &&
-        scene_state.midi.off_script != scene_state.midi.on_script)
+        !executed[scene_state.midi.off_script]) {
         safely_run_script(scene_state.midi.off_script);
+        executed[scene_state.midi.off_script] = 1;
+    }
     
     if (scene_state.midi.cc_count &&
-        scene_state.midi.cc_script != scene_state.midi.on_script &&
-        scene_state.midi.cc_script != scene_state.midi.off_script)
+        !executed[scene_state.midi.cc_script]) {
         safely_run_script(scene_state.midi.cc_script);
+    }
     
     scene_state.midi.on_count = 0;
     scene_state.midi.off_count = 0;
@@ -678,26 +684,17 @@ static void midi_clock_tick(void) {
 
 static void midi_seq_start(void) {
     scene_state.midi.last_event_type = 5;
-    
-    if (scene_state.midi.start_script >= 0 && 
-        scene_state.midi.start_script <= INIT_SCRIPT)
-        run_script(&scene_state, scene_state.midi.start_script);
+    safely_run_script(&scene_state, scene_state.midi.start_script);
 }
 
 static void midi_seq_stop(void) {
     scene_state.midi.last_event_type = 6;
-    
-    if (scene_state.midi.stop_script >= 0 && 
-        scene_state.midi.stop_script <= INIT_SCRIPT)
-        run_script(&scene_state, scene_state.midi.stop_script);
+    safely_run_script(&scene_state, scene_state.midi.stop_script);
 }
 
 static void midi_seq_continue(void) {
     scene_state.midi.last_event_type = 7;
-    
-    if (scene_state.midi.continue_script >= 0 && 
-        scene_state.midi.continue_script <= INIT_SCRIPT)
-        run_script(&scene_state, scene_state.midi.continue_script);
+    safely_run_script(&scene_state, scene_state.midi.continue_script);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
