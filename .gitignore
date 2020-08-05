@@ -49,6 +49,7 @@ __pycache__/
 /src/scanner.c
 /simulator/tt
 /module/gitversion.c
+/ansible/gitversion.c
 /tests/tests
 /docs/teletype.pdf
 /docs/teletype.html
