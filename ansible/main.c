@@ -132,6 +132,7 @@ static softTimer_t monomePollTimer = { .next = NULL, .prev = NULL };
 static softTimer_t monomeRefreshTimer = { .next = NULL, .prev = NULL };
 static softTimer_t gridFaderTimer = { .next = NULL, .prev = NULL };
 static softTimer_t metroLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
+static softTimer_t sceneSaveLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +218,7 @@ void cvTimer_callback(void* o) {
     if (updated) {
         // ANSIBLE_SATELLITE
         for (u8 i = 0; i < 4; i++)
-            dac_set_value_noslew(i, aout[i].now >> 2);
+            dac_set_value_noslew(i, aout[i].now);
         dac_update_now();
 
         /* ANSIBLE_SATELLITE
@@ -338,6 +339,7 @@ void handler_Front(int32_t data) {
     ss_counter = 0;
 
     if (data == 0) {
+        /* ANSIBLE_SATELLITE
         if (ignore_front_press) {
             ignore_front_press = 0;
             return;
@@ -350,7 +352,6 @@ void handler_Front(int32_t data) {
             return;
         }
 
-        /* ANSIBLE_SATELLITE
         if (mode != M_PRESET_R) {
             front_timer = 0;
             set_preset_r_mode(adc[1] >> 7);
@@ -359,9 +360,19 @@ void handler_Front(int32_t data) {
         else
             front_timer = 15;
         */
+        
+        // ANSIBLE_SATELLITE
+        front_timer = 40;
     }
     else {
-        if (front_timer) { set_last_mode(); }
+        // ANSIBLE_SATELLITE if (front_timer) { set_last_mode(); }
+        
+        // ANSIBLE_SATELLITE
+        if (front_timer) {
+            grid_control_mode = !grid_control_mode;
+            grid_set_control_mode(grid_control_mode, mode, &scene_state);
+        }
+        
         front_timer = 0;
     }
 }
@@ -404,6 +415,12 @@ void handler_PollADC(int32_t data) {
 #endif
 }
 
+// ANSIBLE_SATELLITE
+static void scene_save_led_timer_callback(void* o) {
+    timer_remove(&sceneSaveLedTimer);
+    gpio_clr_gpio_pin(B01);
+}
+
 void handler_KeyTimer(int32_t data) {
     /* ANSIBLE_SATELLITE
     if (front_timer) {
@@ -415,6 +432,19 @@ void handler_KeyTimer(int32_t data) {
             front_timer--;
     }
     */
+    
+    // ANSIBLE_SATELLITE
+    if (front_timer) {
+        if (front_timer == 1) {
+            flash_write(preset_select, &scene_state, &scene_text);
+            flash_update_last_saved_scene(preset_select);
+            front_timer = 0;
+            gpio_set_gpio_pin(B01);
+            timer_add(&sceneSaveLedTimer, 400, &scene_save_led_timer_callback, NULL);
+        }
+        else
+            front_timer--;
+    }
 
     if (hold_key) {
         if (hold_key_count > 4)
@@ -450,7 +480,7 @@ void handler_KeyTimer(int32_t data) {
         keyfront_state = !gpio_get_pin_value(NMI);
         static event_t e;
         e.type = kEventFront;
-        e.data = keyfront_state;
+        e.data = !keyfront_state;
         event_post(&e);
     }
 
@@ -545,6 +575,8 @@ void handler_Tr(int32_t data) {
     if (data == 1) {
         event_t e = { .type = kEventAppCustom, .data = 0 };
         event_post(&e);
+    } else if (data == 3) {
+        run_script(&scene_state, 2);
     }
 }
 
@@ -555,6 +587,29 @@ void handler_TrNormal(int32_t data) {
 
 // ANSIBLE_SATELLITE
 void handler_Key(int32_t data) {
+    u8 pressed = data & 1;
+    if (pressed) {
+        if (front_timer) {
+            if (data >> 1) {
+                preset_select = (preset_select + 1) % SCENE_SLOTS;
+            } else {
+                preset_select = (preset_select + SCENE_SLOTS - 1) % SCENE_SLOTS;
+            }
+            ss_grid_init(&scene_state);
+            flash_read(preset_select, &scene_state, &scene_text, 1, 1);
+            flash_update_last_saved_scene(preset_select);
+            ss_set_scene(&scene_state, preset_select);
+
+            scene_state.initializing = true;
+            run_script(&scene_state, INIT_SCRIPT);
+            scene_state.initializing = false;
+
+            set_last_mode();
+            front_timer = 0;
+        } else {
+            run_script(&scene_state, data >> 1);
+        }
+    }
 }
 
 void handler_ScreenRefresh(int32_t data) {
