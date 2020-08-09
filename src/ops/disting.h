@@ -60,5 +60,11 @@ extern const tele_op_t op_EX_ALLOFF;
 extern const tele_op_t op_EX_AO;
 extern const tele_op_t op_EX_T;
 extern const tele_op_t op_EX_TV;
+extern const tele_op_t op_EX_LOOP_REC;
+extern const tele_op_t op_EX_LOOP_PLAY;
+extern const tele_op_t op_EX_LOOP_REV;
+extern const tele_op_t op_EX_LOOP_DOWN;
+extern const tele_op_t op_EX_LOOP_CLR;
+extern const tele_op_t op_EX_LOOP;
 
 #endif

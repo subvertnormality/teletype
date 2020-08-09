@@ -147,6 +147,37 @@ to convert semitones to the actual pitch value.
 prototype = "EX.AL.CLK"
 short = "send clock to Augustus Loop"
 
+["EX.LOOP"]
+prototype = "EX.LOOP x"
+short = "get current state for loop `x`"
+description = """
+0 - initial state
+1 - recording
+3 - playback
+4 - overdub
+5 - paused / muted
+"""
+
+["EX.LOOP.REC"]
+prototype = "EX.LOOP.REC x"
+short = "toggle recording for loop `x`"
+
+["EX.LOOP.PLAY"]
+prototype = "EX.LOOP.PLAY x"
+short = "toggle playback for loop `x`"
+
+["EX.LOOP.CLR"]
+prototype = "EX.LOOP.CLR x"
+short = "clear loop `x`"
+
+["EX.LOOP.REV"]
+prototype = "EX.LOOP.REV x"
+short = "toggle reverse for loop `x`"
+
+["EX.LOOP.DOWN"]
+prototype = "EX.LOOP.DOWN x"
+short = "toggle octave down for loop `x`"
+
 ["EX.M.CH"]
 prototype = "EX.M.CH"
 prototype_set = "EX.M.CH x"
