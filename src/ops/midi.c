@@ -21,7 +21,7 @@ static void op_MI_LVV_get(const void *data, scene_state_t *ss, exec_state_t *es,
 static void op_MI_LO_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_MI_LC_get(const void *data, scene_state_t *ss, exec_state_t *es,
-                          command_state_t *cs);
+                         command_state_t *cs);
 static void op_MI_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es,
                           command_state_t *cs);
 static void op_MI_LCCV_get(const void *data, scene_state_t *ss,
@@ -56,10 +56,16 @@ static void op_MI_OCH_get(const void *data, scene_state_t *ss, exec_state_t *es,
                           command_state_t *cs);
 static void op_MI_CCH_get(const void *data, scene_state_t *ss, exec_state_t *es,
                           command_state_t *cs);
+static void op_MI_CLKD_get(const void *data, scene_state_t *ss,
+                           exec_state_t *es, command_state_t *cs);
+static void op_MI_CLKD_set(const void *data, scene_state_t *ss,
+                           exec_state_t *es, command_state_t *cs);
+static void op_MI_CLKR_get(const void *data, scene_state_t *ss,
+                           exec_state_t *es, command_state_t *cs);
 
-const tele_op_t op_MI_SYM_DOLLAR =
-    MAKE_GET_SET_OP(MI.$, op_MI_SYM_DOLLAR_get, op_MI_SYM_DOLLAR_set, 1, true);
+// clang-format off
 
+const tele_op_t op_MI_SYM_DOLLAR = MAKE_GET_SET_OP(MI.$, op_MI_SYM_DOLLAR_get, op_MI_SYM_DOLLAR_set, 1, true);
 const tele_op_t op_MI_LE   = MAKE_GET_OP(MI.LE,   op_MI_LE_get,   0, true);
 const tele_op_t op_MI_LN   = MAKE_GET_OP(MI.LN,   op_MI_LN_get,   0, true);
 const tele_op_t op_MI_LNV  = MAKE_GET_OP(MI.LNV,  op_MI_LNV_get,  0, true);
@@ -84,6 +90,10 @@ const tele_op_t op_MI_LCH  = MAKE_GET_OP(MI.LCH,  op_MI_LCH_get,  0, true);
 const tele_op_t op_MI_NCH  = MAKE_GET_OP(MI.NCH,  op_MI_NCH_get,  0, true);
 const tele_op_t op_MI_OCH  = MAKE_GET_OP(MI.OCH,  op_MI_OCH_get,  0, true);
 const tele_op_t op_MI_CCH  = MAKE_GET_OP(MI.CCH,  op_MI_CCH_get,  0, true);
+const tele_op_t op_MI_CLKR = MAKE_GET_OP(MI.CLKR, op_MI_CLKR_get, 0, false);
+const tele_op_t op_MI_CLKD = MAKE_GET_SET_OP(MI.CLKD, op_MI_CLKD_get, op_MI_CLKD_set, 0, true);
+
+// clang-format on
 
 static void op_MI_SYM_DOLLAR_get(const void *NOTUSED(data), scene_state_t *ss,
                                  exec_state_t *NOTUSED(es),
@@ -185,7 +195,7 @@ static void op_MI_LO_get(const void *NOTUSED(data), scene_state_t *ss,
 }
 
 static void op_MI_LC_get(const void *NOTUSED(data), scene_state_t *ss,
-                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     cs_push(cs, ss->midi.last_controller);
 }
 
@@ -207,9 +217,7 @@ static void op_MI_NL_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_MI_N_get(const void *NOTUSED(data), scene_state_t *ss,
                         exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.on_count
-                    ? 0
-                    : ss->midi.note_on[i - 1]);
+    cs_push(cs, i < 1 || i > ss->midi.on_count ? 0 : ss->midi.note_on[i - 1]);
 }
 
 static void op_MI_NV_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -223,9 +231,7 @@ static void op_MI_NV_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_MI_V_get(const void *NOTUSED(data), scene_state_t *ss,
                         exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.on_count
-                    ? 0
-                    : ss->midi.note_vel[i - 1]);
+    cs_push(cs, i < 1 || i > ss->midi.on_count ? 0 : ss->midi.note_vel[i - 1]);
 }
 
 static void op_MI_VV_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -244,9 +250,7 @@ static void op_MI_OL_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_MI_O_get(const void *NOTUSED(data), scene_state_t *ss,
                         exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.off_count
-                    ? 0
-                    : ss->midi.note_off[i - 1]);
+    cs_push(cs, i < 1 || i > ss->midi.off_count ? 0 : ss->midi.note_off[i - 1]);
 }
 
 static void op_MI_CL_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -257,25 +261,19 @@ static void op_MI_CL_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_MI_C_get(const void *NOTUSED(data), scene_state_t *ss,
                         exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.cc_count
-                    ? 0
-                    : ss->midi.cn[i - 1]);
+    cs_push(cs, i < 1 || i > ss->midi.cc_count ? 0 : ss->midi.cn[i - 1]);
 }
 
 static void op_MI_CC_get(const void *NOTUSED(data), scene_state_t *ss,
                          exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.cc_count
-                    ? 0
-                    : ss->midi.cc[i - 1]);
+    cs_push(cs, i < 1 || i > ss->midi.cc_count ? 0 : ss->midi.cc[i - 1]);
 }
 
 static void op_MI_CCV_get(const void *NOTUSED(data), scene_state_t *ss,
                           exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.cc_count
-                    ? 0
-                    : ss->midi.cc[i - 1] * 129);
+    cs_push(cs, i < 1 || i > ss->midi.cc_count ? 0 : ss->midi.cc[i - 1] * 129);
 }
 
 static void op_MI_LCH_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -286,23 +284,38 @@ static void op_MI_LCH_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_MI_NCH_get(const void *NOTUSED(data), scene_state_t *ss,
                           exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.on_count
-                    ? 0
-                    : ss->midi.on_channel[i - 1]);
+    cs_push(cs,
+            i < 1 || i > ss->midi.on_count ? 0 : ss->midi.on_channel[i - 1]);
 }
 
 static void op_MI_OCH_get(const void *NOTUSED(data), scene_state_t *ss,
                           exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.off_count
-                    ? 0
-                    : ss->midi.off_channel[i - 1]);
+    cs_push(cs,
+            i < 1 || i > ss->midi.off_count ? 0 : ss->midi.off_channel[i - 1]);
 }
 
 static void op_MI_CCH_get(const void *NOTUSED(data), scene_state_t *ss,
                           exec_state_t *es, command_state_t *cs) {
     s16 i = es_variables(es)->i;
-    cs_push(cs, i < 1 || i > ss->midi.cc_count
-                    ? 0
-                    : ss->midi.cc_channel[i - 1]);
+    cs_push(cs,
+            i < 1 || i > ss->midi.cc_count ? 0 : ss->midi.cc_channel[i - 1]);
+}
+
+static void op_MI_CLKD_get(const void *NOTUSED(data), scene_state_t *ss,
+                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+    cs_push(cs, ss->midi.clock_div);
+}
+
+static void op_MI_CLKD_set(const void *NOTUSED(data), scene_state_t *ss,
+                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+    s16 clock_div = cs_pop(cs);
+    if (clock_div < 1 || clock_div > 24) return;
+    ss->midi.clock_div = clock_div;
+    reset_midi_counter();
+}
+
+static void op_MI_CLKR_get(const void *NOTUSED(data), scene_state_t *ss,
+                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+    reset_midi_counter();
 }

@@ -736,6 +736,8 @@
         "MI.NCH"      => { MATCH_OP(E_OP_MI_NCH); };
         "MI.OCH"      => { MATCH_OP(E_OP_MI_OCH); };
         "MI.CCH"      => { MATCH_OP(E_OP_MI_CCH); };
+        "MI.CLKD"     => { MATCH_OP(E_OP_MI_CLKD); };
+        "MI.CLKR"     => { MATCH_OP(E_OP_MI_CLKR); };
 
         # MODS
         # controlflow

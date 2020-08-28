@@ -28,5 +28,7 @@ extern const tele_op_t op_MI_LCH;
 extern const tele_op_t op_MI_NCH;
 extern const tele_op_t op_MI_OCH;
 extern const tele_op_t op_MI_CCH;
+extern const tele_op_t op_MI_CLKD;
+extern const tele_op_t op_MI_CLKR;
 
 #endif

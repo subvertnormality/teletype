@@ -189,6 +189,7 @@ void ss_midi_init(scene_state_t *ss) {
         ss->midi.off_channel[i] = 0;
         ss->midi.cc_channel[i] = 0;
     }
+    ss->midi.clock_div = 24;
 }
 
 // Hardware

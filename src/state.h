@@ -229,6 +229,7 @@ typedef struct {
     uint8_t cc_channel[MAX_MIDI_EVENTS];
     uint8_t cn[MAX_MIDI_EVENTS];
     uint8_t cc[MAX_MIDI_EVENTS];
+    uint8_t clock_div;
 } scene_midi_t;
 
 typedef struct {

@@ -100,6 +100,7 @@ static tele_mode_t last_mode = M_LIVE;
 static uint32_t ss_counter = 0;
 static u8 grid_connected = 0;
 static u8 grid_control_mode = 0;
+static u8 midi_clock_counter = 0;
 
 static uint16_t adc[4];
 
@@ -673,28 +674,26 @@ static void midi_control_change(u8 ch, u8 num, u8 val) {
 }
 
 static void midi_clock_tick(void) {
-    /*
-    scene_state.midi.last_event_type = 4;
-    
-    if (scene_state.midi.clk_script >= 0 && 
-        scene_state.midi.clk_script <= INIT_SCRIPT)
-        run_script(&scene_state, scene_state.midi.clk_script);
-    */
+    if (++midi_clock_counter >= scene_state.midi.clock_div) {
+        midi_clock_counter = 0;
+        scene_state.midi.last_event_type = 4;
+        safely_run_script(scene_state.midi.clk_script);
+    }
 }
 
 static void midi_seq_start(void) {
     scene_state.midi.last_event_type = 5;
-    safely_run_script(&scene_state, scene_state.midi.start_script);
+    safely_run_script(scene_state.midi.start_script);
 }
 
 static void midi_seq_stop(void) {
     scene_state.midi.last_event_type = 6;
-    safely_run_script(&scene_state, scene_state.midi.stop_script);
+    safely_run_script(scene_state.midi.stop_script);
 }
 
 static void midi_seq_continue(void) {
     scene_state.midi.last_event_type = 7;
-    safely_run_script(&scene_state, scene_state.midi.continue_script);
+    safely_run_script(scene_state.midi.continue_script);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1096,6 +1095,10 @@ void grid_key_press(uint8_t x, uint8_t y, uint8_t z) {
 void device_flip() {
     device_config.flip = !device_config.flip;
     update_device_config(1);
+}
+
+void reset_midi_counter() {
+    midi_clock_counter = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
