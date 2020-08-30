@@ -25,6 +25,8 @@
 #include "init_ansible.h"
 #include "interrupts.h"
 #include "kbd.h"
+#include "midi.h"
+#include "midi_common.h"
 #include "monome.h"
 #include "region.h"
 #include "screen.h"
@@ -99,6 +101,7 @@ static tele_mode_t last_mode = M_LIVE;
 static uint32_t ss_counter = 0;
 static u8 grid_connected = 0;
 static u8 grid_control_mode = 0;
+static u8 midi_clock_counter = 0;
 
 static uint16_t adc[4];
 
@@ -118,6 +121,7 @@ static bool metro_timer_enabled;
 static uint8_t front_timer;
 static uint8_t mod_key = 0, hold_key, hold_key_count = 0;
 static uint64_t last_adc_tick = 0;
+static midi_behavior_t midi_behavior;
 static u8 external_metro = 0; // ANSIBLE_SATELLITE
 
 // timers
@@ -131,6 +135,7 @@ static softTimer_t metroTimer = { .next = NULL, .prev = NULL };
 static softTimer_t monomePollTimer = { .next = NULL, .prev = NULL };
 static softTimer_t monomeRefreshTimer = { .next = NULL, .prev = NULL };
 static softTimer_t gridFaderTimer = { .next = NULL, .prev = NULL };
+static softTimer_t midiScriptTimer = {.next = NULL, .prev = NULL };
 static softTimer_t metroLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
 static softTimer_t sceneSaveLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
 
@@ -149,6 +154,7 @@ static void metroTimer_callback(void* o);
 static void monome_poll_timer_callback(void* obj);
 static void monome_refresh_timer_callback(void* obj);
 static void grid_fader_timer_callback(void* obj);
+static void midiScriptTimer_callback(void* obj);
 
 // event handler prototypes
 static void handler_None(int32_t data);
@@ -322,6 +328,35 @@ void timers_unset_monome(void) {
 
 void grid_fader_timer_callback(void* o) {
     grid_process_fader_slew(&scene_state);
+}
+
+static void safely_run_script(u8 script) {
+    if (script >= 0 && script <= INIT_SCRIPT)
+        run_script(&scene_state, script);
+}
+
+void midiScriptTimer_callback(void* obj) {
+    u8 executed[SCRIPT_COUNT] = { 0 };
+    
+    if (scene_state.midi.on_count) {
+        safely_run_script(scene_state.midi.on_script);
+        executed[scene_state.midi.on_script] = 1;
+    }
+    
+    if (scene_state.midi.off_count &&
+        !executed[scene_state.midi.off_script]) {
+        safely_run_script(scene_state.midi.off_script);
+        executed[scene_state.midi.off_script] = 1;
+    }
+    
+    if (scene_state.midi.cc_count &&
+        !executed[scene_state.midi.cc_script]) {
+        safely_run_script(scene_state.midi.cc_script);
+    }
+    
+    scene_state.midi.on_count = 0;
+    scene_state.midi.off_count = 0;
+    scene_state.midi.cc_count = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -726,6 +761,94 @@ static void handler_MonomeGridKey(s32 data) {
     grid_process_key(&scene_state, x, y, z, 0);
 }
 
+static void handler_midi_connect(s32 data) {
+}
+
+static void handler_midi_disconnect(s32 data) {
+}
+
+static void handler_standard_midi_packet(s32 data) {
+    midi_packet_parse(&midi_behavior, (u32)data);
+}
+
+static void midi_note_on(u8 ch, u8 num, u8 vel) {
+    scene_state.midi.last_event_type = 1;
+    scene_state.midi.last_channel = ch;
+    scene_state.midi.last_note = num;
+    scene_state.midi.last_velocity = vel;
+
+    if (scene_state.midi.on_script != -1 &&
+        scene_state.midi.on_count < MAX_MIDI_EVENTS) {
+        scene_state.midi.on_channel[scene_state.midi.on_count] = ch;
+        scene_state.midi.note_on[scene_state.midi.on_count] = num;
+        scene_state.midi.note_vel[scene_state.midi.on_count] = vel;
+        scene_state.midi.on_count++;
+    }
+}
+
+static void midi_note_off(u8 ch, u8 num, u8 vel) {
+    scene_state.midi.last_event_type = 2;
+    scene_state.midi.last_channel = ch;
+    scene_state.midi.last_note = num;
+    scene_state.midi.last_velocity = vel;
+
+    if (scene_state.midi.off_script != -1 &&
+        scene_state.midi.off_count < MAX_MIDI_EVENTS) {
+        scene_state.midi.off_channel[scene_state.midi.off_count] = ch;
+        scene_state.midi.note_off[scene_state.midi.off_count] = num;
+        scene_state.midi.off_count++;
+    }
+}
+
+static void midi_control_change(u8 ch, u8 num, u8 val) {
+    scene_state.midi.last_event_type = 3;
+    scene_state.midi.last_channel = ch;
+    scene_state.midi.last_controller = num;
+    scene_state.midi.last_cc = val;
+
+    if (scene_state.midi.cc_script != -1) {
+            
+        u8 found = 0;
+        for (u8 i = 0; i < scene_state.midi.cc_count; i++) {
+            if (scene_state.midi.cn[i] == num &&
+                scene_state.midi.cc_channel[i] == ch) {
+                scene_state.midi.cc[i] = val;
+                found = 1;
+                break;
+            }
+        }
+        
+        if (!found && scene_state.midi.cc_count < MAX_MIDI_EVENTS) {
+            scene_state.midi.cc_channel[scene_state.midi.cc_count] = ch;
+            scene_state.midi.cn[scene_state.midi.cc_count] = num;
+            scene_state.midi.cc[scene_state.midi.cc_count] = val;
+            scene_state.midi.cc_count++;
+        }
+    }
+}
+
+static void midi_clock_tick(void) {
+    if (++midi_clock_counter >= scene_state.midi.clock_div) {
+        midi_clock_counter = 0;
+        scene_state.midi.last_event_type = 4;
+        safely_run_script(scene_state.midi.clk_script);
+    }
+}
+
+static void midi_seq_start(void) {
+    scene_state.midi.last_event_type = 5;
+    safely_run_script(scene_state.midi.start_script);
+}
+
+static void midi_seq_stop(void) {
+    scene_state.midi.last_event_type = 6;
+    safely_run_script(scene_state.midi.stop_script);
+}
+
+static void midi_seq_continue(void) {
+    scene_state.midi.last_event_type = 7;
+    safely_run_script(scene_state.midi.continue_script);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // event queue
@@ -757,6 +880,9 @@ void assign_main_event_handlers() {
     app_event_handlers[kEventMonomePoll] = &handler_MonomePoll;
     app_event_handlers[kEventMonomeRefresh] = &handler_MonomeRefresh;
     app_event_handlers[kEventMonomeGridKey] = &handler_MonomeGridKey;
+    app_event_handlers[kEventMidiConnect] = &handler_midi_connect;
+    app_event_handlers[kEventMidiDisconnect] = &handler_midi_disconnect;
+    app_event_handlers[kEventMidiPacket] = &handler_standard_midi_packet;
     
     // ANSIBLE_SATELLITE
     app_event_handlers[kEventTr] = &handler_Tr;
@@ -991,6 +1117,19 @@ void update_device_config(u8 refresh) {
     flash_update_device_config(&device_config);
 }
 
+static void setup_midi(void) {
+    midi_behavior.note_on = &midi_note_on;
+    midi_behavior.note_off = &midi_note_off;
+    midi_behavior.channel_pressure = NULL;
+    midi_behavior.pitch_bend = NULL;
+    midi_behavior.control_change = &midi_control_change;
+    midi_behavior.clock_tick = &midi_clock_tick;
+    midi_behavior.seq_start = &midi_seq_start;
+    midi_behavior.seq_stop = &midi_seq_stop;
+    midi_behavior.seq_continue = &midi_seq_continue;
+    midi_behavior.panic = NULL;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // teletype_io.h
@@ -1139,6 +1278,10 @@ void device_flip() {
     update_device_config(1);
 }
 
+void reset_midi_counter() {
+    midi_clock_counter = 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // main
 
@@ -1160,6 +1303,7 @@ int main(void) {
 
     init_usb_host();
     init_monome();
+    setup_midi();
     // ANSIBLE_SATELLITE init_oled();
 
     // wait to allow for any i2c devices to fully initalise
@@ -1231,6 +1375,7 @@ int main(void) {
     // ANSIBLE_SATELLITE timer_add(&adcTimer, 61, &adcTimer_callback, NULL);
     timer_add(&refreshTimer, 63, &refreshTimer_callback, NULL);
     timer_add(&gridFaderTimer, 25, &grid_fader_timer_callback, NULL);
+    timer_add(&midiScriptTimer, 25, &midiScriptTimer_callback, NULL);
 
     // update IN and PARAM in case Init uses them
     tele_update_adc(1);
@@ -1258,6 +1403,7 @@ int main(void) {
     uint32_t count = 0;
 #endif
     while (true) {
+        midi_read(); 
         check_events();
 #ifdef TELETYPE_PROFILE
         count = (count + 1) % (FCPU_HZ / 10);
