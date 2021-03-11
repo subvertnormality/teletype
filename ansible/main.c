@@ -587,7 +587,7 @@ void handler_MscConnect(int32_t data) {
 }
 
 void handler_Trigger(int32_t data) {
-    /*
+    /* ANSIBLE_SATELLITE
     u8 input = device_config.flip ? 7 - data : data;
     if (!ss_get_mute(&scene_state, input)) {
         bool tr_state = gpio_get_pin_value(A00 + data);
@@ -610,8 +610,19 @@ void handler_Tr(int32_t data) {
     if (data == 1) {
         event_t e = { .type = kEventAppCustom, .data = 0 };
         event_post(&e);
-    } else if (data == 3) {
-        run_script(&scene_state, 2);
+    } else if (data == 2 || data == 3) {
+        if (!ss_get_mute(&scene_state, 2)) {
+            if (data == 3) {
+                if (scene_state.variables.script_pol[2] & 1) {
+                    run_script(&scene_state, 2);
+                }
+            }
+            else {
+                if (scene_state.variables.script_pol[2] & 2) {
+                    run_script(&scene_state, 2);
+                }
+            }
+        }
     }
 }
 
@@ -623,26 +634,37 @@ void handler_TrNormal(int32_t data) {
 // ANSIBLE_SATELLITE
 void handler_Key(int32_t data) {
     u8 pressed = data & 1;
-    if (pressed) {
-        if (front_timer) {
-            if (data >> 1) {
-                preset_select = (preset_select + 1) % SCENE_SLOTS;
-            } else {
-                preset_select = (preset_select + SCENE_SLOTS - 1) % SCENE_SLOTS;
-            }
-            ss_grid_init(&scene_state);
-            flash_read(preset_select, &scene_state, &scene_text, 1, 1);
-            flash_update_last_saved_scene(preset_select);
-            ss_set_scene(&scene_state, preset_select);
-
-            scene_state.initializing = true;
-            run_script(&scene_state, INIT_SCRIPT);
-            scene_state.initializing = false;
-
-            set_last_mode();
-            front_timer = 0;
+    if (pressed && front_timer) {
+        if (data >> 1) {
+            preset_select = (preset_select + 1) % SCENE_SLOTS;
         } else {
-            run_script(&scene_state, data >> 1);
+            preset_select = (preset_select + SCENE_SLOTS - 1) % SCENE_SLOTS;
+        }
+        ss_grid_init(&scene_state);
+        flash_read(preset_select, &scene_state, &scene_text, 1, 1);
+        flash_update_last_saved_scene(preset_select);
+        ss_set_scene(&scene_state, preset_select);
+
+        scene_state.initializing = true;
+        run_script(&scene_state, INIT_SCRIPT);
+        scene_state.initializing = false;
+
+        set_last_mode();
+        front_timer = 0;
+        return;
+    }
+
+    u8 input = data >> 1;
+    if (!ss_get_mute(&scene_state, input)) {
+        if (pressed) {
+            if (scene_state.variables.script_pol[input] & 1) {
+                run_script(&scene_state, input);
+            }
+        }
+        else {
+            if (scene_state.variables.script_pol[input] & 2) {
+                run_script(&scene_state, input);
+            }
         }
     }
 }
