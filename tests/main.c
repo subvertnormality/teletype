@@ -36,6 +36,11 @@ bool tele_get_input_state(uint8_t n) {
     return false;
 }
 void device_flip() {}
+void set_live_submode(uint8_t submode) {}
+void print_dashboard_value(uint8_t index, int16_t value) {}
+int16_t get_dashboard_value(uint8_t index) {
+    return 0;
+}
 void reset_midi_counter() {}
 
 void tele_save_calibration() {}

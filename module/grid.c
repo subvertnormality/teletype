@@ -21,6 +21,7 @@
 
 typedef enum {
     G_LIVE_V,
+    G_LIVE_D,
     G_LIVE_G,
     G_LIVE_GF,
     G_EDIT,
@@ -207,10 +208,13 @@ static void grid_fill_area_scr(u8 x, u8 y, u8 w, u8 h, s8 level, u8 page);
 
 void grid_set_control_mode(u8 control, u8 mode, scene_state_t *ss) {
     if (mode == M_LIVE) {
-        if (grid_mode == GRID_MODE_EDIT)
+        u8 sub_mode = get_live_sub_mode();
+        if (sub_mode == SUB_MODE_GRID)
             tt_mode = G_LIVE_G;
-        else if (grid_mode == GRID_MODE_FULL)
+        else if (sub_mode == SUB_MODE_FULLGRID)
             tt_mode = G_LIVE_GF;
+        else if (sub_mode == SUB_MODE_DASH)
+            tt_mode = G_LIVE_D;
         else
             tt_mode = G_LIVE_V;
     }
@@ -351,7 +355,7 @@ void grid_control_refresh(scene_state_t *ss) {
         tt_mode == G_EDIT && tt_script == 8 ? mode_on : mode_off;
     monomeLedBuffer[d + 1] =
         tt_mode == G_EDIT && tt_script == 9 ? mode_on : mode_off;
-    monomeLedBuffer[d + 3] = tt_mode == G_LIVE_V ? mode_on : mode_off;
+    monomeLedBuffer[d + 3] = tt_mode == G_LIVE_V || tt_mode == G_LIVE_D ? mode_on : mode_off;
     monomeLedBuffer[d + 4] =
         tt_mode == G_LIVE_G || tt_mode == G_LIVE_GF ? mode_on : mode_off;
     monomeLedBuffer[d + 6] = tt_mode == G_PRESET ? mode_on : mode_off;
@@ -384,7 +388,7 @@ void grid_control_refresh(scene_state_t *ss) {
     monomeLedBuffer[d + 32] = script_triggers[8].on ? exec : trig;
     monomeLedBuffer[d + 33] = script_triggers[9].on ? exec : trig;
 
-    if (tt_mode == G_LIVE_V) {
+    if (tt_mode == G_LIVE_V || tt_mode == G_LIVE_D) {
         monomeLedBuffer[d + 3] =
             variable_edit == 1 ? var_edit_on : var_edit_off;
         monomeLedBuffer[d + 4] =
@@ -507,15 +511,19 @@ static void restore_last_mode(scene_state_t *ss) {
     }
     else if (tt_mode == G_LIVE_V) {
         set_mode(M_LIVE);
-        set_live_submode(1);
+        set_live_submode(SUB_MODE_VARS);
+    }
+    else if (tt_mode == G_LIVE_D) {
+        set_mode(M_LIVE);
+        set_live_submode(SUB_MODE_DASH);
     }
     else if (tt_mode == G_LIVE_G) {
         set_mode(M_LIVE);
-        set_live_submode(2);
+        set_live_submode(SUB_MODE_GRID);
     }
     else if (tt_mode == G_LIVE_GF) {
         set_mode(M_LIVE);
-        set_live_submode(3);
+        set_live_submode(SUB_MODE_FULLGRID);
     }
     else if (tt_mode == G_TRACKER) {
         tt_mode = G_TRACKER;
@@ -740,17 +748,15 @@ static u8 grid_control_process_key(scene_state_t *ss, u8 x, u8 y, u8 z,
                 ss->grid.grid_dirty = 1;
                 break;
             case 3:
-                if (tt_mode != G_LIVE_V) {
-                    tt_mode = G_LIVE_V;
-                    set_mode(M_LIVE);
-                    set_live_submode(1);
-                    ss->grid.grid_dirty = 1;
-                }
+                tt_mode = tt_mode == G_LIVE_D ? G_LIVE_V : G_LIVE_D;
+                set_mode(M_LIVE);
+                set_live_submode(tt_mode == G_LIVE_V ? SUB_MODE_VARS : SUB_MODE_DASH);
+                ss->grid.grid_dirty = 1;
                 break;
             case 4:
                 tt_mode = tt_mode == G_LIVE_G ? G_LIVE_GF : G_LIVE_G;
                 set_mode(M_LIVE);
-                set_live_submode(tt_mode == G_LIVE_G ? 2 : 3);
+                set_live_submode(tt_mode == G_LIVE_G ? SUB_MODE_GRID : SUB_MODE_FULLGRID);
                 ss->grid.grid_dirty = 1;
                 break;
             case 6:
@@ -847,6 +853,7 @@ static u8 grid_control_process_key(scene_state_t *ss, u8 x, u8 y, u8 z,
         bool muted = ss_get_mute(ss, x);
         ss_set_mute(ss, x, !muted);
         screen_mutes_updated();
+        set_mutes_updated();
         ss->grid.grid_dirty = 1;
         return 1;
     }
@@ -915,6 +922,7 @@ static u8 grid_control_process_key(scene_state_t *ss, u8 x, u8 y, u8 z,
     if (y == 3 && x == 0 && !from_held && !z) {
         ss->variables.m_act = !ss->variables.m_act;
         screen_mutes_updated();
+        set_mutes_updated();
         tele_metro_updated();
         ss->grid.grid_dirty = 1;
         return 1;
@@ -946,7 +954,7 @@ static u8 grid_control_process_key(scene_state_t *ss, u8 x, u8 y, u8 z,
     }
 
     // live variables
-    if (tt_mode == G_LIVE_V) {
+    if (tt_mode == G_LIVE_V || tt_mode == G_LIVE_D) {
         if (y > 1 && y < 6 && x > 2 && x < 5 && !from_held) {
             variable_edit = z ? x - 2 + ((y - 2) << 1) : 0;
             if (variable_edit) variable_changed = 0;
@@ -1574,19 +1582,14 @@ void grid_fill_area(u8 x, u8 y, u8 w, u8 h, s8 level) {
 
 ///////////////////////////////////////// screen functions
 
-void grid_screen_refresh(scene_state_t *ss, screen_grid_mode mode, u8 page,
-                         u8 ctrl, u8 x1, u8 y1, u8 x2, u8 y2) {
-    switch (mode) {
-        case GRID_MODE_EDIT:
-            grid_screen_refresh_led(ss, 0, page, x1, y1, x2, y2);
-            if (ctrl) grid_screen_refresh_ctrl(ss, page, x1, y1, x2, y2);
-            grid_screen_refresh_info(ss, page, x1, y1, x2, y2);
-            break;
-        case GRID_MODE_FULL:
-            grid_screen_refresh_led(ss, 1, page, x1, y1, x2, y2);
-            break;
-        case GRID_MODE_OFF:
-        case GRID_MODE_LAST: break;
+void grid_screen_refresh(scene_state_t *ss, u8 is_full, u8 page, u8 ctrl, u8 x1,
+                         u8 y1, u8 x2, u8 y2) {
+    if (is_full) {
+        grid_screen_refresh_led(ss, 1, page, x1, y1, x2, y2);
+    } else {
+        grid_screen_refresh_led(ss, 0, page, x1, y1, x2, y2);
+        if (ctrl) grid_screen_refresh_ctrl(ss, page, x1, y1, x2, y2);
+        grid_screen_refresh_info(ss, page, x1, y1, x2, y2);
     }
     SG.scr_dirty = 0;
 }

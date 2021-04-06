@@ -4,6 +4,7 @@
 #include "flash.h"
 #include "globals.h"
 #include "keyboard_helper.h"
+#include "live_mode.h"
 
 // libavr32
 #include "font.h"
@@ -111,6 +112,7 @@ void do_preset_read() {
     flash_update_last_saved_scene(preset_select);
     ss_set_scene(&scene_state, preset_select);
 
+    set_dash_updated();
     scene_state.initializing = true;
     run_script(&scene_state, INIT_SCRIPT);
     scene_state.initializing = false;

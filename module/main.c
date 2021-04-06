@@ -522,7 +522,7 @@ void handler_ScreenRefresh(int32_t data) {
         case M_PRESET_W: screen_dirty = screen_refresh_preset_w(); break;
         case M_PRESET_R: screen_dirty = screen_refresh_preset_r(); break;
         case M_HELP: screen_dirty = screen_refresh_help(); break;
-        case M_LIVE: screen_dirty = screen_refresh_live(&scene_state); break;
+        case M_LIVE: screen_dirty = screen_refresh_live(); break;
         case M_EDIT: screen_dirty = screen_refresh_edit(); break;
     }
 
@@ -905,6 +905,7 @@ bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
         bool muted = ss_get_mute(&scene_state, (k - HID_F1));
         ss_set_mute(&scene_state, (k - HID_F1), !muted);
         screen_mutes_updated();
+        set_mutes_updated();
         return true;
     }
     // ctrl-<F9> toggle metro
@@ -1074,6 +1075,7 @@ void tele_ii_rx(uint8_t addr, uint8_t* data, uint8_t l) {
 void tele_scene(uint8_t i, uint8_t init_grid, uint8_t init_pattern) {
     preset_select = i;
     flash_read(i, &scene_state, &scene_text, init_pattern, init_grid, 0);
+    set_dash_updated();
     if (init_grid) scene_state.grid.scr_dirty = scene_state.grid.grid_dirty = 1;
 }
 
