@@ -10,6 +10,7 @@
 #include "line_editor.h"
 
 // teletype
+#include "helpers.h"
 #include "teletype_io.h"
 
 // libavr32
@@ -133,6 +134,8 @@ static void parse_dash_coordinates(void) {
         
         var_state = 0;
         for (uint8_t c = 0; c < SCENE_TEXT_CHARS - 1; c++) {
+            if (scene_text[index][c] == 0) break;
+            
             if (scene_text[index][c] == '%') {
                 var_start = c;
                 var_format = 0; // decimal by default
@@ -554,20 +557,51 @@ void refresh_dashboard(uint8_t force_refresh) {
         }
     }
     
-    u8 line_no;
+    u8 line_no, s_start;
+    int16_t pixels_to_clear;
+    char s[18];
     for (u8 var = 0; var < MAX_DASH_VARS; var++) {
         if (dash_values_start[var] == -1) continue;
 
         line_no = dash_values_line_format[var] & 0b111;
         if (force_refresh || (dash_line_updated & (1 < line_no))) {
+            
+            switch (dash_values_line_format[var] >> 4) {
+                case 0: {
+                    itoa(dash_values[var], s, 10);
+                    pixels_to_clear = 22; // up to 5 digits x 3 + sign
+                    s_start = 0;
+                    break;
+                }
+                case 1: {
+                    itoa_bin(dash_values[var], s);
+                    pixels_to_clear = 63;
+                    s_start = 1;
+                    break;
+                }
+                case 2: {
+                    itoa_rbin(dash_values[var], s);
+                    pixels_to_clear = 63;
+                    s_start = 1;
+                    break;
+                }
+                case 3: {
+                    itoa_hex(dash_values[var], s);
+                    pixels_to_clear = 15;
+                    s_start = 1;
+                    break;
+                }
+            }
+            
+            if (pixels_to_clear > 128 - dash_values_start[var])
+                pixels_to_clear = 128 - dash_values_start[var];
+            
             for (u8 y = 0; y < 7; y++) {
                 u8* p = (line[line_no].data) + dash_values_start[var] + y * 128;
-                for (u32 i = 0; i < 22; i++) *p++ = 0;
+                for (u32 i = 0; i < pixels_to_clear; i++) *p++ = 0;
             }
 
-            char s[8];
-            itoa(dash_values[var], s, 10);
-            font_string_region_clip(&line[line_no], s, dash_values_start[var], 0, 0xf, 0);
+            font_string_region_clip(&line[line_no], &s[s_start], dash_values_start[var], 0, 0xf, 0);
         }
     }
     

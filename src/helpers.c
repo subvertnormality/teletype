@@ -109,3 +109,59 @@ int16_t rev_bitstring_to_int(const char* token) {
     return value;
 }
 
+void itoa_hex(uint16_t value, char *out) {
+    static char num[] = "0123456789ABCDEF";
+
+    out[0] = 'X';
+    uint8_t v, index = 1, dont_ignore_zeros = 0;
+
+    for (int8_t i = 3; i >= 0; i--) {
+        v = (value >> (i << 2)) & 0xf;
+        if (dont_ignore_zeros || v) {
+            out[index++] = num[v];
+            dont_ignore_zeros = 1;
+        }
+    }
+
+    if (!dont_ignore_zeros) out[index++] = '0';
+    out[index] = '\0';
+}
+
+void itoa_bin(uint16_t value, char *out) {
+    out[0] = 'B';
+    uint8_t v, index = 1, dont_ignore_zeros = 0;
+
+    for (int8_t i = 15; i >= 0; i--) {
+        v = (value >> i) & 1;
+        if (dont_ignore_zeros || v) {
+            out[index++] = '0' + v;
+            dont_ignore_zeros = 1;
+        }
+    }
+
+    if (!dont_ignore_zeros) out[index++] = '0';
+    out[index] = '\0';
+}
+
+void itoa_rbin(uint16_t value, char *out) {
+    out[0] = 'R';
+    uint8_t v, index = 1;
+
+    for (int8_t i = 0; i < 16; i++) {
+        v = (value >> i) & 1;
+        out[index++] = '0' + v;
+    }
+
+    index = 0;
+    for (int8_t i = 16; i > 0; i--) {
+        if (out[i] == '1') {
+            index = i;
+            break;
+        }
+    }
+    if (index == 0) {
+        index = 1;
+        out[index] = '0';
+    }
+    out[index + 1] = '\0';
+}
