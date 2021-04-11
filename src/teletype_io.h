@@ -4,6 +4,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define SUB_MODE_OFF 0
+#define SUB_MODE_VARS 1
+#define SUB_MODE_GRID 2
+#define SUB_MODE_FULLGRID 3
+#define SUB_MODE_DASH 4
+
 // These functions are for interacting with the teletype hardware, each target
 // must provide it's own implementation
 
@@ -54,6 +60,11 @@ extern void grid_key_press(uint8_t x, uint8_t y, uint8_t z);
 
 // manage device config
 extern void device_flip(void);
+
+// live screen / dashboard
+extern void set_live_submode(uint8_t submode);
+extern void print_dashboard_value(uint8_t index, int16_t value);
+extern int16_t get_dashboard_value(uint8_t index);
 
 extern void reset_midi_counter(void);
 

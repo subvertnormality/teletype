@@ -162,6 +162,16 @@
         "MUTE"        => { MATCH_OP(E_OP_MUTE); };
         "STATE"       => { MATCH_OP(E_OP_STATE); };
         "DEVICE.FLIP" => { MATCH_OP(E_OP_DEVICE_FLIP); };
+        "LIVE.OFF"    => { MATCH_OP(E_OP_LIVE_OFF); };
+        "LIVE.O"      => { MATCH_OP(E_OP_LIVE_O); };
+        "LIVE.DASH"   => { MATCH_OP(E_OP_LIVE_DASH); };
+        "LIVE.D"      => { MATCH_OP(E_OP_LIVE_D); };
+        "LIVE.GRID"   => { MATCH_OP(E_OP_LIVE_GRID); };
+        "LIVE.G"      => { MATCH_OP(E_OP_LIVE_G); };
+        "LIVE.VARS"   => { MATCH_OP(E_OP_LIVE_VARS); };
+        "LIVE.V"      => { MATCH_OP(E_OP_LIVE_V); };
+        "PRINT"       => { MATCH_OP(E_OP_PRINT); };
+        "PRT"         => { MATCH_OP(E_OP_PRT); };
 
         # maths
         "ADD"         => { MATCH_OP(E_OP_ADD); };
