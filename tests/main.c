@@ -37,14 +37,13 @@ bool tele_get_input_state(uint8_t n) {
 }
 void device_flip() {}
 void set_live_submode(uint8_t submode) {}
+void select_dash_screen(uint8_t screen) {}
 void print_dashboard_value(uint8_t index, int16_t value) {}
 int16_t get_dashboard_value(uint8_t index) {
     return 0;
 }
 void reset_midi_counter() {}
-
 void tele_save_calibration() {}
-
 void grid_key_press(uint8_t x, uint8_t y, uint8_t z) {}
 
 GREATEST_MAIN_DEFS();

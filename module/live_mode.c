@@ -41,11 +41,12 @@ static uint8_t grid_x1 = 0, grid_y1 = 0, grid_x2 = 0, grid_y2 = 0;
 static uint8_t grid_pressed = 0;
 uint8_t grid_page = 0, grid_show_controls = 0;
 
-static uint8_t dash_text_start;
+static uint8_t dash_text_start, dash_text_end;
 static int8_t dash_line_updated;
 static int16_t dash_values[MAX_DASH_VARS];
 static int8_t dash_values_start[MAX_DASH_VARS];
 static uint8_t dash_values_line_format[MAX_DASH_VARS];
+static uint8_t dash_screen;
 
 static const uint8_t D_INPUT = 1 << 0;
 static const uint8_t D_MESSAGE = 1 << 1;
@@ -99,6 +100,17 @@ void set_live_submode(u8 submode) {
     dirty = D_ALL;
 }
 
+void select_dash_screen(uint8_t screen) {
+    dash_screen = screen;
+    set_dash_updated();
+    if (sub_mode != SUB_MODE_DASH) {
+        sub_mode = SUB_MODE_DASH;
+        line_editor_set(&le, "");
+        history_line = -1;
+        dirty = D_ALL;
+    }
+}
+
 void print_dashboard_value(uint8_t index, int16_t value) {
     if (index >= MAX_DASH_VARS) return;
     if (dash_values[index] != value) {
@@ -116,10 +128,23 @@ int16_t get_dashboard_value(uint8_t index) {
 // dashboard
 
 static void parse_dash_coordinates(void) {
+    uint8_t screen = 1;
     dash_text_start = 0;
     for (uint8_t line = 0; line < SCENE_TEXT_LINES; line++) {
+        if (dash_screen < screen) break;
         if (scene_text[line][0] == '=' && scene_text[line][1] == '=' && scene_text[line][2] == '=') {
-            dash_text_start = line + 1;
+            if (screen == dash_screen) {
+                dash_text_start = line + 1;
+                break;
+            }
+            screen++;
+        }
+    }
+    
+    dash_text_end = SCENE_TEXT_LINES - 1;
+    for (uint8_t line = dash_text_start + 1; line < SCENE_TEXT_LINES; line++) {
+        if (scene_text[line][0] == '=' && scene_text[line][1] == '=' && scene_text[line][2] == '=') {
+            dash_text_end = line - 1;
             break;
         }
     }
@@ -130,11 +155,21 @@ static void parse_dash_coordinates(void) {
     int8_t var_index = 0;
     for (uint8_t y = 0; y < 6; y++) {
         index = dash_text_start + y;
-        if (index >= SCENE_TEXT_LINES) break;
+        if (index > dash_text_end) break;
         
         var_state = 0;
         for (uint8_t c = 0; c < SCENE_TEXT_CHARS - 1; c++) {
-            if (scene_text[index][c] == 0) break;
+            
+            if (scene_text[index][c] == 0) {
+                if (var_state == 2) {
+                    var_index--;
+                    if (var_index >= 0 && var_index < MAX_DASH_VARS) {
+                        dash_values_line_format[var_index] = (var_format << 4) | y;
+                        dash_values_start[var_index] = font_string_position(scene_text[index], var_start) + 2;
+                    }
+                }
+                break;
+            }
             
             if (scene_text[index][c] == '%') {
                 var_start = c;
@@ -142,29 +177,18 @@ static void parse_dash_coordinates(void) {
                 var_index = 0;
                 var_state = 1;
                 continue;
-            } 
+            }
             
             if (var_state == 1) {
                 if (scene_text[index][c] == 'B') {
                     var_format = 1; // binary
-                    var_state = 2;
-                    continue;
                 } else if (scene_text[index][c] == 'R') {
                     var_format = 2; // reversed binary
-                    var_state = 2;
-                    continue;
                 } else if (scene_text[index][c] == 'X') {
                     var_format = 3; // hex
-                    var_state = 2;
-                    continue;
-                }
-            }
-            
-            if (var_state == 1 || var_state == 2) {
-                if (scene_text[index][c] >= '0' && scene_text[index][c] <= '1') {
+                } else if (scene_text[index][c] >= '0' && scene_text[index][c] <= '1') {
                     var_index = scene_text[index][c] - '0';
-                    var_state = 3;
-                    continue;
+                    var_state = 2;
                 } else if (scene_text[index][c] >= '2' && scene_text[index][c] <= '9') {
                     var_index = scene_text[index][c] - '0' - 1;
                     if (var_index >= 0 && var_index < MAX_DASH_VARS) {
@@ -172,11 +196,11 @@ static void parse_dash_coordinates(void) {
                         dash_values_start[var_index] = font_string_position(scene_text[index], var_start) + 2;
                     }
                     var_state = 0;
-                    continue;
-                }
+                } else var_state = 0;
+                continue;
             }
-
-            if (var_state == 3) {
+            
+            if (var_state == 2) {
                 if (scene_text[index][c] >= '0' && scene_text[index][c] <= '9') {
                     var_index = var_index * 10 + (scene_text[index][c] - '0');
                 }
@@ -185,9 +209,8 @@ static void parse_dash_coordinates(void) {
                     dash_values_line_format[var_index] = (var_format << 4) | y;
                     dash_values_start[var_index] = font_string_position(scene_text[index], var_start) + 2;
                 }
+                var_state = 0;
             }
-            
-            var_state = 0;
         }
     }
 }
@@ -234,6 +257,7 @@ void init_live_mode() {
     show_welcome_message = true;
     history_top = -1;
     history_line = -1;
+    dash_screen = 0;
     dash_text_start = 0;
     dash_line_updated = 0;
     for (uint8_t i = 0; i < MAX_DASH_VARS; i++) {
@@ -551,7 +575,7 @@ void refresh_dashboard(uint8_t force_refresh) {
         if (force_refresh || (dash_line_updated & (1 < y))) {
             region_fill(&line[y], 0);
             index = dash_text_start + y;
-            if (index < SCENE_TEXT_LINES) {
+            if (index <= dash_text_end) {
                 font_string_region_clip(&line[y], scene_text[index], 2, 0, y ? 0x8 : 0xC, 0);
             }
         }

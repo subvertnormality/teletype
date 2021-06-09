@@ -63,6 +63,7 @@ extern void device_flip(void);
 
 // live screen / dashboard
 extern void set_live_submode(uint8_t submode);
+extern void select_dash_screen(uint8_t screen);
 extern void print_dashboard_value(uint8_t index, int16_t value);
 extern int16_t get_dashboard_value(uint8_t index);
 

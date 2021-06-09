@@ -77,6 +77,11 @@ void set_live_submode(uint8_t submode) {
     printf("\n");
 }
 
+void select_dash_screen(uint8_t screen) {
+    printf("SELECT_DASH_SCREEN screen:%" PRIu8, screen);
+    printf("\n");
+}
+
 void print_dashboard_value(uint8_t index, int16_t value) {
     printf("PRINT_DASHBOARD_VALUE  index:%" PRIu8 " value:%" PRId16, index, value);
     printf("\n");
