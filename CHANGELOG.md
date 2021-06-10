@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.2.1
+## v4.0.0
 
 - **FIX**: `LAST SCRIPT` in live mode gives time since init script was run
 - **FIX**: negative pattern values are properly read from USB
