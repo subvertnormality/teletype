@@ -84,31 +84,32 @@ extern const tele_op_t op_TIF;  // ternary if
 
 extern const tele_op_t op_XOR;  // XOR alias NE
 
-extern const tele_op_t op_SYM_PLUS;                // + alias ADD
-extern const tele_op_t op_SYM_DASH;                // - alias SUB
-extern const tele_op_t op_SYM_STAR;                // * alias MUL
-extern const tele_op_t op_SYM_FORWARD_SLASH;       // / alias DIV
-extern const tele_op_t op_SYM_PERCENTAGE;          // % alias MOD
-extern const tele_op_t op_SYM_EQUAL_x2;            // == alias EQ
-extern const tele_op_t op_SYM_EXCLAMATION_EQUAL;   // != alias NE
-extern const tele_op_t op_SYM_LEFT_ANGLED;         // < alias LT
-extern const tele_op_t op_SYM_RIGHT_ANGLED;        // > alias GT
-extern const tele_op_t op_SYM_LEFT_ANGLED_EQUAL;   // <= alias LTE
-extern const tele_op_t op_SYM_RIGHT_ANGLED_EQUAL;  // >= alias GT
-extern const tele_op_t op_SYM_RIGHT_ANGLED_LEFT_ANGLED; // >< alias INR
-extern const tele_op_t op_SYM_LEFT_ANGLED_RIGHT_ANGLED; // <> alias OUTR
-extern const tele_op_t op_SYM_RIGHT_ANGLED_EQUAL_LEFT_ANGLED; // >=< alias INRI
-extern const tele_op_t op_SYM_LEFT_ANGLED_EQUAL_RIGHT_ANGLED; // <=> alias OUTRI
-extern const tele_op_t op_SYM_EXCLAMATION;         // ! alias NZ
-extern const tele_op_t op_SYM_LEFT_ANGLED_x2;      // << alias LSH
-extern const tele_op_t op_SYM_RIGHT_ANGLED_x2;     // >> alias RSH
-extern const tele_op_t op_SYM_LEFT_ANGLED_x3;      // <<< alias LROT
-extern const tele_op_t op_SYM_RIGHT_ANGLED_x3;     // >>> alias RROT
-extern const tele_op_t op_SYM_AMPERSAND_x2;        // && alias AND
-extern const tele_op_t op_SYM_PIPE_x2;             // || alias OR
-extern const tele_op_t op_SYM_AMPERSAND_x3;        // &&& alias AND3
-extern const tele_op_t op_SYM_PIPE_x3;             // ||| alias OR3
-extern const tele_op_t op_SYM_AMPERSAND_x4;        // &&&& alias AND4
-extern const tele_op_t op_SYM_PIPE_x4;             // |||| alias OR4
+extern const tele_op_t op_SYM_PLUS;                            // + alias ADD
+extern const tele_op_t op_SYM_DASH;                            // - alias SUB
+extern const tele_op_t op_SYM_STAR;                            // * alias MUL
+extern const tele_op_t op_SYM_FORWARD_SLASH;                   // / alias DIV
+extern const tele_op_t op_SYM_PERCENTAGE;                      // % alias MOD
+extern const tele_op_t op_SYM_EQUAL_x2;                        // == alias EQ
+extern const tele_op_t op_SYM_EXCLAMATION_EQUAL;               // != alias NE
+extern const tele_op_t op_SYM_LEFT_ANGLED;                     // < alias LT
+extern const tele_op_t op_SYM_RIGHT_ANGLED;                    // > alias GT
+extern const tele_op_t op_SYM_LEFT_ANGLED_EQUAL;               // <= alias LTE
+extern const tele_op_t op_SYM_RIGHT_ANGLED_EQUAL;              // >= alias GT
+extern const tele_op_t op_SYM_RIGHT_ANGLED_LEFT_ANGLED;        // >< alias INR
+extern const tele_op_t op_SYM_LEFT_ANGLED_RIGHT_ANGLED;        // <> alias OUTR
+extern const tele_op_t op_SYM_RIGHT_ANGLED_EQUAL_LEFT_ANGLED;  // >=< alias INRI
+extern const tele_op_t
+    op_SYM_LEFT_ANGLED_EQUAL_RIGHT_ANGLED;      // <=> alias OUTRI
+extern const tele_op_t op_SYM_EXCLAMATION;      // ! alias NZ
+extern const tele_op_t op_SYM_LEFT_ANGLED_x2;   // << alias LSH
+extern const tele_op_t op_SYM_RIGHT_ANGLED_x2;  // >> alias RSH
+extern const tele_op_t op_SYM_LEFT_ANGLED_x3;   // <<< alias LROT
+extern const tele_op_t op_SYM_RIGHT_ANGLED_x3;  // >>> alias RROT
+extern const tele_op_t op_SYM_AMPERSAND_x2;     // && alias AND
+extern const tele_op_t op_SYM_PIPE_x2;          // || alias OR
+extern const tele_op_t op_SYM_AMPERSAND_x3;     // &&& alias AND3
+extern const tele_op_t op_SYM_PIPE_x3;          // ||| alias OR3
+extern const tele_op_t op_SYM_AMPERSAND_x4;     // &&&& alias AND4
+extern const tele_op_t op_SYM_PIPE_x4;          // |||| alias OR4
 
 #endif

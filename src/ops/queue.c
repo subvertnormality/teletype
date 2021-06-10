@@ -1,8 +1,8 @@
 #include "ops/queue.h"
+#include <stdlib.h>  // rand
 #include "helpers.h"
 #include "state.h"
 #include "teletype_io.h"
-#include <stdlib.h>  // rand
 
 static void op_Q_get(const void *data, scene_state_t *ss, exec_state_t *es,
                      command_state_t *cs);
@@ -16,14 +16,14 @@ static void op_Q_N_get(const void *data, scene_state_t *ss, exec_state_t *es,
                        command_state_t *cs);
 static void op_Q_N_set(const void *data, scene_state_t *ss, exec_state_t *es,
                        command_state_t *cs);
-static void op_Q_CLR_get(const void *data, scene_state_t *ss,
-                           exec_state_t *es, command_state_t *cs);
-static void op_Q_CLR_set(const void *data, scene_state_t *ss,
-                           exec_state_t *es, command_state_t *cs);
+static void op_Q_CLR_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                         command_state_t *cs);
+static void op_Q_CLR_set(const void *data, scene_state_t *ss, exec_state_t *es,
+                         command_state_t *cs);
 static void op_Q_GRW_get(const void *data, scene_state_t *ss, exec_state_t *es,
-                          command_state_t *cs);
+                         command_state_t *cs);
 static void op_Q_GRW_set(const void *data, scene_state_t *ss, exec_state_t *es,
-                          command_state_t *cs);
+                         command_state_t *cs);
 static void op_Q_SUM_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_Q_MIN_get(const void *data, scene_state_t *ss, exec_state_t *es,
@@ -39,15 +39,15 @@ static void op_Q_RND_get(const void *data, scene_state_t *ss, exec_state_t *es,
 static void op_Q_RND_set(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_Q_SRT_get(const void *data, scene_state_t *ss, exec_state_t *es,
-                          command_state_t *cs);
+                         command_state_t *cs);
 static void op_Q_SRT_set(const void *data, scene_state_t *ss, exec_state_t *es,
-                          command_state_t *cs);
+                         command_state_t *cs);
 static void op_Q_REV_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
-static void op_Q_SH_get(const void *data, scene_state_t *ss,
-                           exec_state_t *es, command_state_t *cs);
-static void op_Q_SH_set(const void *data, scene_state_t *ss,
-                           exec_state_t *es, command_state_t *cs);
+static void op_Q_SH_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                        command_state_t *cs);
+static void op_Q_SH_set(const void *data, scene_state_t *ss, exec_state_t *es,
+                        command_state_t *cs);
 static void op_Q_ADD_get(const void *data, scene_state_t *ss, exec_state_t *es,
                          command_state_t *cs);
 static void op_Q_ADD_set(const void *data, scene_state_t *ss, exec_state_t *es,
@@ -82,26 +82,41 @@ static void op_Q_P2_set(const void *data, scene_state_t *ss, exec_state_t *es,
                         command_state_t *cs);
 
 
-const tele_op_t op_Q =        MAKE_GET_SET_OP(Q,     op_Q_get,     op_Q_set, 0, true);
-const tele_op_t op_Q_AVG =    MAKE_GET_SET_OP(Q.AVG, op_Q_AVG_get, op_Q_AVG_set, 0, true);
-const tele_op_t op_Q_N =      MAKE_GET_SET_OP(Q.N,   op_Q_N_get,   op_Q_N_set, 0, true);
-const tele_op_t op_Q_CLR =    MAKE_GET_SET_OP(Q.CLR, op_Q_CLR_get, op_Q_CLR_set, 0, false);
-const tele_op_t op_Q_GRW =    MAKE_GET_SET_OP(Q.GRW, op_Q_GRW_get, op_Q_GRW_set, 0, true);
-const tele_op_t op_Q_SUM =    MAKE_GET_OP(Q.SUM, op_Q_SUM_get, 0, true);
-const tele_op_t op_Q_MIN =    MAKE_GET_SET_OP(Q.MIN, op_Q_MIN_get, op_Q_MIN_set, 0, true);
-const tele_op_t op_Q_MAX =    MAKE_GET_SET_OP(Q.MAX, op_Q_MAX_get, op_Q_MAX_set, 0, true);
-const tele_op_t op_Q_RND =    MAKE_GET_SET_OP(Q.RND, op_Q_RND_get, op_Q_RND_set, 0, true);
-const tele_op_t op_Q_SRT =    MAKE_GET_SET_OP(Q.SRT, op_Q_SRT_get, op_Q_SRT_set, 0, false);
-const tele_op_t op_Q_REV =    MAKE_GET_OP(Q.REV, op_Q_REV_get, 0, false);
-const tele_op_t op_Q_SH =     MAKE_GET_SET_OP(Q.SH,  op_Q_SH_get,  op_Q_SH_set,  0, false);
-const tele_op_t op_Q_ADD =    MAKE_GET_SET_OP(Q.ADD, op_Q_ADD_get, op_Q_ADD_set, 1, false);
-const tele_op_t op_Q_SUB =    MAKE_GET_SET_OP(Q.SUB, op_Q_SUB_get, op_Q_SUB_set, 1, false);
-const tele_op_t op_Q_MUL =    MAKE_GET_SET_OP(Q.MUL, op_Q_MUL_get, op_Q_MUL_set, 1, false);
-const tele_op_t op_Q_DIV =    MAKE_GET_SET_OP(Q.DIV, op_Q_DIV_get, op_Q_DIV_set, 1, false);
-const tele_op_t op_Q_MOD =    MAKE_GET_SET_OP(Q.MOD, op_Q_MOD_get, op_Q_MOD_set, 1, false);
-const tele_op_t op_Q_I =      MAKE_GET_SET_OP(Q.I,   op_Q_I_get,   op_Q_I_set, 1, true);
-const tele_op_t op_Q_2P =     MAKE_GET_SET_OP(Q.2P,  op_Q_2P_get,  op_Q_2P_set, 0, false);
-const tele_op_t op_Q_P2 =     MAKE_GET_SET_OP(Q.P2,  op_Q_P2_get,  op_Q_P2_set, 0, false);
+const tele_op_t op_Q = MAKE_GET_SET_OP(Q, op_Q_get, op_Q_set, 0, true);
+const tele_op_t op_Q_AVG =
+    MAKE_GET_SET_OP(Q.AVG, op_Q_AVG_get, op_Q_AVG_set, 0, true);
+const tele_op_t op_Q_N = MAKE_GET_SET_OP(Q.N, op_Q_N_get, op_Q_N_set, 0, true);
+const tele_op_t op_Q_CLR =
+    MAKE_GET_SET_OP(Q.CLR, op_Q_CLR_get, op_Q_CLR_set, 0, false);
+const tele_op_t op_Q_GRW =
+    MAKE_GET_SET_OP(Q.GRW, op_Q_GRW_get, op_Q_GRW_set, 0, true);
+const tele_op_t op_Q_SUM = MAKE_GET_OP(Q.SUM, op_Q_SUM_get, 0, true);
+const tele_op_t op_Q_MIN =
+    MAKE_GET_SET_OP(Q.MIN, op_Q_MIN_get, op_Q_MIN_set, 0, true);
+const tele_op_t op_Q_MAX =
+    MAKE_GET_SET_OP(Q.MAX, op_Q_MAX_get, op_Q_MAX_set, 0, true);
+const tele_op_t op_Q_RND =
+    MAKE_GET_SET_OP(Q.RND, op_Q_RND_get, op_Q_RND_set, 0, true);
+const tele_op_t op_Q_SRT =
+    MAKE_GET_SET_OP(Q.SRT, op_Q_SRT_get, op_Q_SRT_set, 0, false);
+const tele_op_t op_Q_REV = MAKE_GET_OP(Q.REV, op_Q_REV_get, 0, false);
+const tele_op_t op_Q_SH =
+    MAKE_GET_SET_OP(Q.SH, op_Q_SH_get, op_Q_SH_set, 0, false);
+const tele_op_t op_Q_ADD =
+    MAKE_GET_SET_OP(Q.ADD, op_Q_ADD_get, op_Q_ADD_set, 1, false);
+const tele_op_t op_Q_SUB =
+    MAKE_GET_SET_OP(Q.SUB, op_Q_SUB_get, op_Q_SUB_set, 1, false);
+const tele_op_t op_Q_MUL =
+    MAKE_GET_SET_OP(Q.MUL, op_Q_MUL_get, op_Q_MUL_set, 1, false);
+const tele_op_t op_Q_DIV =
+    MAKE_GET_SET_OP(Q.DIV, op_Q_DIV_get, op_Q_DIV_set, 1, false);
+const tele_op_t op_Q_MOD =
+    MAKE_GET_SET_OP(Q.MOD, op_Q_MOD_get, op_Q_MOD_set, 1, false);
+const tele_op_t op_Q_I = MAKE_GET_SET_OP(Q.I, op_Q_I_get, op_Q_I_set, 1, true);
+const tele_op_t op_Q_2P =
+    MAKE_GET_SET_OP(Q .2P, op_Q_2P_get, op_Q_2P_set, 0, false);
+const tele_op_t op_Q_P2 =
+    MAKE_GET_SET_OP(Q.P2, op_Q_P2_get, op_Q_P2_set, 0, false);
 
 
 static void op_Q_get(const void *NOTUSED(data), scene_state_t *ss,
@@ -161,14 +176,14 @@ static void op_Q_N_set(const void *NOTUSED(data), scene_state_t *ss,
 
 
 static void op_Q_CLR_get(const void *NOTUSED(data), scene_state_t *ss,
-                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t *q = ss->variables.q;
     ss->variables.q_n = 1;
     for (int8_t i = 0; i < Q_LENGTH; i++) { q[i] = 0; }
 }
 
 static void op_Q_CLR_set(const void *NOTUSED(data), scene_state_t *ss,
-                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t *q = ss->variables.q;
     ss->variables.q_n = 1;
     for (int8_t i = 0; i < Q_LENGTH; i++) { q[i] = 0; }
@@ -176,12 +191,12 @@ static void op_Q_CLR_set(const void *NOTUSED(data), scene_state_t *ss,
 }
 
 static void op_Q_GRW_get(const void *NOTUSED(data), scene_state_t *ss,
-                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     cs_push(cs, ss->variables.q_grow);
 }
 
 static void op_Q_GRW_set(const void *NOTUSED(data), scene_state_t *ss,
-                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     ss->variables.q_grow = cs_pop(cs);
     ss->variables.q_grow = ss->variables.q_grow < 1 ? 0 : 1;
     if (!ss->variables.q_grow && ss->variables.q_n < 1) {
@@ -265,7 +280,7 @@ static void op_Q_RND_set(const void *NOTUSED(data), scene_state_t *ss,
     }
     else if (rnd < 0) {
         // switch random elements rnd nb times
-        rnd = rnd < (-3 * q_n) ? (-3 * q_n) : rnd; // not more than 3*q_n times
+        rnd = rnd < (-3 * q_n) ? (-3 * q_n) : rnd;  // not more than 3*q_n times
         for (int16_t i = rnd; i < 0; i++) {
             a = rand() % q_n;
             b = rand() % q_n;
@@ -280,7 +295,7 @@ static void op_Q_RND_set(const void *NOTUSED(data), scene_state_t *ss,
 }
 
 static void op_Q_SRT_get(const void *NOTUSED(data), scene_state_t *ss,
-                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t *q = ss->variables.q;
     int16_t q_n = ss->variables.q_n;
     int8_t min_idx = 0;
@@ -302,7 +317,7 @@ static void op_Q_SRT_get(const void *NOTUSED(data), scene_state_t *ss,
 
 
 static void op_Q_SRT_set(const void *NOTUSED(data), scene_state_t *ss,
-                          exec_state_t *NOTUSED(es), command_state_t *cs) {
+                         exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t *q = ss->variables.q;
     int16_t q_n = ss->variables.q_n;
     int8_t min_idx = 0;
@@ -350,7 +365,7 @@ static void op_Q_REV_get(const void *NOTUSED(data), scene_state_t *ss,
 
 
 static void op_Q_SH_get(const void *NOTUSED(data), scene_state_t *ss,
-                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+                        exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t *q = ss->variables.q;
     int16_t q_n = ss->variables.q_n;
     int16_t tmp = q[q_n - 1];
@@ -361,7 +376,7 @@ static void op_Q_SH_get(const void *NOTUSED(data), scene_state_t *ss,
 
 
 static void op_Q_SH_set(const void *NOTUSED(data), scene_state_t *ss,
-                           exec_state_t *NOTUSED(es), command_state_t *cs) {
+                        exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t *q = ss->variables.q;
     int16_t q_n = ss->variables.q_n;
     int16_t nb_shifts = cs_pop(cs);
@@ -443,8 +458,8 @@ static void op_Q_DIV_get(const void *NOTUSED(data), scene_state_t *ss,
     int16_t *q = ss->variables.q;
     int16_t q_n = ss->variables.q_n;
     int16_t div = cs_pop(cs);
-    if(div != 0){
-	for (int8_t i = 0; i < q_n; i++) { q[i] = q[i] / div; }
+    if (div != 0) {
+        for (int8_t i = 0; i < q_n; i++) { q[i] = q[i] / div; }
     }
 }
 
@@ -454,10 +469,10 @@ static void op_Q_DIV_set(const void *NOTUSED(data), scene_state_t *ss,
     int16_t q_n = ss->variables.q_n;
     int16_t div = cs_pop(cs);
     int8_t i = cs_pop(cs);
-    if(div != 0) {
-	i = i < 0 ? 0 : i;
-	i = i > q_n - 1 ? q_n - 1 : i;
-	q[i] = q[i] / div;
+    if (div != 0) {
+        i = i < 0 ? 0 : i;
+        i = i > q_n - 1 ? q_n - 1 : i;
+        q[i] = q[i] / div;
     }
 }
 
@@ -466,8 +481,8 @@ static void op_Q_MOD_get(const void *NOTUSED(data), scene_state_t *ss,
     int16_t *q = ss->variables.q;
     int16_t q_n = ss->variables.q_n;
     int16_t mod = cs_pop(cs);
-    if(mod != 0){
-	for (int8_t i = 0; i < q_n; i++) { q[i] = q[i] % mod; }
+    if (mod != 0) {
+        for (int8_t i = 0; i < q_n; i++) { q[i] = q[i] % mod; }
     }
 }
 
@@ -477,10 +492,10 @@ static void op_Q_MOD_set(const void *NOTUSED(data), scene_state_t *ss,
     int16_t q_n = ss->variables.q_n;
     int16_t mod = cs_pop(cs);
     int8_t i = cs_pop(cs);
-    if(mod != 0 ){
-	i = i < 0 ? 0 : i;
-	i = i > q_n - 1 ? q_n - 1 : i;
-	q[i] = q[i] % mod;
+    if (mod != 0) {
+        i = i < 0 ? 0 : i;
+        i = i > q_n - 1 ? q_n - 1 : i;
+        q[i] = q[i] % mod;
     }
 }
 
@@ -544,4 +559,3 @@ static void op_Q_P2_set(const void *NOTUSED(data), scene_state_t *ss,
         q[i] = ss_get_pattern_val(ss, pn, i);
     }
 }
-

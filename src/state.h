@@ -345,7 +345,8 @@ void ss_turtle_set_val(scene_state_t *, scene_turtle_t *, int16_t);
 
 void ss_set_param_scale(scene_state_t *, int16_t, int16_t);
 void ss_set_in_scale(scene_state_t *, int16_t, int16_t);
-void ss_set_fader_scale(scene_state_t *ss, int16_t fader, int16_t min, int16_t max);
+void ss_set_fader_scale(scene_state_t *ss, int16_t fader, int16_t min,
+                        int16_t max);
 void ss_update_in_scale(scene_state_t *);
 void ss_update_param_scale(scene_state_t *);
 void ss_update_fader_scale(scene_state_t *ss, int16_t fader);
@@ -408,9 +409,7 @@ typedef struct {
     int16_t top;
 } command_state_stack_t;
 
-typedef struct {
-    command_state_stack_t stack;
-} command_state_t;
+typedef struct { command_state_stack_t stack; } command_state_t;
 
 extern void cs_init(command_state_t *cs);
 extern int16_t cs_stack_size(command_state_t *cs);

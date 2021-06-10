@@ -17,8 +17,24 @@
 - **IMP**: DELAY_SIZE increased to 64 from 16
 - **FIX**: scale degree arguments 1-indexed: `N.S`, `N.CS`
 - **NEW**: Just Friends 4.0 OPs and dual JF OPs
+- **NEW**: binary scale ops `N.B` and `N.BX`
+- **NEW**: reverse binary for numbers: `R...`
+- **NEW**: reverse binary OP: `BREV`
+- **NEW**: `ES.CV` read earthsea CV values
+- **NEW**: added setter for `R`, sets R.MIN and R.MAX to same value, allowing R to be used as variable
+- **NEW**: v/oct to hz/v conversion op: `HZ`
+- **FIX**: W/2.0 ops added
+- **NEW**: W/2.0 ops documentation
+- **NEW**: `><`, `<>`, `>=<` and `<=>` OPs, checks if value is within or outside of range
+- **IMP**: new powerful Q OPs
+- **IMP**: Improved line editing movement (forward/backward by word skips intervening space).
+- **NEW**: Delete to end of word command `alt-d` added.
+- **NEW**: new multi-logic OPs `AND3`, `AND4`, `OR3` and `OR4` with aliases `&&&`, `&&&&`, `|||` and `||||`
+- **NEW**: ops to control live mode: `LIVE.OFF`, `LIVE.VARS`, `LIVE.GRID`, `LIVE.DASH`, `PRINT`
 - **NEW**: `SCENE.P` OP: load another scene but keep current pattern state
 - **NEW**: alias: `EV` for `EVERY`
+- **NEW**: live mode dashboard
+- **NEW**: ops to control live mode: `LIVE.OFF`, `LIVE.VARS`, `LIVE.GRID`, `LIVE.DASH`, `PRINT`
 
 ## v3.2.0
 

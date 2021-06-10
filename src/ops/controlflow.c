@@ -38,7 +38,7 @@ static void op_SCENE_set(const void *data, scene_state_t *ss, exec_state_t *es,
 static void op_SCENE_G_get(const void *data, scene_state_t *ss,
                            exec_state_t *es, command_state_t *cs);
 static void op_SCENE_P_get(const void *data, scene_state_t *ss,
-                          exec_state_t *es, command_state_t *cs);
+                           exec_state_t *es, command_state_t *cs);
 static void op_SCRIPT_get(const void *data, scene_state_t *ss, exec_state_t *es,
                           command_state_t *cs);
 static void op_SCRIPT_set(const void *data, scene_state_t *ss, exec_state_t *es,

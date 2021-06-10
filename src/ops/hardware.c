@@ -530,20 +530,20 @@ static void op_LIVE_OFF_get(const void *NOTUSED(data),
 }
 
 static void op_LIVE_DASH_get(const void *NOTUSED(data),
-                            scene_state_t *NOTUSED(ss),
-                            exec_state_t *NOTUSED(es), command_state_t *cs) {
+                             scene_state_t *NOTUSED(ss),
+                             exec_state_t *NOTUSED(es), command_state_t *cs) {
     select_dash_screen(cs_pop(cs) - 1);
 }
 
 static void op_LIVE_GRID_get(const void *NOTUSED(data),
-                            scene_state_t *NOTUSED(ss),
-                            exec_state_t *NOTUSED(es), command_state_t *cs) {
+                             scene_state_t *NOTUSED(ss),
+                             exec_state_t *NOTUSED(es), command_state_t *cs) {
     set_live_submode(SUB_MODE_GRID);
 }
 
 static void op_LIVE_VARS_get(const void *NOTUSED(data),
-                            scene_state_t *NOTUSED(ss),
-                            exec_state_t *NOTUSED(es), command_state_t *cs) {
+                             scene_state_t *NOTUSED(ss),
+                             exec_state_t *NOTUSED(es), command_state_t *cs) {
     set_live_submode(SUB_MODE_VARS);
 }
 

@@ -1,8 +1,8 @@
 #include "command.h"
 
 #include <string.h>  // memcpy
-#include "ops/op.h"
 #include "helpers.h"
+#include "ops/op.h"
 #include "util.h"
 
 void copy_command(tele_command_t *dst, const tele_command_t *src) {

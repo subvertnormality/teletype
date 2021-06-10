@@ -355,7 +355,8 @@ void grid_control_refresh(scene_state_t *ss) {
         tt_mode == G_EDIT && tt_script == 8 ? mode_on : mode_off;
     monomeLedBuffer[d + 1] =
         tt_mode == G_EDIT && tt_script == 9 ? mode_on : mode_off;
-    monomeLedBuffer[d + 3] = tt_mode == G_LIVE_V || tt_mode == G_LIVE_D ? mode_on : mode_off;
+    monomeLedBuffer[d + 3] =
+        tt_mode == G_LIVE_V || tt_mode == G_LIVE_D ? mode_on : mode_off;
     monomeLedBuffer[d + 4] =
         tt_mode == G_LIVE_G || tt_mode == G_LIVE_GF ? mode_on : mode_off;
     monomeLedBuffer[d + 6] = tt_mode == G_PRESET ? mode_on : mode_off;
@@ -750,13 +751,15 @@ static u8 grid_control_process_key(scene_state_t *ss, u8 x, u8 y, u8 z,
             case 3:
                 tt_mode = tt_mode == G_LIVE_D ? G_LIVE_V : G_LIVE_D;
                 set_mode(M_LIVE);
-                set_live_submode(tt_mode == G_LIVE_V ? SUB_MODE_VARS : SUB_MODE_DASH);
+                set_live_submode(tt_mode == G_LIVE_V ? SUB_MODE_VARS
+                                                     : SUB_MODE_DASH);
                 ss->grid.grid_dirty = 1;
                 break;
             case 4:
                 tt_mode = tt_mode == G_LIVE_G ? G_LIVE_GF : G_LIVE_G;
                 set_mode(M_LIVE);
-                set_live_submode(tt_mode == G_LIVE_G ? SUB_MODE_GRID : SUB_MODE_FULLGRID);
+                set_live_submode(tt_mode == G_LIVE_G ? SUB_MODE_GRID
+                                                     : SUB_MODE_FULLGRID);
                 ss->grid.grid_dirty = 1;
                 break;
             case 6:
@@ -1584,9 +1587,8 @@ void grid_fill_area(u8 x, u8 y, u8 w, u8 h, s8 level) {
 
 void grid_screen_refresh(scene_state_t *ss, u8 is_full, u8 page, u8 ctrl, u8 x1,
                          u8 y1, u8 x2, u8 y2) {
-    if (is_full) {
-        grid_screen_refresh_led(ss, 1, page, x1, y1, x2, y2);
-    } else {
+    if (is_full) { grid_screen_refresh_led(ss, 1, page, x1, y1, x2, y2); }
+    else {
         grid_screen_refresh_led(ss, 0, page, x1, y1, x2, y2);
         if (ctrl) grid_screen_refresh_ctrl(ss, page, x1, y1, x2, y2);
         grid_screen_refresh_info(ss, page, x1, y1, x2, y2);

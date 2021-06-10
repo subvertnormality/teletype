@@ -58,24 +58,25 @@ void ss_variables_init(scene_state_t *ss) {
         .tr_time = { 100, 100, 100, 100 },
         .in_range = { 0, 16383 },
         .param_range = { 0, 16383 },
-        .fader_ranges = {
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-            { 0, 16383 },
-        },
+        .fader_ranges =
+            {
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+                { 0, 16383 },
+            },
     };
 
     memcpy(&ss->variables, &default_variables, sizeof(default_variables));
@@ -487,9 +488,10 @@ void ss_update_param_scale(scene_state_t *ss) {
 }
 
 void ss_update_fader_scale(scene_state_t *ss, int16_t fader) {
-    ss->variables.fader_scales[fader] = scale_init(ss->cal.f_min[fader], ss->cal.f_max[fader],
-                                           ss->variables.fader_ranges[fader].out_min,
-                                           ss->variables.fader_ranges[fader].out_max);
+    ss->variables.fader_scales[fader] =
+        scale_init(ss->cal.f_min[fader], ss->cal.f_max[fader],
+                   ss->variables.fader_ranges[fader].out_min,
+                   ss->variables.fader_ranges[fader].out_max);
 }
 
 void ss_update_fader_scale_all(scene_state_t *ss) {
@@ -516,7 +518,8 @@ void ss_set_in_scale(scene_state_t *ss, int16_t min, int16_t max) {
     ss_update_in_scale(ss);
 }
 
-void ss_set_fader_scale(scene_state_t *ss, int16_t fader, int16_t min, int16_t max) {
+void ss_set_fader_scale(scene_state_t *ss, int16_t fader, int16_t min,
+                        int16_t max) {
     ss->variables.fader_ranges[fader].out_min = min;
     ss->variables.fader_ranges[fader].out_max = max;
     ss_update_fader_scale(ss, fader);

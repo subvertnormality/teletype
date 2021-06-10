@@ -32,6 +32,8 @@
 - **NEW**: new op: `SCENE.P`
 - **NEW**: new multi-logic OPs `AND3`, `AND4`, `OR3` and `OR4` with aliases `&&&`, `&&&&`, `|||` and `||||`
 - **NEW**: alias: `EV` for `EVERY`
+- **NEW**: live mode dashboard
+- **NEW**: ops to control live mode: `LIVE.OFF`, `LIVE.VARS`, `LIVE.GRID`, `LIVE.DASH`, `PRINT`
 
 ## v3.2.0
 

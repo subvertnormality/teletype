@@ -66,7 +66,7 @@ static uint8_t activity;
 static int16_t vars_prev[8];
 char var_names[] = { 'A', 0, 'X', 0, 'B', 0, 'Y', 0,
                      'C', 0, 'Z', 0, 'D', 0, 'T', 0 };
-                     
+
 static void parse_dash_coordinates(void);
 static void refresh_dashboard(uint8_t force_refresh);
 static void refresh_activities(void);
@@ -132,7 +132,8 @@ static void parse_dash_coordinates(void) {
     dash_text_start = 0;
     for (uint8_t line = 0; line < SCENE_TEXT_LINES; line++) {
         if (dash_screen < screen) break;
-        if (scene_text[line][0] == '=' && scene_text[line][1] == '=' && scene_text[line][2] == '=') {
+        if (scene_text[line][0] == '=' && scene_text[line][1] == '=' &&
+            scene_text[line][2] == '=') {
             if (screen == dash_screen) {
                 dash_text_start = line + 1;
                 break;
@@ -140,15 +141,16 @@ static void parse_dash_coordinates(void) {
             screen++;
         }
     }
-    
+
     dash_text_end = SCENE_TEXT_LINES - 1;
     for (uint8_t line = dash_text_start + 1; line < SCENE_TEXT_LINES; line++) {
-        if (scene_text[line][0] == '=' && scene_text[line][1] == '=' && scene_text[line][2] == '=') {
+        if (scene_text[line][0] == '=' && scene_text[line][1] == '=' &&
+            scene_text[line][2] == '=') {
             dash_text_end = line - 1;
             break;
         }
     }
-    
+
     for (uint8_t i = 0; i < MAX_DASH_VARS; i++) dash_values_start[i] = -1;
 
     u8 index, var_state, var_start = 0, var_format = 0;
@@ -156,58 +158,73 @@ static void parse_dash_coordinates(void) {
     for (uint8_t y = 0; y < 6; y++) {
         index = dash_text_start + y;
         if (index > dash_text_end) break;
-        
+
         var_state = 0;
         for (uint8_t c = 0; c < SCENE_TEXT_CHARS - 1; c++) {
-            
             if (scene_text[index][c] == 0) {
                 if (var_state == 2) {
                     var_index--;
                     if (var_index >= 0 && var_index < MAX_DASH_VARS) {
-                        dash_values_line_format[var_index] = (var_format << 4) | y;
-                        dash_values_start[var_index] = font_string_position(scene_text[index], var_start) + 2;
+                        dash_values_line_format[var_index] =
+                            (var_format << 4) | y;
+                        dash_values_start[var_index] =
+                            font_string_position(scene_text[index], var_start) +
+                            2;
                     }
                 }
                 break;
             }
-            
+
             if (scene_text[index][c] == '%') {
                 var_start = c;
-                var_format = 0; // decimal by default
+                var_format = 0;  // decimal by default
                 var_index = 0;
                 var_state = 1;
                 continue;
             }
-            
+
             if (var_state == 1) {
                 if (scene_text[index][c] == 'B') {
-                    var_format = 1; // binary
-                } else if (scene_text[index][c] == 'R') {
-                    var_format = 2; // reversed binary
-                } else if (scene_text[index][c] == 'X') {
-                    var_format = 3; // hex
-                } else if (scene_text[index][c] >= '0' && scene_text[index][c] <= '1') {
+                    var_format = 1;  // binary
+                }
+                else if (scene_text[index][c] == 'R') {
+                    var_format = 2;  // reversed binary
+                }
+                else if (scene_text[index][c] == 'X') {
+                    var_format = 3;  // hex
+                }
+                else if (scene_text[index][c] >= '0' &&
+                         scene_text[index][c] <= '1') {
                     var_index = scene_text[index][c] - '0';
                     var_state = 2;
-                } else if (scene_text[index][c] >= '2' && scene_text[index][c] <= '9') {
+                }
+                else if (scene_text[index][c] >= '2' &&
+                         scene_text[index][c] <= '9') {
                     var_index = scene_text[index][c] - '0' - 1;
                     if (var_index >= 0 && var_index < MAX_DASH_VARS) {
-                        dash_values_line_format[var_index] = (var_format << 4) | y;
-                        dash_values_start[var_index] = font_string_position(scene_text[index], var_start) + 2;
+                        dash_values_line_format[var_index] =
+                            (var_format << 4) | y;
+                        dash_values_start[var_index] =
+                            font_string_position(scene_text[index], var_start) +
+                            2;
                     }
                     var_state = 0;
-                } else var_state = 0;
+                }
+                else
+                    var_state = 0;
                 continue;
             }
-            
+
             if (var_state == 2) {
-                if (scene_text[index][c] >= '0' && scene_text[index][c] <= '9') {
+                if (scene_text[index][c] >= '0' &&
+                    scene_text[index][c] <= '9') {
                     var_index = var_index * 10 + (scene_text[index][c] - '0');
                 }
                 var_index--;
                 if (var_index >= 0 && var_index < MAX_DASH_VARS) {
                     dash_values_line_format[var_index] = (var_format << 4) | y;
-                    dash_values_start[var_index] = font_string_position(scene_text[index], var_start) + 2;
+                    dash_values_start[var_index] =
+                        font_string_position(scene_text[index], var_start) + 2;
                 }
                 var_state = 0;
             }
@@ -552,9 +569,8 @@ void process_live_keys(uint8_t k, uint8_t m, bool is_held_key, bool is_release,
     }
     // tilde: show the variables
     else if (match_no_mod(m, k, HID_TILDE)) {
-        if (sub_mode == SUB_MODE_VARS) {
-            sub_mode = SUB_MODE_OFF;
-        } else {
+        if (sub_mode == SUB_MODE_VARS) { sub_mode = SUB_MODE_OFF; }
+        else {
             sub_mode = SUB_MODE_VARS;
         }
         dirty = D_ALL;
@@ -576,11 +592,12 @@ void refresh_dashboard(uint8_t force_refresh) {
             region_fill(&line[y], 0);
             index = dash_text_start + y;
             if (index <= dash_text_end) {
-                font_string_region_clip(&line[y], scene_text[index], 2, 0, y ? 0x8 : 0xC, 0);
+                font_string_region_clip(&line[y], scene_text[index], 2, 0,
+                                        y ? 0x8 : 0xC, 0);
             }
         }
     }
-    
+
     u8 line_no, s_start;
     int16_t pixels_to_clear;
     char s[18];
@@ -589,11 +606,10 @@ void refresh_dashboard(uint8_t force_refresh) {
 
         line_no = dash_values_line_format[var] & 0b111;
         if (force_refresh || (dash_line_updated & (1 < line_no))) {
-            
             switch (dash_values_line_format[var] >> 4) {
                 case 0: {
                     itoa(dash_values[var], s, 10);
-                    pixels_to_clear = 22; // up to 5 digits x 3 + sign
+                    pixels_to_clear = 22;  // up to 5 digits x 3 + sign
                     s_start = 0;
                     break;
                 }
@@ -616,27 +632,28 @@ void refresh_dashboard(uint8_t force_refresh) {
                     break;
                 }
             }
-            
+
             if (pixels_to_clear > 128 - dash_values_start[var])
                 pixels_to_clear = 128 - dash_values_start[var];
-            
+
             for (u8 y = 0; y < 7; y++) {
-                u8* p = (line[line_no].data) + dash_values_start[var] + y * 128;
+                u8 *p = (line[line_no].data) + dash_values_start[var] + y * 128;
                 for (u32 i = 0; i < pixels_to_clear; i++) *p++ = 0;
             }
 
-            font_string_region_clip(&line[line_no], &s[s_start], dash_values_start[var], 0, 0xf, 0);
+            font_string_region_clip(&line[line_no], &s[s_start],
+                                    dash_values_start[var], 0, 0xf, 0);
         }
     }
-    
+
     if (force_refresh || (dash_line_updated & 1)) {
         // clear space for activity monitor
         for (u8 y = 0; y < 7; y++) {
-            u8* p = (line[0].data) + 85 + y * 128;
+            u8 *p = (line[0].data) + 85 + y * 128;
             for (u32 i = 0; i < 43; i++) *p++ = 0;
         }
     }
-    
+
     dash_line_updated = 0;
 }
 
@@ -706,27 +723,26 @@ void refresh_activities() {
         uint8_t mute_fg = ss_get_mute(&scene_state, i) ? 15 : 1;
         uint8_t script_pol = ss_get_script_pol(&scene_state, i);
         if (script_pol & 1) { line[0].data[87 + i + stagger] = mute_fg; }
-        if (script_pol & 2) {
-            line[0].data[87 + i + stagger + 1] = mute_fg;
-        }
+        if (script_pol & 2) { line[0].data[87 + i + stagger + 1] = mute_fg; }
     }
-    
+
     line[0].dirty = 1;
 }
 
 uint8_t screen_refresh_live() {
     if (sub_mode == SUB_MODE_FULLGRID) {
         if (dirty & D_GRID || scene_state.grid.scr_dirty) {
-            grid_screen_refresh(&scene_state, 1, grid_page, grid_show_controls, grid_x1, grid_y1, grid_x2, grid_y2);
+            grid_screen_refresh(&scene_state, 1, grid_page, grid_show_controls,
+                                grid_x1, grid_y1, grid_x2, grid_y2);
             dirty &= ~D_GRID;
             return 0b11111111;
         }
-        
+
         return 0;
     }
-    
+
     uint8_t screen_dirty = 0;
-    
+
     // D_ALL has a meaning different than just combining all other flags:
     // with individual flags, submodes can decide what needs to be refreshed
     // D_ALL means render everything
@@ -768,17 +784,18 @@ uint8_t screen_refresh_live() {
         dirty &= ~D_MESSAGE;
         screen_dirty |= (1 << 6);
     }
-    
+
     if (sub_mode == SUB_MODE_GRID) {
         if (dirty & D_GRID || scene_state.grid.scr_dirty) {
-            grid_screen_refresh(&scene_state, 0, grid_page, grid_show_controls, grid_x1, grid_y1, grid_x2, grid_y2);
+            grid_screen_refresh(&scene_state, 0, grid_page, grid_show_controls,
+                                grid_x1, grid_y1, grid_x2, grid_y2);
             dirty &= ~D_GRID;
             screen_dirty |= 0b111111;
         }
-        
+
         return screen_dirty;
     }
-    
+
     if (sub_mode == SUB_MODE_VARS) {
         if (dirty & D_VARS) {
             int16_t *vp =
@@ -795,23 +812,25 @@ uint8_t screen_refresh_live() {
                 region_fill(&line[1], 0);
                 screen_dirty |= 0b11;
             }
-            
+
             for (size_t i = 0; i < 8; i += 2)
-                if (force_refresh || (vp[i] != vars_prev[i]) || (vp[i + 1] != vars_prev[i + 1])) {
+                if (force_refresh || (vp[i] != vars_prev[i]) ||
+                    (vp[i + 1] != vars_prev[i + 1])) {
                     region_fill(&line[i / 2 + 2], 0);
                     vars_prev[i] = vp[i];
                     vars_prev[i + 1] = vp[i + 1];
                     itoa(vp[i], s, 10);
-                    font_string_region_clip_right(&line[i / 2 + 2], s, 11 * 4, 0,
-                                                  0xf, 0);
-                    font_string_region_clip_right(
-                        &line[i / 2 + 2], var_names + (i * 2), 14 * 4, 0, 0x1, 0);
-                    itoa(vp[i + 1], s, 10);
-                    font_string_region_clip_right(&line[i / 2 + 2], s, 25 * 4, 0,
-                                                  0xf, 0);
+                    font_string_region_clip_right(&line[i / 2 + 2], s, 11 * 4,
+                                                  0, 0xf, 0);
                     font_string_region_clip_right(&line[i / 2 + 2],
-                                                  var_names + ((i + 1) * 2), 28 * 4,
+                                                  var_names + (i * 2), 14 * 4,
                                                   0, 0x1, 0);
+                    itoa(vp[i + 1], s, 10);
+                    font_string_region_clip_right(&line[i / 2 + 2], s, 25 * 4,
+                                                  0, 0xf, 0);
+                    font_string_region_clip_right(&line[i / 2 + 2],
+                                                  var_names + ((i + 1) * 2),
+                                                  28 * 4, 0, 0x1, 0);
                     screen_dirty |= (1 << (i / 2 + 2));
                     for (int row = 1; row < 9; row += 2) {
                         line[i / 2 + 2].data[row * 128 + 12 * 4 - 1] = 0x1;
@@ -820,7 +839,7 @@ uint8_t screen_refresh_live() {
                 }
         }
     }
-    
+
     else if (sub_mode == SUB_MODE_DASH) {
         if (dirty & D_DASH) {
             if (dash_line_updated & 1) {
@@ -832,7 +851,7 @@ uint8_t screen_refresh_live() {
             screen_dirty |= 0x3F;
         }
     }
-    
+
     else {
         if (dirty & D_ALL) {
             for (int i = 0; i < 6; i++) region_fill(&line[i], 0);
@@ -840,12 +859,12 @@ uint8_t screen_refresh_live() {
             screen_dirty |= 0x3F;
         }
     }
-    
+
     if (dirty & D_ACTIVITY) {
         refresh_activities();
         screen_dirty |= 1;
     }
-    
+
     dirty = 0;
     return screen_dirty;
 }
