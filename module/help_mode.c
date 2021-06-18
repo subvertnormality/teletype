@@ -20,7 +20,7 @@
 
 // clang-format off
 
-#define HELP1_LENGTH 69
+#define HELP1_LENGTH 71
 const char* help1[HELP1_LENGTH] = { "1/16 HELP",
                                     "[ ] NAVIGATE HELP PAGES",
                                     "UP/DOWN TO SCROLL",
@@ -48,7 +48,7 @@ const char* help1[HELP1_LENGTH] = { "1/16 HELP",
                                     "CTRL-L/R|JUMP WORDS",
                                     "~|TOGGLE VARS",
                                     "ALT-G|GRID VISUALIZER",
-                                    "ALT-D|DASHBOARD",
+                                    "SH-D|DASHBOARD",
                                     "ALT-ARROWS|MOVE IN GRID",
                                     "ALT-SH-ARRS|SELECT AREA",
                                     "ALT-SPACE|PRESS IN GRID",
@@ -65,6 +65,8 @@ const char* help1[HELP1_LENGTH] = { "1/16 HELP",
                                     "SH-UP/DOWN|SELECT LINES",
                                     "ALT-SLASH|DISABLE LINE(S)",
                                     "ALT-DELETE|DELETE LINE(S)",
+                                    "ALT-D|DELETE WORD FORWARD",
+                                    "ALT-BSP|DELETE WORD BACKWARDS",
                                     "ALT-UP/DN|MOVE LINE(S)",
                                     " ",
                                     "// PATTERN",
