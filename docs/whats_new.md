@@ -35,6 +35,7 @@
 - **NEW**: alias: `EV` for `EVERY`
 - **NEW**: live mode dashboard
 - **NEW**: ops to control live mode: `LIVE.OFF`, `LIVE.VARS`, `LIVE.GRID`, `LIVE.DASH`, `PRINT`
+- **FIX**: `PN.ROT` parameters are swapped
 
 ## v3.2.0
 
