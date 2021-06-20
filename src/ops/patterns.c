@@ -856,7 +856,9 @@ static void op_P_ROT_get(const void *NOTUSED(data), scene_state_t *ss,
 
 static void op_PN_ROT_get(const void *NOTUSED(data), scene_state_t *ss,
                           exec_state_t *NOTUSED(es), command_state_t *cs) {
-    p_rotate(ss, cs_pop(cs), cs_pop(cs));
+    int16_t pn = cs_pop(cs);
+    int16_t rot = cs_pop(cs);
+    p_rotate(ss, pn, rot);
 }
 
 const tele_op_t op_P_ROT = MAKE_GET_OP(P.ROT, op_P_ROT_get, 1, false);
