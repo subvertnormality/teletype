@@ -1,6 +1,7 @@
 #include "live_mode.h"
 
 #include <string.h>
+#include "delay.h"
 
 // this
 #include "flash.h"
@@ -8,6 +9,7 @@
 #include "globals.h"
 #include "keyboard_helper.h"
 #include "line_editor.h"
+#include "random.h"
 
 // teletype
 #include "helpers.h"
@@ -70,6 +72,9 @@ char var_names[] = { 'A', 0, 'X', 0, 'B', 0, 'Y', 0,
 static void parse_dash_coordinates(void);
 static void refresh_dashboard(uint8_t force_refresh);
 static void refresh_activities(void);
+static void update_screen(void);
+static void show_animation(void);
+static void show_animation2(void);
 
 // teletype_io.h
 void tele_has_delays(bool has_delays) {
@@ -388,6 +393,12 @@ void process_live_keys(uint8_t k, uint8_t m, bool is_held_key, bool is_release,
     if ((match_no_mod(m, k, HID_DOWN) || match_ctrl(m, k, HID_N)) &&
         sub_mode != SUB_MODE_FULLGRID) {
         history_next();
+    }
+    else if (match_alt(m, k, HID_M)) {
+        show_animation();
+    }
+    else if (match_alt(m, k, HID_T)) {
+        show_animation2();
     }
     // <up> or C-p: history previous
     else if ((match_no_mod(m, k, HID_UP) || match_ctrl(m, k, HID_P)) &&
@@ -867,4 +878,345 @@ uint8_t screen_refresh_live() {
 
     dirty = 0;
     return screen_dirty;
+}
+
+#define ccount 32
+// char* characters = "0123456789ABCDEFGHIKLOPQRSTUVXYZ*=_+{}\\/<>?";
+char* characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-={}|[]\\;':,./<>?";
+char mlines[8][ccount];
+u8 blevel[8][ccount];
+u8 shift[8][ccount];
+u8 start;
+
+u16 ran(u16 max) {
+    return (random_next(&scene_state.rand_states.s.rand.rand) >> 1) % max;
+}
+
+void show_line(char* line1) {
+    char s[36];
+    region_fill(&line[7], 0);
+    for (int i = 0; i < strlen(line1); i++) {
+        strcpy(s, line1);
+        s[i+1] = 0;
+        font_string_region_clip(&line[7], s, 0, 0, 0xff, 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(ran(25) + 125);
+    }
+}
+
+void append_line(char* line1, u8 keep_header) {
+    for (int l = keep_header ? 3 : 0; l < 7; l++) {
+        for (int i = 0; i < ccount; i++) mlines[l][i] = mlines[l+1][i];
+    }
+    
+    strcpy(mlines[7], line1);
+    
+    for (int i = 0; i < 7; i++) {
+        region_fill(&line[i], 0);
+        font_string_region_clip(&line[i], mlines[i], 0, 0, 0xff, 0);
+        if (i == 0) refresh_activities();
+        line[i].dirty = 1;
+        region_draw(&line[i]);
+    }
+    
+    char s[36];
+    region_fill(&line[7], 0);
+    for (int i = 0; i < strlen(line1); i++) {
+        strcpy(s, line1);
+        s[i+1] = 0;
+        font_string_region_clip(&line[7], s, 0, 0, 0xff, 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(ran(25) + 125);
+    }
+}
+
+void matrix(void) {
+    char s[36];
+    
+    for (int l = 0; l < 7; l++) {
+        for (int i = 0; i < ccount; i++) {
+            //mlines[l][i] = mlines[l][i] == ' ' ?
+            //    (mlines[l+1][i] == ' ' ? ' ' : characters[ran(strlen(characters))]) : mlines[l+1][i];
+            mlines[l][i] = mlines[l+1][i] == ' ' ? ' ' : characters[ran(strlen(characters))];
+            blevel[l][i] = blevel[l+1][i] ? blevel[l+1][i] - 1 : 0;
+            if (blevel[l][i] == 14) blevel[l][i]++;
+            shift[l][i] = shift[l+1][i];
+        }
+    }
+    
+    u16 r;
+    for (int i = 0; i < ccount; i++) {
+        if (mlines[6][i] == ' ') {
+            if (ran(5) > 3) {
+                mlines[7][i] = characters[ran(strlen(characters))];
+                blevel[7][i] = 15;
+            } else {
+                mlines[7][i] = ' ';
+                blevel[7][i] = 0;
+            }
+        } else {
+            if (ran(5) < 4) {
+                mlines[7][i] = characters[ran(strlen(characters))];
+                blevel[7][i] = 7 + ran(5);
+            } else {
+                mlines[7][i] = ' ';
+                blevel[7][i] = 0;
+            }
+        }
+        shift[7][i] = 1 - ran(3);
+    }
+    
+    s[1] = 0;
+    for (int l = 0; l < start; l++) {
+        // region_fill(&line[l], 0);
+        for (int i = 0; i < ccount; i++) {
+            s[0] = mlines[7-l][i];
+            font_string_region_clip(&line[l], s, 4*i + shift[7-l][i], 0, blevel[7-l][i], 0);
+        }
+        line[l].dirty = 1;
+        region_draw(&line[l]);
+    }
+    
+    if (start < 8) start++;
+}
+
+void faulty_cursor(void) {
+    char* s = ">";
+    
+    for (int i = 0; i < 70; i++) {
+        region_fill(&line[7], 0);
+        font_string_region_clip(&line[7], s, 0, 0, ran(15), 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(ran(25) + 10);
+    }
+}
+
+void flash_crash(void) {
+    char* s1 = "> to ";
+    char* s[3] = { "> to FLASH", "> to       CRASH", "> to FLASH CRASH" };
+    
+    region_fill(&line[7], 0);
+    font_string_region_clip(&line[7], s[0], 0, 0, ran(15), 0);
+    line[7].dirty = 1;
+    region_draw(&line[7]);
+    delay_ms(300);
+    
+    region_fill(&line[7], 0);
+    font_string_region_clip(&line[7], s[1], 0, 0, ran(15), 0);
+    line[7].dirty = 1;
+    region_draw(&line[7]);
+    delay_ms(300);
+
+    region_fill(&line[7], 0);
+    font_string_region_clip(&line[7], s[2], 0, 0, ran(15), 0);
+    line[7].dirty = 1;
+    region_draw(&line[7]);
+    delay_ms(300);
+
+    for (int i = 0; i < 90; i++) {
+        region_fill(&line[7], 0);
+        font_string_region_clip(&line[7], s[ran(3)], 0, 0, ran(15), 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(ran(25) + 10);
+    }
+
+    for (int i = 15; i >= 0; i--) {
+        region_fill(&line[7], 0);
+        font_string_region_clip(&line[7], s[2], 0, 0, i, 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(25);
+    }
+}
+
+void time_to_flash(void) {
+    region_fill(&line[7], 0);
+    font_string_region_clip(&line[7], "> time to ", 0, 0, 15, 0);
+    line[7].dirty = 1;
+    region_draw(&line[7]);
+
+    for (int i = 0; i < 200; i++) {
+        font_string_region_clip(&line[7], "FLASH!", 38, 0, ran(15), 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(ran(15) + 20);
+    }
+    
+    font_string_region_clip(&line[7], "FLASH!", 38, 0, 15, 0);
+    line[7].dirty = 1;
+    region_draw(&line[7]);
+}
+
+void turtle(void) {
+    char* turtle = "> Follow the turtle..";
+    show_line(turtle);
+    char s[55];
+    strcpy(s, turtle);
+    
+    region_fill(&line[7], 0);
+    for (int i = 0; i < 30; i++) {
+        for (int j = 0; j < i; j++) {
+            s[j+21] = '.';
+        }
+        s[i+21] = '@';
+        s[i+22] = 0;
+        font_string_region_clip(&line[7], s, 0, 0, 0xff, 0);
+        line[7].dirty = 1;
+        region_draw(&line[7]);
+        delay_ms(ran(25) + 125);
+    }
+}
+
+void show_animation() {
+    ran(5);
+    
+    for (int l = 0; l < 8; l++) {
+        for (int i = 0; i < ccount; i++) {
+            mlines[l][i] = ' ';
+            blevel[l][i] = 15;
+        }
+    }    
+    
+    delay_ms(2000);
+    faulty_cursor();
+    delay_ms(1000);
+    show_line("> Wake up, Neo...");
+    delay_ms(2400);
+    show_line("> The Matrix has you...");
+    delay_ms(3300);
+    turtle();
+    show_line("> to");
+    delay_ms(500);
+    flash_crash();
+    delay_ms(1000);
+    
+    start = 1;
+    
+    for (int i = 0; i < 3000; i++) {
+        matrix();
+        delay_ms(100);
+    }
+}
+
+void show_animation2() {
+    ran(5);
+    
+    for (int l = 0; l < 8; l++) {
+        for (int i = 0; i < ccount; i++) {
+            mlines[l][i] = ' ';
+            blevel[l][i] = 15;
+        }
+    }    
+    
+    delay_ms(2000);
+    faulty_cursor();
+    delay_ms(1000);
+    append_line("> Wake up, Neo...", 0);
+    delay_ms(2400);
+    append_line("> TELETYPE 4.0.0 IS HERE!", 0);
+    delay_ms(3300);
+    append_line("> time to FLASH!", 0);
+    time_to_flash();
+    delay_ms(1000);
+    
+    for (int i = 0; i < 8; i++) {
+        delay_ms(100);
+        append_line(" ", 0);
+    }
+    
+    for (int l = 0; l < 8; l++) {
+        for (int i = 0; i < ccount; i++) {
+            mlines[l][i] = ' ';
+            blevel[l][i] = 15;
+        }
+    }
+    
+    strcpy(mlines[0], "TELETYPE 4.0.0 IS HERE!");
+    strcpy(mlines[1], "Huge thanks to developers:");
+    
+    u32 delay = 300;
+    
+    append_line("a773", 1);
+    delay_ms(delay);
+    append_line("csboling", 1);
+    delay_ms(delay);
+    append_line("desolationjones", 1);
+    delay_ms(delay);
+    append_line("discohead", 1);
+    delay_ms(delay);
+    append_line("eimhin", 1);
+    delay_ms(delay);
+    append_line("Galapagoose", 1);
+    delay_ms(delay);
+    append_line("jngpng", 1);
+    delay_ms(delay);
+    append_line("karol", 1);
+    delay_ms(delay);
+    append_line("nattog", 1);
+    delay_ms(delay);
+    append_line("midouest", 1);
+    delay_ms(delay);
+    append_line("scanner darkly", 1);
+    delay_ms(delay);
+    append_line("Svin", 1);
+    delay_ms(delay);
+    append_line("tehn", 1);
+    delay_ms(delay);
+    append_line("tkzajac", 1);
+    delay_ms(delay);
+
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+
+    strcpy(mlines[1], "We <3 our beta testers:");
+    
+    append_line("alanza", 1);
+    delay_ms(delay);
+    append_line("Dewb", 1);
+    delay_ms(delay);
+    append_line("Mad86", 1);
+    delay_ms(delay);
+    append_line("morgulbee", 1);
+    delay_ms(delay);
+    append_line("renegog", 1);
+    delay_ms(delay);
+    append_line("SavageMessiah", 1);
+    delay_ms(delay);
+    append_line("SimonKirby", 1);
+    delay_ms(delay);
+    append_line("tambouri", 1);
+    delay_ms(delay);
+    append_line("Voiron27", 1);
+    delay_ms(delay);
+    append_line("Zeke_B", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    append_line(" ", 1);
+    delay_ms(delay);
+    
+    start = 1;
+    
+    for (int i = 0; i < 3000; i++) {
+        matrix();
+        delay_ms(100);
+    }
 }
