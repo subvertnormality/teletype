@@ -182,6 +182,7 @@ INC_PATH = \
        ../src/usb/midi                                    \
        ../src/usb/msc                                     \
        ../conf                                            \
+       ../conf/trilogy                                    \
        avr32/boards                                       \
        avr32/drivers/cpu/cycle_counter                    \
        avr32/drivers/flashc                               \

@@ -637,7 +637,7 @@ void handler_Key(int32_t data) {
             preset_select = (preset_select + SCENE_SLOTS - 1) % SCENE_SLOTS;
         }
         ss_grid_init(&scene_state);
-        flash_read(preset_select, &scene_state, &scene_text, 1, 1);
+        flash_read(preset_select, &scene_state, &scene_text, 1, 1, 1);
         flash_update_last_saved_scene(preset_select);
         ss_set_scene(&scene_state, preset_select);
 
