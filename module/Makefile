@@ -64,7 +64,7 @@ SHELL=bash
 
 # Makefile.avr32.in defines an unused variable build, which is used in the clean
 # target, it's probably there to list other build targets
-build += ../src/scanner.c ../src/match_token.c ../module/gitversion.c
+build += ../src/scanner.c ../src/match_token.c ../ansible/gitversion.c
 
 # Include the common Makefile, which will also include the project specific
 # config.mk file.
@@ -80,5 +80,5 @@ include $(MAKEFILE_PATH)
 	ragel -C -G2 ../src/scanner.rl -o ../src/scanner.c
 
 # Add the git commit id to a file for use when printing out the version
-../module/gitversion.c: ../.git/HEAD ../.git/index
+../ansible/gitversion.c: ../.git/HEAD ../.git/index
 	echo "const char *git_version = \"$(shell cut -d '-' -f 1 <<< $(shell git describe --tags | cut -c 1-)) $(shell git describe --always --dirty --exclude '*' | tr '[a-z]' '[A-Z]')\";" > $@

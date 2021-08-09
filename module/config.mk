@@ -37,7 +37,7 @@
 
 
 # project name
-THIS = teletype
+THIS = satellite
 
 # Path to top level ASF directory relative to this project directory.
 PRJ_PATH = ../libavr32/asf
@@ -61,18 +61,18 @@ TARGET = $(THIS).elf
 
 # List of C source files.
 CSRCS = \
-	../module/main.c					\
-	../module/edit_mode.c   				\
-	../module/flash.c					\
-	../module/gitversion.c					\
-	../module/grid.c						\
-	../module/help_mode.c  					\
-	../module/line_editor.c					\
-	../module/live_mode.c   				\
-	../module/pattern_mode.c   				\
-	../module/preset_r_mode.c   				\
-	../module/preset_w_mode.c   				\
-	../module/usb_disk_mode.c   				\
+	../ansible/main.c					\
+	../ansible/edit_mode.c   				\
+	../ansible/flash.c					\
+	../ansible/gitversion.c					\
+	../ansible/grid.c						\
+	../ansible/help_mode.c  					\
+	../ansible/line_editor.c					\
+	../ansible/live_mode.c   				\
+	../ansible/pattern_mode.c   				\
+	../ansible/preset_r_mode.c   				\
+	../ansible/preset_w_mode.c   				\
+	../ansible/usb_disk_mode.c   				\
 	../src/command.c					\
 	../src/every.c					\
 	../src/helpers.c					\
@@ -111,125 +111,124 @@ CSRCS = \
 	../src/ops/wslash.c					\
 	../src/ops/turtle.c					\
 	../src/ops/seed.c					\
-	../libavr32/src/adc.c					\
-	../libavr32/src/events.c				\
+       ../libavr32/src/adc.c               \
+       ../libavr32/src/dac.c               \
+       ../libavr32/src/events.c            \
 	../libavr32/src/euclidean/euclidean.c			\
 	../libavr32/src/euclidean/data.c			\
 	../libavr32/src/fix.c					\
-	../libavr32/src/font.c					\
-	../libavr32/src/i2c.c					\
-	../libavr32/src/init_teletype.c				\
-	../libavr32/src/init_common.c				\
-	../libavr32/src/interrupts.c				\
+       ../libavr32/src/i2c.c               \
+       ../libavr32/src/init_ansible.c       \
+       ../libavr32/src/init_common.c       \
+       ../libavr32/src/interrupts.c        \
 	../libavr32/src/kbd.c					\
 	../libavr32/src/midi_common.c				\
-	../libavr32/src/monome.c				\
-	../libavr32/src/music.c				\
-	../libavr32/src/region.c				\
-	../libavr32/src/screen.c				\
-	../libavr32/src/timers.c				\
-	../libavr32/src/usb.c					\
-	../libavr32/src/util.c					\
-	../libavr32/src/usb/ftdi/ftdi.c				\
-	../libavr32/src/usb/ftdi/uhi_ftdi.c			\
-	../libavr32/src/usb/hid/hid.c				\
-	../libavr32/src/usb/hid/uhi_hid.c			\
-	../libavr32/src/usb/midi/uhi_midi.c			\
-	../libavr32/src/usb/midi/midi.c				\
-	../libavr32/src/usb/msc/msc.c				\
+       ../libavr32/src/monome.c            \
+       ../libavr32/src/music.c             \
+       ../libavr32/src/timers.c            \
+       ../libavr32/src/usb.c               \
+       ../libavr32/src/util.c              \
+       ../libavr32/src/usb/ftdi/ftdi.c     \
+       ../libavr32/src/usb/ftdi/uhi_ftdi.c \
+       ../libavr32/src/usb/hid/hid.c       \
+       ../libavr32/src/usb/hid/uhi_hid.c   \
+       ../libavr32/src/usb/midi/uhi_midi.c \
+       ../libavr32/src/usb/midi/midi.c     \
+       ../libavr32/src/usb/msc/msc.c       \
 	../libavr32/src/random.c			\
-	avr32/drivers/adc/adc.c					\
-	avr32/drivers/flashc/flashc.c				\
-	avr32/drivers/gpio/gpio.c				\
-	avr32/drivers/intc/intc.c				\
-	avr32/drivers/pm/pm.c					\
-	avr32/drivers/pm/pm_conf_clocks.c			\
-	avr32/drivers/pm/power_clocks_lib.c			\
-	avr32/drivers/spi/spi.c					\
-	avr32/drivers/tc/tc.c					\
-	avr32/drivers/twi/twi.c					\
-	avr32/drivers/usart/usart.c				\
-	avr32/drivers/usbb/usbb_host.c				\
+       avr32/drivers/adc/adc.c                            \
+       avr32/drivers/flashc/flashc.c                      \
+       avr32/drivers/gpio/gpio.c                          \
+       avr32/drivers/intc/intc.c                          \
+       avr32/drivers/pm/pm.c                              \
+       avr32/drivers/pm/pm_conf_clocks.c                  \
+       avr32/drivers/pm/power_clocks_lib.c                \
+       avr32/drivers/spi/spi.c                            \
+       avr32/drivers/tc/tc.c                              \
+       avr32/drivers/twi/twi.c                            \
+       avr32/drivers/usart/usart.c                        \
+       avr32/drivers/usbb/usbb_host.c                     \
 	avr32/services/fs/fat/fat.c				\
 	avr32/services/fs/fat/fat_unusual.c			\
 	avr32/services/fs/fat/file.c				\
 	avr32/services/fs/fat/navigation.c			\
-	avr32/utils/debug/print_funcs.c				\
+       avr32/utils/debug/print_funcs.c                    \
 	common/services/storage/ctrl_access/ctrl_access.c	\
-	common/services/usb/class/msc/host/uhi_msc.c		\
-	common/services/usb/class/msc/host/uhi_msc_mem.c	\
-	common/services/spi/uc3_spi/spi_master.c		\
-	common/services/usb/uhc/uhc.c				\
-	common/services/clock/uc3b0_b1/sysclk.c
+       common/services/usb/class/msc/host/uhi_msc.c       \
+       common/services/usb/class/msc/host/uhi_msc_mem.c   \
+       common/services/spi/uc3_spi/spi_master.c           \
+       common/services/usb/uhc/uhc.c                      \
+       common/services/clock/uc3b0_b1/sysclk.c  
 
 # List of assembler source files.
 ASSRCS = \
-	avr32/utils/startup/trampoline_uc3.S			\
+       avr32/utils/startup/trampoline_uc3.S               \
 	avr32/drivers/intc/exception.S
 
 # List of include paths.
 INC_PATH = \
 	../../src						\
-	../src							\
-	../src/usb						\
-	../src/usb/ftdi						\
-	../src/usb/hid						\
-	../src/usb/midi						\
-	../src/usb/msc						\
-	../conf							\
-	../conf/teletype					\
-	avr32/boards						\
-	avr32/drivers/cpu/cycle_counter				\
-	avr32/drivers/flashc					\
-	avr32/drivers/gpio					\
-	avr32/drivers/intc					\
-	avr32/drivers/pm					\
-	avr32/drivers/spi					\
-	avr32/drivers/tc					\
-	avr32/drivers/twi					\
-	avr32/drivers/usart					\
-	avr32/drivers/usbb					\
-	avr32/utils						\
-	avr32/utils/debug					\
-	avr32/utils/preprocessor				\
+       ../src                                             \
+       ../src/usb                                         \
+       ../src/usb/ftdi                                    \
+       ../src/usb/hid                                     \
+       ../src/usb/midi                                    \
+       ../src/usb/msc                                     \
+       ../conf                                            \
+       ../conf/trilogy                                    \
+       avr32/boards                                       \
+       avr32/drivers/cpu/cycle_counter                    \
+       avr32/drivers/flashc                               \
+       avr32/drivers/gpio                                 \
+       avr32/drivers/intc                                 \
+       avr32/drivers/pm                                   \
+       avr32/drivers/spi                                  \
+       avr32/drivers/tc                                   \
+       avr32/drivers/twi                                  \
+       avr32/drivers/usart                                \
+       avr32/drivers/usbb                                 \
+       avr32/utils                                        \
+       avr32/utils/debug                                  \
+       avr32/utils/preprocessor                           \
 	avr32/services/fs/fat					\
-	common/boards						\
-	common/boards/user_board				\
-	common/services/storage/ctrl_access			\
+       common/boards                                      \
+       common/boards/user_board                           \
+       common/services/storage/ctrl_access                \
+       common/services/clock                              \
+       common/services/delay                              \
+       common/services/usb/                               \
+       common/services/usb/uhc                            \
 	common/services/clock					\
-	common/services/delay					\
-	common/services/usb/					\
-	common/services/usb/uhc					\
-	common/services/clock					\
 	common/services/storage/ctrl_access			\
-	common/services/usb/class/msc				\
-	common/services/usb/class/msc/host			\
-	common/services/usb/class/hid				\
-	common/services/spi/uc3_spi				\
-	common/utils
+       common/services/usb/class/msc                      \
+       common/services/usb/class/msc/host                 \
+       common/services/usb/class/hid                      \
+       common/services/spi/uc3_spi                        \
+       common/utils                                       
 
 # Additional search paths for libraries.
-LIB_PATH =
+LIB_PATH = 
 
 # List of libraries to use during linking.
-LIBS =
+LIBS = 
 
 # Path relative to top level directory pointing to a linker script.
 LINKER_SCRIPT = ../src/link_uc3b0512.lds
 
+
 # Additional options for debugging. By default the common Makefile.in will
 # add -g3.
-DBGFLAGS =
+DBGFLAGS = 
 
 # Application optimization used during compilation and linking:
 # -O0, -O1, -O2, -O3 or -Os
 OPTIMIZATION = -Os
 
 # Extra flags to use when archiving.
-ARFLAGS =
+ARFLAGS = 
 
 # Extra flags to use when assembling.
-ASFLAGS =
+ASFLAGS = 
 
 # Extra flags to use when compiling.
 CFLAGS = -fshort-enums -fno-common
@@ -249,5 +248,5 @@ CPPFLAGS = -D BOARD=USER_BOARD -D UHD_ENABLE
 LDFLAGS = -Wl,-e,_trampoline
 
 # Pre- and post-build commands
-PREBUILD_CMD =
-POSTBUILD_CMD =
+PREBUILD_CMD = 
+POSTBUILD_CMD = 

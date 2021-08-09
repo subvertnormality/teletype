@@ -1,7 +1,6 @@
 #include "grid.h"
 #include "edit_mode.h"
 #include "flash.h"
-#include "font.h"
 #include "globals.h"
 #include "live_mode.h"
 #include "pattern_mode.h"
@@ -1576,6 +1575,7 @@ void grid_fill_area(u8 x, u8 y, u8 w, u8 h, s8 level) {
 
 void grid_screen_refresh(scene_state_t *ss, screen_grid_mode mode, u8 page,
                          u8 ctrl, u8 x1, u8 y1, u8 x2, u8 y2) {
+    /* ANSIBLE_SATELLITE
     switch (mode) {
         case GRID_MODE_EDIT:
             grid_screen_refresh_led(ss, 0, page, x1, y1, x2, y2);
@@ -1588,11 +1588,13 @@ void grid_screen_refresh(scene_state_t *ss, screen_grid_mode mode, u8 page,
         case GRID_MODE_OFF:
         case GRID_MODE_LAST: break;
     }
+    */
     SG.scr_dirty = 0;
 }
 
 void grid_screen_refresh_ctrl(scene_state_t *ss, u8 page, u8 x1, u8 y1, u8 x2,
                               u8 y2) {
+    /* ANSIBLE_SATELLITE
     grid_fill_area_scr(0, 0, GRID_MAX_DIMENSION, GRID_MAX_DIMENSION, 0, 0);
 
     u8 last_x, last_y;
@@ -1668,10 +1670,12 @@ void grid_screen_refresh_ctrl(scene_state_t *ss, u8 page, u8 x1, u8 y1, u8 x2,
     }
 
     return;
+    */
 }
 
 void grid_screen_refresh_led(scene_state_t *ss, u8 full_grid, u8 page, u8 x1,
                              u8 y1, u8 x2, u8 y2) {
+    /* ANSIBLE_SATELLITE
     grid_fill_area_scr(0, 0, GRID_MAX_DIMENSION, GRID_MAX_DIMENSION, 0, 0);
 
     u16 x, y;
@@ -1897,10 +1901,12 @@ void grid_screen_refresh_led(scene_state_t *ss, u8 full_grid, u8 page, u8 x1,
             line[y >> 3].data[left + ((y & 7) << 7) + _x1] = y & 1 ? 4 : 15;
             line[y >> 3].data[left + ((y & 7) << 7) + _x2] = y & 1 ? 15 : 4;
         }
+    */
 }
 
 static void grid_screen_refresh_info(scene_state_t *ss, u8 page, u8 x1, u8 y1,
                                      u8 x2, u8 y2) {
+    /* ANSIBLE_SATELLITE
     char s[32];
     u8 area_x, area_y, area_w, area_h;
 
@@ -1981,9 +1987,11 @@ static void grid_screen_refresh_info(scene_state_t *ss, u8 page, u8 x1, u8 y1,
     line[1].data[2 + 384] = l;
     line[1].data[3 + 384] = l;
     line[1].data[2 + 512] = l;
+    */
 }
 
 void grid_fill_area_scr(u8 x, u8 y, u8 w, u8 h, s8 level, u8 page) {
+    /* ANSIBLE_SATELLITE
     if (level == LED_OFF) return;
 
     u16 x_end = min(GRID_MAX_DIMENSION, x + w);
@@ -2022,4 +2030,5 @@ void grid_fill_area_scr(u8 x, u8 y, u8 w, u8 h, s8 level, u8 page) {
         for (u16 _x = x; _x < x_end; _x++)
             for (u16 _y = y1; _y <= y2; _y++) screen[_x][_y] = level;
     }
+    */
 }

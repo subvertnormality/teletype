@@ -16,12 +16,13 @@
 
 // system
 #include "adc.h"
+#include "dac.h"
 #include "events.h"
 #include "font.h"
 #include "hid.h"
 #include "i2c.h"
 #include "init_common.h"
-#include "init_teletype.h"
+#include "init_ansible.h"
 #include "interrupts.h"
 #include "kbd.h"
 #include "midi.h"
@@ -121,6 +122,7 @@ static uint8_t front_timer;
 static uint8_t mod_key = 0, hold_key, hold_key_count = 0;
 static uint64_t last_adc_tick = 0;
 static midi_behavior_t midi_behavior;
+static u8 external_metro = 0; // ANSIBLE_SATELLITE
 
 // timers
 static softTimer_t clockTimer = { .next = NULL, .prev = NULL };
@@ -134,6 +136,8 @@ static softTimer_t monomePollTimer = { .next = NULL, .prev = NULL };
 static softTimer_t monomeRefreshTimer = { .next = NULL, .prev = NULL };
 static softTimer_t gridFaderTimer = { .next = NULL, .prev = NULL };
 static softTimer_t midiScriptTimer = {.next = NULL, .prev = NULL };
+static softTimer_t metroLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
+static softTimer_t sceneSaveLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -165,6 +169,9 @@ static void handler_Trigger(int32_t data);
 static void handler_ScreenRefresh(int32_t data);
 static void handler_EventTimer(int32_t data);
 static void handler_AppCustom(int32_t data);
+static void handler_Tr(int32_t data); // ANSIBLE_SATELLITE
+static void handler_TrNormal(int32_t data); // ANSIBLE_SATELLITE
+static void handler_Key(int32_t data); // ANSIBLE_SATELLITE
 
 // event queue
 static void empty_event_handlers(void);
@@ -215,6 +222,12 @@ void cvTimer_callback(void* o) {
     set_slew_icon(slewing);
 
     if (updated) {
+        // ANSIBLE_SATELLITE
+        for (u8 i = 0; i < 4; i++)
+            dac_set_value_noslew(i, aout[i].now);
+        dac_update_now();
+
+        /* ANSIBLE_SATELLITE
         uint16_t a0, a1, a2, a3;
 
         if (device_config.flip) {
@@ -247,6 +260,7 @@ void cvTimer_callback(void* o) {
         spi_write(DAC_SPI, a1 >> 4);
         spi_write(DAC_SPI, a1 << 4);
         spi_unselectChip(DAC_SPI, DAC_SPI_NPCS);
+        */
     }
 #ifdef TELETYPE_PROFILE
     profile_update(&prof_CV);
@@ -279,6 +293,7 @@ void hidTimer_callback(void* o) {
 }
 
 void metroTimer_callback(void* o) {
+    if (external_metro) return; // ANSIBLE_SATELLITE
     event_t e = { .type = kEventAppCustom, .data = 0 };
     event_post(&e);
 }
@@ -350,13 +365,16 @@ void midiScriptTimer_callback(void* obj) {
 void handler_None(int32_t data) {}
 
 void handler_Front(int32_t data) {
+    /* ANSIBLE_SATELLITE
     if (ss_counter >= SS_TIMEOUT) {
         exit_screensaver();
         return;
     }
+    */
     ss_counter = 0;
 
     if (data == 0) {
+        /* ANSIBLE_SATELLITE
         if (ignore_front_press) {
             ignore_front_press = 0;
             return;
@@ -376,9 +394,20 @@ void handler_Front(int32_t data) {
         }
         else
             front_timer = 15;
+        */
+        
+        // ANSIBLE_SATELLITE
+        front_timer = 40;
     }
     else {
-        if (front_timer) { set_last_mode(); }
+        // ANSIBLE_SATELLITE if (front_timer) { set_last_mode(); }
+        
+        // ANSIBLE_SATELLITE
+        if (front_timer) {
+            grid_control_mode = !grid_control_mode;
+            grid_set_control_mode(grid_control_mode, mode, &scene_state);
+        }
+        
         front_timer = 0;
     }
 }
@@ -388,6 +417,7 @@ void handler_PollADC(int32_t data) {
 #ifdef TELETYPE_PROFILE
     profile_update(&prof_ADC);
 #endif
+    /* ANSIBLE_SATELLITE
     static int16_t last_knob = 0;
 
     adc_convert(&adc);
@@ -414,16 +444,38 @@ void handler_PollADC(int32_t data) {
     else {
         ss_set_param(&scene_state, adc[1] << 2);
     }
+    */
 #ifdef TELETYPE_PROFILE
     profile_update(&prof_ADC);
 #endif
 }
 
+// ANSIBLE_SATELLITE
+static void scene_save_led_timer_callback(void* o) {
+    timer_remove(&sceneSaveLedTimer);
+    gpio_clr_gpio_pin(B01);
+}
+
 void handler_KeyTimer(int32_t data) {
+    /* ANSIBLE_SATELLITE
     if (front_timer) {
         if (front_timer == 1 && !grid_connected) {
             if (mode == M_PRESET_R) { process_preset_r_load(); }
             front_timer = 0;
+        }
+        else
+            front_timer--;
+    }
+    */
+    
+    // ANSIBLE_SATELLITE
+    if (front_timer) {
+        if (front_timer == 1) {
+            flash_write(preset_select, &scene_state, &scene_text);
+            flash_update_last_saved_scene(preset_select);
+            front_timer = 0;
+            gpio_set_gpio_pin(B01);
+            timer_add(&sceneSaveLedTimer, 400, &scene_save_led_timer_callback, NULL);
         }
         else
             front_timer--;
@@ -434,6 +486,45 @@ void handler_KeyTimer(int32_t data) {
             process_keypress(hold_key, mod_key, true, false);
         else
             hold_key_count++;
+    }
+
+    // ANSIBLE_SATELLITE
+    
+    static uint8_t key0_state;
+    static uint8_t key1_state;
+    static uint8_t keyfront_state;
+    static uint8_t tr0normal_state;
+
+    if (key0_state != !gpio_get_pin_value(B07)) {
+        key0_state = !gpio_get_pin_value(B07);
+        static event_t e;
+        e.type = kEventKey;
+        e.data = key0_state;
+        event_post(&e);
+    }
+
+    if (key1_state != !gpio_get_pin_value(B06)) {
+        key1_state = !gpio_get_pin_value(B06);
+        static event_t e;
+        e.type = kEventKey;
+        e.data = key1_state + 2;
+        event_post(&e);
+    }
+
+    if (keyfront_state != !gpio_get_pin_value(NMI)) {
+        keyfront_state = !gpio_get_pin_value(NMI);
+        static event_t e;
+        e.type = kEventFront;
+        e.data = !keyfront_state;
+        event_post(&e);
+    }
+
+    if (tr0normal_state != !gpio_get_pin_value(B10)) {
+        tr0normal_state = !gpio_get_pin_value(B10);
+        static event_t e;
+        e.type = kEventTrNormal;
+        e.data = tr0normal_state;
+        event_post(&e);
     }
 }
 
@@ -479,10 +570,12 @@ void handler_MscConnect(int32_t data) {
     u8 flags = irqs_pause();
 
     // clear screen
+    /* ANSIBLE_SATELLITE
     for (size_t i = 0; i < 8; i++) {
         region_fill(&line[i], 0);
         region_draw(&line[i]);
     }
+    */
 
     // do USB
     tele_usb_disk();
@@ -494,10 +587,76 @@ void handler_MscConnect(int32_t data) {
 }
 
 void handler_Trigger(int32_t data) {
+    /* ANSIBLE_SATELLITE
     u8 input = device_config.flip ? 7 - data : data;
     if (!ss_get_mute(&scene_state, input)) {
         bool tr_state = gpio_get_pin_value(A00 + data);
         if (tr_state) {
+            if (scene_state.variables.script_pol[input] & 1) {
+                run_script(&scene_state, input);
+            }
+        }
+        else {
+            if (scene_state.variables.script_pol[input] & 2) {
+                run_script(&scene_state, input);
+            }
+        }
+    }
+    */
+}
+
+// ANSIBLE_SATELLITE
+void handler_Tr(int32_t data) {
+    if (data == 1) {
+        event_t e = { .type = kEventAppCustom, .data = 0 };
+        event_post(&e);
+    } else if (data == 2 || data == 3) {
+        if (!ss_get_mute(&scene_state, 2)) {
+            if (data == 3) {
+                if (scene_state.variables.script_pol[2] & 1) {
+                    run_script(&scene_state, 2);
+                }
+            }
+            else {
+                if (scene_state.variables.script_pol[2] & 2) {
+                    run_script(&scene_state, 2);
+                }
+            }
+        }
+    }
+}
+
+// ANSIBLE_SATELLITE
+void handler_TrNormal(int32_t data) {
+    external_metro = data;
+}
+
+// ANSIBLE_SATELLITE
+void handler_Key(int32_t data) {
+    u8 pressed = data & 1;
+    if (pressed && front_timer) {
+        if (data >> 1) {
+            preset_select = (preset_select + 1) % SCENE_SLOTS;
+        } else {
+            preset_select = (preset_select + SCENE_SLOTS - 1) % SCENE_SLOTS;
+        }
+        ss_grid_init(&scene_state);
+        flash_read(preset_select, &scene_state, &scene_text, 1, 1);
+        flash_update_last_saved_scene(preset_select);
+        ss_set_scene(&scene_state, preset_select);
+
+        scene_state.initializing = true;
+        run_script(&scene_state, INIT_SCRIPT);
+        scene_state.initializing = false;
+
+        set_last_mode();
+        front_timer = 0;
+        return;
+    }
+
+    u8 input = data >> 1;
+    if (!ss_get_mute(&scene_state, input)) {
+        if (pressed) {
             if (scene_state.variables.script_pol[input] & 1) {
                 run_script(&scene_state, input);
             }
@@ -525,6 +684,10 @@ void handler_ScreenRefresh(int32_t data) {
         case M_EDIT: screen_dirty = screen_refresh_edit(); break;
     }
 
+    // ANSIBLE_SATELLITE
+    if (grid_control_mode && screen_dirty) scene_state.grid.grid_dirty = 1;
+    
+    /* ANSIBLE_SATELLITE
     u8 grid = 0;
     for (size_t i = 0; i < 8; i++)
         if (screen_dirty & (1 << i)) {
@@ -532,6 +695,7 @@ void handler_ScreenRefresh(int32_t data) {
             if (ss_counter < SS_TIMEOUT) region_draw(&line[i]);
         }
     if (grid_control_mode && grid) scene_state.grid.grid_dirty = 1;
+    */
 
 #ifdef TELETYPE_PROFILE
     profile_update(&prof_ScreenRefresh);
@@ -541,6 +705,7 @@ void handler_ScreenRefresh(int32_t data) {
 void handler_EventTimer(int32_t data) {
     tele_tick(&scene_state, RATE_CLOCK);
 
+    /* ANSIBLE_SATELLITE
     if (ss_counter < SS_TIMEOUT) {
         ss_counter++;
         if (ss_counter == SS_TIMEOUT) {
@@ -550,6 +715,13 @@ void handler_EventTimer(int32_t data) {
                     screen_draw_region(i << 1, j, 2, 1, &empty);
         }
     }
+    */
+}
+
+// ANSIBLE_SATELLITE
+static void metro_led_timer_callback(void* o) {
+    timer_remove(&metroLedTimer);
+    gpio_clr_gpio_pin(B00);
 }
 
 void handler_AppCustom(int32_t data) {
@@ -557,6 +729,8 @@ void handler_AppCustom(int32_t data) {
     // data argument. For now, we're just using it for the metro
     if (ss_get_script_len(&scene_state, METRO_SCRIPT)) {
         set_metro_icon(true);
+        timer_add(&metroLedTimer, 10, &metro_led_timer_callback, NULL); // ANSIBLE_SATELLITE
+        gpio_set_gpio_pin(B00); // ANSIBLE_SATELLITE
         run_script(&scene_state, METRO_SCRIPT);
         if (grid_connected && grid_control_mode)
             grid_metro_triggered(&scene_state);
@@ -596,11 +770,13 @@ static void handler_MonomeRefresh(s32 data) {
 }
 
 static void handler_MonomeGridKey(s32 data) {
+    /* ANSIBLE_SATELLITE
     if (grid_control_mode && ss_counter >= SS_TIMEOUT) {
         exit_screensaver();
         return;
     }
     if (grid_control_mode) ss_counter = 0;
+    */
 
     u8 x, y, z;
     monome_grid_key_parse_event_data(data, &x, &y, &z);
@@ -729,6 +905,11 @@ void assign_main_event_handlers() {
     app_event_handlers[kEventMidiConnect] = &handler_midi_connect;
     app_event_handlers[kEventMidiDisconnect] = &handler_midi_disconnect;
     app_event_handlers[kEventMidiPacket] = &handler_standard_midi_packet;
+    
+    // ANSIBLE_SATELLITE
+    app_event_handlers[kEventTr] = &handler_Tr;
+    app_event_handlers[kEventTrNormal] = &handler_TrNormal;
+    app_event_handlers[kEventKey] = &handler_Key;
 }
 
 static void assign_msc_event_handlers(void) {
@@ -801,6 +982,7 @@ void clear_delays_and_slews(scene_state_t* ss) {
 
 void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key,
                       bool is_release) {
+    /* ANSIBLE_SATELLITE
     // reset inactivity counter
     if (ss_counter >= SS_TIMEOUT) {
         exit_screensaver();
@@ -814,11 +996,12 @@ void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key,
             process_live_keys(key, mod_key, is_held_key, true, &scene_state);
         return;
     }
+    */
 
     // first try global keys
     if (process_global_keys(key, mod_key, is_held_key)) return;
 
-
+    /* ANSIBLE_SATELLITE
     switch (mode) {
         case M_EDIT: process_edit_keys(key, mod_key, is_held_key); break;
         case M_LIVE:
@@ -833,6 +1016,7 @@ void process_keypress(uint8_t key, uint8_t mod_key, bool is_held_key,
             break;
         case M_HELP: process_help_keys(key, mod_key, is_held_key); break;
     }
+    */
 }
 
 bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
@@ -932,6 +1116,7 @@ bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
 // other
 
 void render_init(void) {
+    /* ANSIBLE_SATELLITE
     region_alloc(&line[0]);
     region_alloc(&line[1]);
     region_alloc(&line[2]);
@@ -940,6 +1125,7 @@ void render_init(void) {
     region_alloc(&line[5]);
     region_alloc(&line[6]);
     region_alloc(&line[7]);
+    */
 }
 
 void exit_screensaver(void) {
@@ -948,7 +1134,7 @@ void exit_screensaver(void) {
 }
 
 void update_device_config(u8 refresh) {
-    screen_set_direction(device_config.flip);
+    // ANSIBLE_SATELLITE screen_set_direction(device_config.flip);
     if (refresh) set_mode(mode);
     flash_update_device_config(&device_config);
 }
@@ -1009,12 +1195,22 @@ void tele_metro_reset() {
 }
 
 void tele_tr(uint8_t i, int16_t v) {
+    /* ANSIBLE_SATELLITE
     uint32_t pin = B08 + (device_config.flip ? 3 - i : i);
-
+    
     if (v)
         gpio_set_pin_high(pin);
     else
         gpio_set_pin_low(pin);
+    */
+
+    // ANSIBLE_SATELLITE
+    uint32_t pin = B02 + i;
+
+    if (v)
+        gpio_set_gpio_pin(pin);
+    else
+        gpio_clr_gpio_pin(pin);
 }
 
 void tele_cv(uint8_t i, int16_t v, uint8_t s) {
@@ -1048,11 +1244,17 @@ void tele_cv_off(uint8_t i, int16_t v) {
 }
 
 void tele_update_adc(u8 force) {
+    /* ANSIBLE_SATELLITE
     if (!force && get_ticks() == last_adc_tick) return;
     last_adc_tick = get_ticks();
     adc_convert(&adc);
     ss_set_in(&scene_state, adc[0] << 2);
     ss_set_param(&scene_state, adc[1] << 2);
+    */
+    
+    // ANSIBLE_SATELLITE
+    ss_set_in(&scene_state, 0);
+    ss_set_param(&scene_state, 8192); // centre position
 }
 
 void tele_ii_tx(uint8_t addr, uint8_t* data, uint8_t l) {
@@ -1077,7 +1279,8 @@ void tele_kill() {
 }
 
 bool tele_get_input_state(uint8_t n) {
-    return gpio_get_pin_value(A00 + n) > 0;
+    // ANSIBLE_SATELLITE return gpio_get_pin_value(A00 + n) > 0;
+    return 0;
 }
 
 void tele_vars_updated() {
@@ -1114,7 +1317,7 @@ int main(void) {
     init_events();
     init_tc();
     init_spi();
-    init_adc();
+    // ANSIBLE_SATELLITE init_adc();
 
     irq_initialize_vectors();
     register_interrupts();
@@ -1122,8 +1325,8 @@ int main(void) {
 
     init_usb_host();
     init_monome();
-    init_oled();
     setup_midi();
+    // ANSIBLE_SATELLITE init_oled();
 
     // wait to allow for any i2c devices to fully initalise
     delay_ms(1500);
@@ -1135,8 +1338,9 @@ int main(void) {
     ss_init(&scene_state);
 
     // screen init
-    render_init();
+    // ANSIBLE_SATELLITE render_init();
 
+    /* ANSIBLE_SATELLITE
     if (is_flash_fresh()) {
         char s[36];
         strcpy(s, "SCENES WILL BE OVERWRITTEN!");
@@ -1155,6 +1359,7 @@ int main(void) {
         region_draw(&line[7]);
         ignore_front_press = 1;
     }
+    */
 
     // prepare flash (if needed)
     flash_prepare();
@@ -1174,17 +1379,22 @@ int main(void) {
     ss_set_scene(&scene_state, preset_select);
     flash_read(preset_select, &scene_state, &scene_text, 1, 1);
 
+    /* ANSIBLE_SATELLITE
     // setup daisy chain for two dacs
     spi_selectChip(DAC_SPI, DAC_SPI_NPCS);
     spi_write(DAC_SPI, 0x80);
     spi_write(DAC_SPI, 0xff);
     spi_write(DAC_SPI, 0xff);
     spi_unselectChip(DAC_SPI, DAC_SPI_NPCS);
+    */
+    init_dacs(); // ANSIBLE_SATELLITE
+    tele_kill(); // ANSIBLE_SATELLITE
 
     timer_add(&clockTimer, RATE_CLOCK, &clockTimer_callback, NULL);
     timer_add(&cvTimer, RATE_CV, &cvTimer_callback, NULL);
-    timer_add(&keyTimer, 71, &keyTimer_callback, NULL);
-    timer_add(&adcTimer, 61, &adcTimer_callback, NULL);
+    // ANSIBLE_SATELLITE timer_add(&keyTimer, 71, &keyTimer_callback, NULL);
+    timer_add(&keyTimer, 50, &keyTimer_callback, NULL); // ANSIBLE_SATELLITE
+    // ANSIBLE_SATELLITE timer_add(&adcTimer, 61, &adcTimer_callback, NULL);
     timer_add(&refreshTimer, 63, &refreshTimer_callback, NULL);
     timer_add(&gridFaderTimer, 25, &grid_fader_timer_callback, NULL);
     timer_add(&midiScriptTimer, 25, &midiScriptTimer_callback, NULL);
