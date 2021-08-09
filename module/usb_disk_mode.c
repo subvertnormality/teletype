@@ -10,10 +10,11 @@
 #include "teletype.h"
 
 // libavr32
+#include "font.h"
+#include "region.h"
 #include "util.h"
 
 // asf
-#include "gpio.h" // ANSIBLE_SATELLITE
 #include "delay.h"
 #include "fat.h"
 #include "file.h"
@@ -34,9 +35,7 @@ static void grid_usb_read(scene_state_t *scene, char c);
 
 
 void tele_usb_disk() {
-    // ANSIBLE_SATELLITE char input_buffer[32];
-    gpio_set_gpio_pin(B01); // ANSIBLE_SATELLITE
-
+    char input_buffer[32];
     print_dbg("\r\nusb");
 
     uint8_t lun_state = 0;
@@ -63,15 +62,13 @@ void tele_usb_disk() {
 
         // WRITE SCENES
         char filename[13];
-        strcpy(filename, "tt00a.txt"); // ANSIBLE_SATELLITE
+        strcpy(filename, "tt00s.txt");
 
         print_dbg("\r\nwriting scenes");
-        /* ANSIBLE_SATELLITE
         strcpy(input_buffer, "WRITE");
         region_fill(&line[0], 0);
         font_string_region_clip_tab(&line[0], input_buffer, 2, 0, 0xa, 0);
         region_draw(&line[0]);
-        */
 
         for (int i = 0; i < SCENE_SLOTS; i++) {
             scene_state_t scene;
@@ -80,12 +77,10 @@ void tele_usb_disk() {
             char text[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
             memset(text, 0, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
 
-            /* ANSIBLE_SATELLITE
             strcat(input_buffer, ".");
             region_fill(&line[0], 0);
             font_string_region_clip_tab(&line[0], input_buffer, 2, 0, 0xa, 0);
             region_draw(&line[0]);
-            */
 
             flash_read(i, &scene, &text, 1, 1, 1);
 
@@ -218,15 +213,13 @@ void tele_usb_disk() {
 
 
         // READ SCENES
-        strcpy(filename, "tt00s.txt"); // ANSIBLE_SATELLITE
+        strcpy(filename, "tt00.txt");
         print_dbg("\r\nreading scenes...");
 
-        /* ANSIBLE_SATELLITE
         strcpy(input_buffer, "READ");
         region_fill(&line[1], 0);
         font_string_region_clip_tab(&line[1], input_buffer, 2, 0, 0xa, 0);
         region_draw(&line[1]);
-        */
 
         for (int i = 0; i < SCENE_SLOTS; i++) {
             scene_state_t scene;
@@ -234,12 +227,10 @@ void tele_usb_disk() {
             char text[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
             memset(text, 0, SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
 
-            /* ANSIBLE_SATELLITE
             strcat(input_buffer, ".");
             region_fill(&line[1], 0);
             font_string_region_clip_tab(&line[1], input_buffer, 2, 0, 0xa, 0);
             region_draw(&line[1]);
-            */
             if (nav_filelist_findname(filename, 0)) {
                 print_dbg("\r\nfound: ");
                 print_dbg(filename);
@@ -425,7 +416,6 @@ void tele_usb_disk() {
     }
 
     nav_exit();
-    gpio_clr_gpio_pin(B01);
 }
 
 char fvalue[36];
