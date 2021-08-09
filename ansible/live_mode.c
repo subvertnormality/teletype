@@ -9,6 +9,7 @@ uint8_t grid_show_controls = 0;
 
 static uint8_t dirty = 0;
 
+
 // teletype_io.h
 void tele_has_delays(bool has_delays) {}
 void tele_has_stack(bool has_stack) {}
