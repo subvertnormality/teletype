@@ -87,7 +87,7 @@ void tele_usb_disk() {
             region_draw(&line[0]);
             */
 
-            flash_read(i, &scene, &text, 1, 1);
+            flash_read(i, &scene, &text, 1, 1, 1);
 
             if (!nav_file_create((FS_STRING)filename)) {
                 if (fs_g_status != FS_ERR_FILE_EXIST) {
