@@ -3,6 +3,7 @@
 ## v4.0.x
 
 - **FIX**: `PROB 100` would only execute 99.01% of the time.
+- **FIX**: some `G.FDR` configurations caused incorrect rendering in grid visualizer
 
 ## v4.0.0
 
