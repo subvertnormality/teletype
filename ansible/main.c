@@ -17,6 +17,7 @@
 // system
 #include "adc.h"
 #include "dac.h"
+#include "cdc.h"
 #include "events.h"
 #include "font.h"
 #include "hid.h"
@@ -80,14 +81,12 @@ void tele_profile_delay(uint8_t d) {
 scene_state_t scene_state;
 char scene_text[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
 uint8_t preset_select;
-region line[8] = { { .w = 128, .h = 8, .x = 0, .y = 0 },
-                   { .w = 128, .h = 8, .x = 0, .y = 8 },
-                   { .w = 128, .h = 8, .x = 0, .y = 16 },
-                   { .w = 128, .h = 8, .x = 0, .y = 24 },
-                   { .w = 128, .h = 8, .x = 0, .y = 32 },
-                   { .w = 128, .h = 8, .x = 0, .y = 40 },
-                   { .w = 128, .h = 8, .x = 0, .y = 48 },
-                   { .w = 128, .h = 8, .x = 0, .y = 56 } };
+region line[8] = {
+    {.w = 128, .h = 8, .x = 0, .y = 0 },  {.w = 128, .h = 8, .x = 0, .y = 8 },
+    {.w = 128, .h = 8, .x = 0, .y = 16 }, {.w = 128, .h = 8, .x = 0, .y = 24 },
+    {.w = 128, .h = 8, .x = 0, .y = 32 }, {.w = 128, .h = 8, .x = 0, .y = 40 },
+    {.w = 128, .h = 8, .x = 0, .y = 48 }, {.w = 128, .h = 8, .x = 0, .y = 56 }
+};
 char copy_buffer[SCENE_TEXT_LINES][SCENE_TEXT_CHARS];
 uint8_t copy_buffer_len = 0;
 
@@ -125,16 +124,16 @@ static midi_behavior_t midi_behavior;
 static u8 external_metro = 0; // ANSIBLE_SATELLITE
 
 // timers
-static softTimer_t clockTimer = { .next = NULL, .prev = NULL };
-static softTimer_t refreshTimer = { .next = NULL, .prev = NULL };
-static softTimer_t keyTimer = { .next = NULL, .prev = NULL };
-static softTimer_t cvTimer = { .next = NULL, .prev = NULL };
-static softTimer_t adcTimer = { .next = NULL, .prev = NULL };
-static softTimer_t hidTimer = { .next = NULL, .prev = NULL };
-static softTimer_t metroTimer = { .next = NULL, .prev = NULL };
-static softTimer_t monomePollTimer = { .next = NULL, .prev = NULL };
-static softTimer_t monomeRefreshTimer = { .next = NULL, .prev = NULL };
-static softTimer_t gridFaderTimer = { .next = NULL, .prev = NULL };
+static softTimer_t clockTimer = {.next = NULL, .prev = NULL };
+static softTimer_t refreshTimer = {.next = NULL, .prev = NULL };
+static softTimer_t keyTimer = {.next = NULL, .prev = NULL };
+static softTimer_t cvTimer = {.next = NULL, .prev = NULL };
+static softTimer_t adcTimer = {.next = NULL, .prev = NULL };
+static softTimer_t hidTimer = {.next = NULL, .prev = NULL };
+static softTimer_t metroTimer = {.next = NULL, .prev = NULL };
+static softTimer_t monomePollTimer = {.next = NULL, .prev = NULL };
+static softTimer_t monomeRefreshTimer = {.next = NULL, .prev = NULL };
+static softTimer_t gridFaderTimer = {.next = NULL, .prev = NULL };
 static softTimer_t midiScriptTimer = {.next = NULL, .prev = NULL };
 static softTimer_t metroLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
 static softTimer_t sceneSaveLedTimer = { .next = NULL, .prev = NULL }; // ANSIBLE_SATELLITE
@@ -268,33 +267,33 @@ void cvTimer_callback(void* o) {
 }
 
 void clockTimer_callback(void* o) {
-    event_t e = { .type = kEventTimer, .data = 0 };
+    event_t e = {.type = kEventTimer, .data = 0 };
     event_post(&e);
 }
 
 void refreshTimer_callback(void* o) {
-    event_t e = { .type = kEventScreenRefresh, .data = 0 };
+    event_t e = {.type = kEventScreenRefresh, .data = 0 };
     event_post(&e);
 }
 
 void keyTimer_callback(void* o) {
-    event_t e = { .type = kEventKeyTimer, .data = 0 };
+    event_t e = {.type = kEventKeyTimer, .data = 0 };
     event_post(&e);
 }
 
 void adcTimer_callback(void* o) {
-    event_t e = { .type = kEventPollADC, .data = 0 };
+    event_t e = {.type = kEventPollADC, .data = 0 };
     event_post(&e);
 }
 
 void hidTimer_callback(void* o) {
-    event_t e = { .type = kEventHidTimer, .data = 0 };
+    event_t e = {.type = kEventHidTimer, .data = 0 };
     event_post(&e);
 }
 
 void metroTimer_callback(void* o) {
     if (external_metro) return; // ANSIBLE_SATELLITE
-    event_t e = { .type = kEventAppCustom, .data = 0 };
+    event_t e = {.type = kEventAppCustom, .data = 0 };
     event_post(&e);
 }
 
@@ -302,7 +301,7 @@ void metroTimer_callback(void* o) {
 static void monome_poll_timer_callback(void* obj) {
     // asynchronous, non-blocking read
     // UHC callback spawns appropriate events
-    ftdi_read();
+    serial_read();
 }
 
 // monome refresh callback
@@ -331,29 +330,26 @@ void grid_fader_timer_callback(void* o) {
 }
 
 static void safely_run_script(u8 script) {
-    if (script >= 0 && script <= INIT_SCRIPT)
-        run_script(&scene_state, script);
+    if (script >= 0 && script <= INIT_SCRIPT) run_script(&scene_state, script);
 }
 
 void midiScriptTimer_callback(void* obj) {
     u8 executed[SCRIPT_COUNT] = { 0 };
-    
+
     if (scene_state.midi.on_count) {
         safely_run_script(scene_state.midi.on_script);
         executed[scene_state.midi.on_script] = 1;
     }
-    
-    if (scene_state.midi.off_count &&
-        !executed[scene_state.midi.off_script]) {
+
+    if (scene_state.midi.off_count && !executed[scene_state.midi.off_script]) {
         safely_run_script(scene_state.midi.off_script);
         executed[scene_state.midi.off_script] = 1;
     }
-    
-    if (scene_state.midi.cc_count &&
-        !executed[scene_state.midi.cc_script]) {
+
+    if (scene_state.midi.cc_count && !executed[scene_state.midi.cc_script]) {
         safely_run_script(scene_state.midi.cc_script);
     }
-    
+
     scene_state.midi.on_count = 0;
     scene_state.midi.off_count = 0;
     scene_state.midi.cc_count = 0;
@@ -641,7 +637,7 @@ void handler_Key(int32_t data) {
             preset_select = (preset_select + SCENE_SLOTS - 1) % SCENE_SLOTS;
         }
         ss_grid_init(&scene_state);
-        flash_read(preset_select, &scene_state, &scene_text, 1, 1);
+        flash_read(preset_select, &scene_state, &scene_text, 1, 1, 1);
         flash_update_last_saved_scene(preset_select);
         ss_set_scene(&scene_state, preset_select);
 
@@ -680,7 +676,7 @@ void handler_ScreenRefresh(int32_t data) {
         case M_PRESET_W: screen_dirty = screen_refresh_preset_w(); break;
         case M_PRESET_R: screen_dirty = screen_refresh_preset_r(); break;
         case M_HELP: screen_dirty = screen_refresh_help(); break;
-        case M_LIVE: screen_dirty = screen_refresh_live(&scene_state); break;
+        case M_LIVE: screen_dirty = screen_refresh_live(); break;
         case M_EDIT: screen_dirty = screen_refresh_edit(); break;
     }
 
@@ -742,6 +738,11 @@ void handler_AppCustom(int32_t data) {
 static void handler_FtdiConnect(s32 data) {
     ftdi_setup();
 }
+
+static void handler_SerialConnect(s32 data) {
+    monome_setup_mext();
+}
+
 static void handler_FtdiDisconnect(s32 data) {
     grid_connected = 0;
     timers_unset_monome();
@@ -783,11 +784,9 @@ static void handler_MonomeGridKey(s32 data) {
     grid_process_key(&scene_state, x, y, z, 0);
 }
 
-static void handler_midi_connect(s32 data) {
-}
+static void handler_midi_connect(s32 data) {}
 
-static void handler_midi_disconnect(s32 data) {
-}
+static void handler_midi_disconnect(s32 data) {}
 
 static void handler_standard_midi_packet(s32 data) {
     midi_packet_parse(&midi_behavior, (u32)data);
@@ -829,7 +828,6 @@ static void midi_control_change(u8 ch, u8 num, u8 val) {
     scene_state.midi.last_cc = val;
 
     if (scene_state.midi.cc_script != -1) {
-            
         u8 found = 0;
         for (u8 i = 0; i < scene_state.midi.cc_count; i++) {
             if (scene_state.midi.cn[i] == num &&
@@ -839,7 +837,7 @@ static void midi_control_change(u8 ch, u8 num, u8 val) {
                 break;
             }
         }
-        
+
         if (!found && scene_state.midi.cc_count < MAX_MIDI_EVENTS) {
             scene_state.midi.cc_channel[scene_state.midi.cc_count] = ch;
             scene_state.midi.cn[scene_state.midi.cc_count] = num;
@@ -905,7 +903,9 @@ void assign_main_event_handlers() {
     app_event_handlers[kEventMidiConnect] = &handler_midi_connect;
     app_event_handlers[kEventMidiDisconnect] = &handler_midi_disconnect;
     app_event_handlers[kEventMidiPacket] = &handler_standard_midi_packet;
-    
+    app_event_handlers[kEventSerialConnect] = &handler_SerialConnect;
+    app_event_handlers[kEventSerialDisconnect] = &handler_FtdiDisconnect;
+
     // ANSIBLE_SATELLITE
     app_event_handlers[kEventTr] = &handler_Tr;
     app_event_handlers[kEventTrNormal] = &handler_TrNormal;
@@ -1081,6 +1081,7 @@ bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
         bool muted = ss_get_mute(&scene_state, (k - HID_F1));
         ss_set_mute(&scene_state, (k - HID_F1), !muted);
         screen_mutes_updated();
+        set_mutes_updated();
         return true;
     }
     // ctrl-<F9> toggle metro
@@ -1265,9 +1266,11 @@ void tele_ii_rx(uint8_t addr, uint8_t* data, uint8_t l) {
     i2c_leader_rx(addr, data, l);
 }
 
-void tele_scene(uint8_t i, uint8_t init_grid) {
+void tele_scene(uint8_t i, uint8_t init_grid, uint8_t init_pattern) {
+    if (i >= SCENE_SLOTS) return;
     preset_select = i;
-    flash_read(i, &scene_state, &scene_text, init_grid, 0);
+    flash_read(i, &scene_state, &scene_text, init_pattern, init_grid, 0);
+    set_dash_updated();
     if (init_grid) scene_state.grid.scr_dirty = scene_state.grid.grid_dirty = 1;
 }
 
@@ -1377,7 +1380,7 @@ int main(void) {
     // load preset from flash
     preset_select = flash_last_saved_scene();
     ss_set_scene(&scene_state, preset_select);
-    flash_read(preset_select, &scene_state, &scene_text, 1, 1);
+    flash_read(preset_select, &scene_state, &scene_text, 1, 1, 1);
 
     /* ANSIBLE_SATELLITE
     // setup daisy chain for two dacs
@@ -1425,7 +1428,7 @@ int main(void) {
     uint32_t count = 0;
 #endif
     while (true) {
-        midi_read(); 
+        midi_read();
         check_events();
 #ifdef TELETYPE_PROFILE
         count = (count + 1) % (FCPU_HZ / 10);

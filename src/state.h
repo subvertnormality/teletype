@@ -53,6 +53,9 @@
 #define METRO_MIN_MS 25
 #define METRO_MIN_UNSUPPORTED_MS 2
 
+#define NB_NBX_SCALES 16
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // SCENE STATE /////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,8 +96,11 @@ typedef struct {
     int16_t param;
     int16_t q[Q_LENGTH];
     int16_t q_n;
+    int16_t q_grow;
     int16_t r_min;
     int16_t r_max;
+    int16_t n_scale_bits[NB_NBX_SCALES];
+    int16_t n_scale_root[NB_NBX_SCALES];
     int16_t scene;
     uint8_t script_pol[8];
     int64_t time;
@@ -339,7 +345,8 @@ void ss_turtle_set_val(scene_state_t *, scene_turtle_t *, int16_t);
 
 void ss_set_param_scale(scene_state_t *, int16_t, int16_t);
 void ss_set_in_scale(scene_state_t *, int16_t, int16_t);
-void ss_set_fader_scale(scene_state_t *ss, int16_t fader, int16_t min, int16_t max);
+void ss_set_fader_scale(scene_state_t *ss, int16_t fader, int16_t min,
+                        int16_t max);
 void ss_update_in_scale(scene_state_t *);
 void ss_update_param_scale(scene_state_t *);
 void ss_update_fader_scale(scene_state_t *ss, int16_t fader);
@@ -402,9 +409,7 @@ typedef struct {
     int16_t top;
 } command_state_stack_t;
 
-typedef struct {
-    command_state_stack_t stack;
-} command_state_t;
+typedef struct { command_state_stack_t stack; } command_state_t;
 
 extern void cs_init(command_state_t *cs);
 extern int16_t cs_stack_size(command_state_t *cs);

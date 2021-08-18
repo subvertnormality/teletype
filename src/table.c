@@ -2,11 +2,11 @@
 
 // const int table_v[11] = {0, 3277, 6554, 9830, 13107, 16384, 19661, 22938,
 // 26214, 29491, 32768 };
-const int table_v[11] = { 0,    1638,  3277,  4915,  6554, 8192,
-                          9830, 11469, 13107, 14746, 16384 };
+const int16_t table_v[11] = { 0,    1638,  3277,  4915,  6554, 8192,
+                              9830, 11469, 13107, 14746, 16384 };
 
 
-const int table_vv[100] = {
+const int16_t table_vv[100] = {
     0,    16,   33,   49,   66,   82,   98,   115,  131,  147,  164,  180,
     197,  213,  229,  246,  262,  279,  295,  311,  328,  344,  360,  377,
     393,  410,  426,  442,  459,  475,  492,  508,  524,  541,  557,  573,
@@ -18,9 +18,21 @@ const int table_vv[100] = {
     1573, 1589, 1606, 1622
 };
 
+
+const int16_t table_hzv[76] = {
+    205,  217,  230,   244,   258,   273,   290,   307,   325,   344,  365,
+    387,  410,  434,   460,   487,   516,   547,   579,   614,   650,  689,
+    730,  773,  819,   868,   920,   974,   1032,  1094,  1159,  1227, 1300,
+    1378, 1460, 1546,  1638,  1736,  1839,  1948,  2064,  2187,  2317, 2455,
+    2601, 2755, 2919,  3093,  3277,  3472,  3678,  3897,  4129,  4374, 4634,
+    4910, 5202, 5511,  5839,  6186,  6554,  6943,  7356,  7794,  8257, 8748,
+    9268, 9819, 10403, 11022, 11677, 12372, 13107, 13887, 14712, 15587
+};
+
+
 //>>> for i in range(0,256):
 //...     print '%.0f, ' % (math.pow(i/64.,4)*16384./256.)
-const int table_exp[256] = {
+const int16_t table_exp[256] = {
     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
     0,     0,     0,     0,     0,     0,     0,     0,     0,     1,     1,
     1,     1,     1,     1,     2,     2,     2,     3,     3,     4,     4,
@@ -82,52 +94,76 @@ const int table_exp[256] = {
 // 1000010100100010
 // 1000010100100100
 // 1000010101000100
-const int table_nr[32] = {
-    0x8888, 0x888A, 0x8892, 0x8894, 0x88A2, 0x88A4, 0x8912, 0x8914,
-    0x8922, 0x8924, 0x8A8A, 0x8AAA, 0x9292, 0x92AA, 0x94AA, 0x952A,
-    0x8282, 0x828A, 0x8292, 0x82A2, 0x8484, 0x848A, 0x8492, 0x8494,
-    0x84A2, 0x84A4, 0x850A, 0x8512, 0x8514, 0x8522, 0x8524, 0x8544
-};
+const uint16_t table_nr[32] = { 0x8888, 0x888A, 0x8892, 0x8894, 0x88A2, 0x88A4,
+                                0x8912, 0x8914, 0x8922, 0x8924, 0x8A8A, 0x8AAA,
+                                0x9292, 0x92AA, 0x94AA, 0x952A, 0x8282, 0x828A,
+                                0x8292, 0x82A2, 0x8484, 0x848A, 0x8492, 0x8494,
+                                0x84A2, 0x84A4, 0x850A, 0x8512, 0x8514, 0x8522,
+                                0x8524, 0x8544 };
 
 // scales for N.S op
-const int table_n_s[9][7] = {
-    {0, 2, 4, 5, 7, 9, 11}, // Major
-    {0, 2, 3, 5, 7, 8, 10}, // Natural Minor
-    {0, 2, 3, 5, 7, 8, 11}, // Harmonic Minor
-    {0, 2, 3, 5, 7, 9, 11}, // Melodic Minor
-    {0, 2, 3, 5, 7, 9, 10}, // Dorian
-    {0, 1, 3, 5, 7, 8, 10}, // Phrygian
-    {0, 2, 4, 6, 7, 9, 11}, // Lydian
-    {0, 2, 4, 5, 7, 9, 10}, // Myxolidian
-    {0, 1, 3, 5, 6, 8, 10}, // Locrian
+const uint8_t table_n_s[9][7] = {
+    { 0, 2, 4, 5, 7, 9, 11 },  // Major
+    { 0, 2, 3, 5, 7, 8, 10 },  // Natural Minor
+    { 0, 2, 3, 5, 7, 8, 11 },  // Harmonic Minor
+    { 0, 2, 3, 5, 7, 9, 11 },  // Melodic Minor
+    { 0, 2, 3, 5, 7, 9, 10 },  // Dorian
+    { 0, 1, 3, 5, 7, 8, 10 },  // Phrygian
+    { 0, 2, 4, 6, 7, 9, 11 },  // Lydian
+    { 0, 2, 4, 5, 7, 9, 10 },  // Myxolidian
+    { 0, 1, 3, 5, 6, 8, 10 },  // Locrian
 };
 
 // chords for N.C op
-const int table_n_c[13][4] = {
-    {0, 4, 7, 11},  // Major 7th       - 0
-    {0, 3, 7, 10},  // Minor 7th       - 1
-    {0, 4, 7, 10},  // Dominant 7th    - 2
-    {0, 3, 6, 9},   // Diminished 7th  - 3
-    {0, 4, 8, 10},  // Augmented 7th   - 4
-    {0, 4, 6, 10},  // Dominant 7b5    - 5
-    {0, 3, 6, 10},  // Minor 7b5       - 6
-    {0, 4, 8, 11},  // Major 7#5       - 7
-    {0, 3, 7, 11},  // Minor major 7th - 8
-    {0, 3, 6, 11},  // Dim Major 7th   - 9
-    {0, 4, 7, 9},   // Major 6th       - 10
-    {0, 3, 7, 9},   // Minor 6th       - 11
-    {0, 5, 7, 10},  // 7th sus 4       - 12
+const uint8_t table_n_c[13][4] = {
+    { 0, 4, 7, 11 },  // Major 7th       - 0
+    { 0, 3, 7, 10 },  // Minor 7th       - 1
+    { 0, 4, 7, 10 },  // Dominant 7th    - 2
+    { 0, 3, 6, 9 },   // Diminished 7th  - 3
+    { 0, 4, 8, 10 },  // Augmented 7th   - 4
+    { 0, 4, 6, 10 },  // Dominant 7b5    - 5
+    { 0, 3, 6, 10 },  // Minor 7b5       - 6
+    { 0, 4, 8, 11 },  // Major 7#5       - 7
+    { 0, 3, 7, 11 },  // Minor major 7th - 8
+    { 0, 3, 6, 11 },  // Dim Major 7th   - 9
+    { 0, 4, 7, 9 },   // Major 6th       - 10
+    { 0, 3, 7, 9 },   // Minor 6th       - 11
+    { 0, 5, 7, 10 },  // 7th sus 4       - 12
 };
 
 // chord scales for N.CS op - values are indices into table_n_c
-const int table_n_cs[9][7] = {
-    {0, 1, 1, 0, 2, 1, 6}, // Major
-    {1, 6, 0, 1, 1, 0, 2}, // Natural Minor
-    {8, 6, 7, 1, 2, 0, 3}, // Harmonic Minor
-    {8, 1, 7, 2, 2, 6, 6}, // Melodic Minor
-    {1, 1, 0, 2, 1, 6, 0}, // Dorian
-    {1, 0, 2, 1, 6, 0, 1}, // Phrygian
-    {0, 2, 1, 6, 0, 1, 1}, // Lydian
-    {6, 0, 1, 1, 0, 2, 1}, // Locrian
-    {2, 1, 6, 0, 1, 1, 0}, // Myxolydian
+const uint8_t table_n_cs[9][7] = {
+    { 0, 1, 1, 0, 2, 1, 6 },  // Major
+    { 1, 6, 0, 1, 1, 0, 2 },  // Natural Minor
+    { 8, 6, 7, 1, 2, 0, 3 },  // Harmonic Minor
+    { 8, 1, 7, 2, 2, 6, 6 },  // Melodic Minor
+    { 1, 1, 0, 2, 1, 6, 0 },  // Dorian
+    { 1, 0, 2, 1, 6, 0, 1 },  // Phrygian
+    { 0, 2, 1, 6, 0, 1, 1 },  // Lydian
+    { 6, 0, 1, 1, 0, 2, 1 },  // Locrian
+    { 2, 1, 6, 0, 1, 1, 0 },  // Myxolydian
+};
+
+// preset bit mask scales for N.B and N.BX
+const uint16_t table_n_b[] = {
+    0b101011010101,  // ionian (major)
+    0b101101010110,  // dorian
+    0b110101011010,  // phrygian
+    0b101010110101,  // lydian
+    0b101011010110,  // mixolydian
+    0b101101011010,  // aeolean (natural minor)
+    0b110101101010,  // locrian
+    0b101101010101,  // melodic minor
+    0b101101011001,  // harmonic minor
+    0b101010010100,  // major pentatonic
+    0b100101010010,  // minor pentatonic
+    0b101010101010,  // whole note (1st messiaen mode)
+    0b110110110110,  // octatonic (half-whole, 2nd messiaen mode)
+    0b101101101101,  // octatonic (whole-half)
+    0b101110111011,  // 3rd messiaen mode
+    0b111001111001,  // 4th messiaen mode
+    0b110001110001,  // 5th messiaen mode
+    0b101011101011,  // 6th mesiaen mode
+    0b111101111101,  // 7th messiaen mode
+    0b100110011001,  // augmented
 };

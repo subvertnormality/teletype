@@ -3,10 +3,9 @@
 #include <stddef.h>  // offsetof
 
 #include "helpers.h"
-#include "teletype_io.h"
-
 #include "ops/ansible.h"
 #include "ops/controlflow.h"
+#include "ops/crow.h"
 #include "ops/delay.h"
 #include "ops/disting.h"
 #include "ops/earthsea.h"
@@ -32,7 +31,10 @@
 #include "ops/variables.h"
 #include "ops/whitewhale.h"
 #include "ops/wslash.h"
-
+#include "ops/wslashdelay.h"
+#include "ops/wslashsynth.h"
+#include "ops/wslashtape.h"
+#include "teletype_io.h"
 
 /////////////////////////////////////////////////////////////////
 // OPS //////////////////////////////////////////////////////////
@@ -71,37 +73,48 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_P_ADDW, &op_PN_ADDW, &op_P_SUBW, &op_PN_SUBW,
 
     // queue
-    &op_Q, &op_Q_AVG, &op_Q_N,
+    &op_Q, &op_Q_AVG, &op_Q_N, &op_Q_CLR, &op_Q_GRW, &op_Q_SUM, &op_Q_MIN,
+    &op_Q_MAX, &op_Q_RND, &op_Q_SRT, &op_Q_REV, &op_Q_SH, &op_Q_ADD, &op_Q_SUB,
+    &op_Q_MUL, &op_Q_DIV, &op_Q_MOD, &op_Q_I, &op_Q_2P, &op_Q_P2,
 
     // hardware
     &op_CV, &op_CV_OFF, &op_CV_SLEW, &op_IN, &op_IN_SCALE, &op_PARAM,
     &op_PARAM_SCALE, &op_IN_CAL_MIN, &op_IN_CAL_MAX, &op_IN_CAL_RESET,
     &op_PARAM_CAL_MIN, &op_PARAM_CAL_MAX, &op_PARAM_CAL_RESET, &op_PRM, &op_TR,
     &op_TR_POL, &op_TR_TIME, &op_TR_TOG, &op_TR_PULSE, &op_TR_P, &op_CV_SET,
-    &op_MUTE, &op_STATE, &op_DEVICE_FLIP,
+    &op_MUTE, &op_STATE, &op_DEVICE_FLIP, &op_LIVE_OFF, &op_LIVE_O,
+    &op_LIVE_DASH, &op_LIVE_D, &op_LIVE_GRID, &op_LIVE_G, &op_LIVE_VARS,
+    &op_LIVE_V, &op_PRINT, &op_PRT,
 
     // maths
     &op_ADD, &op_SUB, &op_MUL, &op_DIV, &op_MOD, &op_RAND, &op_RND, &op_RRAND,
     &op_RRND, &op_R, &op_R_MIN, &op_R_MAX, &op_TOSS, &op_MIN, &op_MAX, &op_LIM,
-    &op_WRAP, &op_WRP, &op_QT, &op_QT_S, &op_QT_CS, &op_QT_B, &op_AVG, &op_EQ,
-    &op_NE, &op_LT, &op_GT, &op_LTE, &op_GTE, &op_NZ, &op_EZ, &op_RSH, &op_LSH,
-    &op_LROT, &op_RROT, &op_EXP, &op_ABS, &op_SGN, &op_AND, &op_OR, &op_JI,
-    &op_SCALE, &op_SCL, &op_N, &op_VN, &op_N_S, &op_N_C, &op_N_CS, &op_V,
-    &op_VV, &op_ER, &op_NR, &op_BPM, &op_BIT_OR, &op_BIT_AND, &op_BIT_NOT,
-    &op_BIT_XOR, &op_BSET, &op_BGET, &op_BCLR, &op_BTOG, &op_XOR, &op_CHAOS,
+    &op_WRAP, &op_WRP, &op_QT, &op_QT_S, &op_QT_CS, &op_QT_B, &op_QT_BX,
+    &op_AVG, &op_EQ, &op_NE, &op_LT, &op_GT, &op_LTE, &op_GTE, &op_INR,
+    &op_OUTR, &op_INRI, &op_OUTRI, &op_NZ, &op_EZ, &op_RSH, &op_LSH, &op_LROT,
+    &op_RROT, &op_EXP, &op_ABS, &op_SGN, &op_AND, &op_OR, &op_AND3, &op_OR3,
+    &op_AND4, &op_OR4, &op_JI, &op_SCALE, &op_SCL, &op_N, &op_VN, &op_HZ,
+    &op_N_S, &op_N_C, &op_N_CS, &op_N_B, &op_N_BX, &op_V, &op_VV, &op_ER,
+    &op_NR, &op_BPM, &op_BIT_OR, &op_BIT_AND, &op_BIT_NOT, &op_BIT_XOR,
+    &op_BSET, &op_BGET, &op_BCLR, &op_BTOG, &op_BREV, &op_XOR, &op_CHAOS,
     &op_CHAOS_R, &op_CHAOS_ALG, &op_SYM_PLUS, &op_SYM_DASH, &op_SYM_STAR,
     &op_SYM_FORWARD_SLASH, &op_SYM_PERCENTAGE, &op_SYM_EQUAL_x2,
     &op_SYM_EXCLAMATION_EQUAL, &op_SYM_LEFT_ANGLED, &op_SYM_RIGHT_ANGLED,
-    &op_SYM_LEFT_ANGLED_EQUAL, &op_SYM_RIGHT_ANGLED_EQUAL, &op_SYM_EXCLAMATION,
+    &op_SYM_LEFT_ANGLED_EQUAL, &op_SYM_RIGHT_ANGLED_EQUAL,
+    &op_SYM_RIGHT_ANGLED_LEFT_ANGLED, &op_SYM_LEFT_ANGLED_RIGHT_ANGLED,
+    &op_SYM_RIGHT_ANGLED_EQUAL_LEFT_ANGLED,
+    &op_SYM_LEFT_ANGLED_EQUAL_RIGHT_ANGLED, &op_SYM_EXCLAMATION,
     &op_SYM_LEFT_ANGLED_x2, &op_SYM_RIGHT_ANGLED_x2, &op_SYM_LEFT_ANGLED_x3,
-    &op_SYM_RIGHT_ANGLED_x3, &op_SYM_AMPERSAND_x2, &op_SYM_PIPE_x2, &op_TIF,
+    &op_SYM_RIGHT_ANGLED_x3, &op_SYM_AMPERSAND_x2, &op_SYM_PIPE_x2,
+    &op_SYM_AMPERSAND_x3, &op_SYM_PIPE_x3, &op_SYM_AMPERSAND_x4,
+    &op_SYM_PIPE_x4, &op_TIF,
 
     // stack
     &op_S_ALL, &op_S_POP, &op_S_CLR, &op_S_L,
 
     // controlflow
     &op_SCRIPT, &op_SYM_DOLLAR, &op_SCRIPT_POL, &op_SYM_DOLLAR_POL, &op_KILL,
-    &op_SCENE, &op_SCENE_G, &op_BREAK, &op_BRK, &op_SYNC,
+    &op_SCENE, &op_SCENE_G, &op_SCENE_P, &op_BREAK, &op_BRK, &op_SYNC,
 
     // delay
     &op_DEL_CLR,
@@ -122,7 +135,7 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
 
     // earthsea
     &op_ES_PRESET, &op_ES_MODE, &op_ES_CLOCK, &op_ES_RESET, &op_ES_PATTERN,
-    &op_ES_TRANS, &op_ES_STOP, &op_ES_TRIPLE, &op_ES_MAGIC,
+    &op_ES_TRANS, &op_ES_STOP, &op_ES_TRIPLE, &op_ES_MAGIC, &op_ES_CV,
 
     // orca
     &op_OR_TRK, &op_OR_CLK, &op_OR_DIV, &op_OR_PHASE, &op_OR_RST, &op_OR_WGT,
@@ -144,9 +157,37 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     // justfriends
     &op_JF_TR, &op_JF_RMODE, &op_JF_RUN, &op_JF_SHIFT, &op_JF_VTR, &op_JF_MODE,
     &op_JF_TICK, &op_JF_VOX, &op_JF_NOTE, &op_JF_GOD, &op_JF_TUNE, &op_JF_QT,
+    &op_JF_PITCH, &op_JF_ADDR, &op_JF_SPEED, &op_JF_TSC, &op_JF_RAMP,
+    &op_JF_CURVE, &op_JF_FM, &op_JF_TIME, &op_JF_INTONE, &op_JF_POLY,
+    &op_JF_POLY_RESET, &op_JF_SEL,
 
     // W/
     &op_WS_PLAY, &op_WS_REC, &op_WS_CUE, &op_WS_LOOP,
+
+    // W/S
+    &op_WS_S_PITCH, &op_WS_S_VEL, &op_WS_S_VOX, &op_WS_S_NOTE, &op_WS_S_AR_MODE,
+    &op_WS_S_LPG_TIME, &op_WS_S_LPG_SYMMETRY, &op_WS_S_CURVE, &op_WS_S_RAMP,
+    &op_WS_S_FM_INDEX, &op_WS_S_FM_RATIO, &op_WS_S_FM_ENV, &op_WS_S_VOICES,
+    &op_WS_S_PATCH,
+
+    // W/D
+    &op_WS_D_FEEDBACK, &op_WS_D_MIX, &op_WS_D_LOWPASS, &op_WS_D_FREEZE,
+    &op_WS_D_TIME, &op_WS_D_LENGTH, &op_WS_D_POSITION, &op_WS_D_CUT,
+    &op_WS_D_FREQ_RANGE, &op_WS_D_RATE, &op_WS_D_FREQ, &op_WS_D_CLK,
+    &op_WS_D_CLK_RATIO, &op_WS_D_PLUCK, &op_WS_D_MOD_RATE, &op_WS_D_MOD_AMOUNT,
+
+    // W/T
+    &op_WS_T_RECORD, &op_WS_T_PLAY, &op_WS_T_REV, &op_WS_T_SPEED, &op_WS_T_FREQ,
+    &op_WS_T_PRE_LEVEL, &op_WS_T_MONITOR_LEVEL, &op_WS_T_REC_LEVEL,
+    &op_WS_T_HEAD_ORDER, &op_WS_T_LOOP_START, &op_WS_T_LOOP_END,
+    &op_WS_T_LOOP_ACTIVE, &op_WS_T_LOOP_SCALE, &op_WS_T_LOOP_NEXT,
+    &op_WS_T_TIMESTAMP, &op_WS_T_SEEK, &op_WS_T_CLEARTAPE,
+
+    // crow
+    &op_CROW_SEL, &op_CROW_V, &op_CROW_SLEW, &op_CROW_C1, &op_CROW_C2,
+    &op_CROW_C3, &op_CROW_C4, &op_CROW_RST, &op_CROW_PULSE, &op_CROW_AR,
+    &op_CROW_LFO, &op_CROW_IN, &op_CROW_OUT, &op_CROW_Q0, &op_CROW_Q1,
+    &op_CROW_Q2, &op_CROW_Q3,
 
     // telex
     &op_TO_TR, &op_TO_TR_TOG, &op_TO_TR_PULSE, &op_TO_TR_TIME, &op_TO_TR_TIME_S,
@@ -190,7 +231,7 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_TI_PARAM_INIT, &op_TI_IN_INIT, &op_TI_INIT,
 
     &op_TI_PRM, &op_TI_PRM_QT, &op_TI_PRM_N, &op_TI_PRM_SCALE, &op_TI_PRM_MAP,
-    &op_TI_PRM_INIT,
+    &op_TI_PRM_CALIB, &op_TI_PRM_INIT,
 
     // fader
     &op_FADER, &op_FADER_SCALE, &op_FADER_CAL_MIN, &op_FADER_CAL_MAX,
@@ -251,8 +292,8 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
 
 const tele_mod_t *tele_mods[E_MOD__LENGTH] = {
     // controlflow
-    &mod_IF, &mod_ELIF, &mod_ELSE, &mod_L, &mod_W, &mod_EVERY, &mod_SKIP,
-    &mod_OTHER, &mod_PROB,
+    &mod_IF, &mod_ELIF, &mod_ELSE, &mod_L, &mod_W, &mod_EVERY, &mod_EV,
+    &mod_SKIP, &mod_OTHER, &mod_PROB,
 
     // delay
     &mod_DEL, &mod_DEL_X, &mod_DEL_R, &mod_DEL_G, &mod_DEL_B,
@@ -264,7 +305,13 @@ const tele_mod_t *tele_mods[E_MOD__LENGTH] = {
     &mod_S,
 
     // disting ex
-    &mod_EX1, &mod_EX2, &mod_EX3, &mod_EX4
+    &mod_EX1, &mod_EX2, &mod_EX3, &mod_EX4,
+
+    // just friends
+    &mod_JF0, &mod_JF1, &mod_JF2,
+
+    // crow
+    &mod_CROWN, &mod_CROW1, &mod_CROW2, &mod_CROW3, &mod_CROW4
 };
 
 /////////////////////////////////////////////////////////////////

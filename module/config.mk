@@ -86,6 +86,7 @@ CSRCS = \
 	../src/ops/op.c						\
 	../src/ops/ansible.c					\
 	../src/ops/controlflow.c				\
+	../src/ops/crow.c				\
 	../src/ops/delay.c					\
 	../src/ops/disting.c					\
 	../src/ops/earthsea.c					\
@@ -109,6 +110,9 @@ CSRCS = \
 	../src/ops/variables.c					\
 	../src/ops/whitewhale.c					\
 	../src/ops/wslash.c					\
+	../src/ops/wslashsynth.c				\
+	../src/ops/wslashdelay.c				\
+	../src/ops/wslashtape.c					\
 	../src/ops/turtle.c					\
 	../src/ops/seed.c					\
 	../libavr32/src/adc.c					\
@@ -130,6 +134,8 @@ CSRCS = \
 	../libavr32/src/timers.c				\
 	../libavr32/src/usb.c					\
 	../libavr32/src/util.c					\
+	../libavr32/src/usb/cdc/cdc.c				\
+	../libavr32/src/usb/cdc/uhi_cdc.c			\
 	../libavr32/src/usb/ftdi/ftdi.c				\
 	../libavr32/src/usb/ftdi/uhi_ftdi.c			\
 	../libavr32/src/usb/hid/hid.c				\
@@ -172,6 +178,7 @@ INC_PATH = \
 	../../src						\
 	../src							\
 	../src/usb						\
+	../src/usb/cdc						\
 	../src/usb/ftdi						\
 	../src/usb/hid						\
 	../src/usb/midi						\
@@ -246,7 +253,8 @@ CFLAGS = -fshort-enums -fno-common
 CPPFLAGS = -D BOARD=USER_BOARD -D UHD_ENABLE
 
 # Extra flags to use when linking
-LDFLAGS = -Wl,-e,_trampoline
+# NVRAM size may need to change if additional data is to be stored in scenes.
+LDFLAGS = -Wl,-e,_trampoline,--defsym=__flash_nvram_size__=200K
 
 # Pre- and post-build commands
 PREBUILD_CMD =

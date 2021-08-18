@@ -58,7 +58,11 @@ OPS_SECTIONS = [
     "fader",
     "wslash",
     "matrixarchate",
-    "disting"
+    "disting",
+    "wslashdelay",
+    "wslashsynth",
+    "wslashtape",
+    "crow"
 ]
 
 
