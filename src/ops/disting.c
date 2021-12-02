@@ -690,7 +690,7 @@ static void op_EX_LP_get(const void *NOTUSED(data), scene_state_t *ss,
         return;
     }
 
-    cs_push(cs, get_looper_state(loop) & 0xb1111);
+    cs_push(cs, get_looper_state(loop) & 0b1111);
 }
 
 static void op_EX_LP_REVQ_get(const void *NOTUSED(data), scene_state_t *ss,

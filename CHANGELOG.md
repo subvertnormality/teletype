@@ -2,10 +2,11 @@
 
 ## v4.0.x
 
-- *FIX*: cache currently-running commands to avoid corruption during SCENE ops.
+- **FIX**: cache currently-running commands to avoid corruption during SCENE ops.
 - **FIX**: delay when opening docs
 - **FIX**: `PROB 100` would only execute 99.01% of the time.
 - **FIX**: some `G.FDR` configurations caused incorrect rendering in grid visualizer
+- **FIX**: fix `EX.LP` not returning correct values
 
 ## v4.0.0
 
