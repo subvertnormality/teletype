@@ -873,7 +873,9 @@
         "I2M.NO2"         => { MATCH_OP(E_OP_I2M_NO2 ); };
         "I2M.C"           => { MATCH_OP(E_OP_I2M_C ); };
         "I2M.C.PUSH"      => { MATCH_OP(E_OP_I2M_C_PUSH ); };
+        "I2M.C.+"         => { MATCH_OP(E_OP_I2M_C_PLUS ); };
         "I2M.C.RM"        => { MATCH_OP(E_OP_I2M_C_RM ); };
+        "I2M.C.-"         => { MATCH_OP(E_OP_I2M_C_MINUS ); };
         "I2M.C.CLR"       => { MATCH_OP(E_OP_I2M_C_CLR ); };
         "I2M.C.L"         => { MATCH_OP(E_OP_I2M_C_L ); };
         "I2M.C.INV"       => { MATCH_OP(E_OP_I2M_C_INV ); };
