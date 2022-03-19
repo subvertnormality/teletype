@@ -3,10 +3,15 @@
 
 #include "ops/op.h"
 
+extern const tele_op_t op_I2M_PANIC;
 extern const tele_op_t op_I2M_CH;
 extern const tele_op_t op_I2M_TIME;
+extern const tele_op_t op_I2M_T;
 extern const tele_op_t op_I2M_SHIFT;
+extern const tele_op_t op_I2M_S;
 extern const tele_op_t op_I2M_NOTE;
+extern const tele_op_t op_I2M_MIN;
+extern const tele_op_t op_I2M_MAX;
 extern const tele_op_t op_I2M_N;
 extern const tele_op_t op_I2M_NOTE_O;
 extern const tele_op_t op_I2M_NO;
@@ -15,6 +20,7 @@ extern const tele_op_t op_I2M_NO2;
 extern const tele_op_t op_I2M_REP;
 extern const tele_op_t op_I2M_RAT;
 extern const tele_op_t op_I2M_C;
+extern const tele_op_t op_I2M_CHORD;
 extern const tele_op_t op_I2M_C_ADD;
 extern const tele_op_t op_I2M_C_PLUS;
 extern const tele_op_t op_I2M_C_RM;
@@ -25,7 +31,7 @@ extern const tele_op_t op_I2M_C_INV;
 extern const tele_op_t op_I2M_C_INS;
 extern const tele_op_t op_I2M_C_DEL;
 extern const tele_op_t op_I2M_C_SET;
-extern const tele_op_t op_I2M_C_STRUM;
+extern const tele_op_t op_I2M_C_STR;
 extern const tele_op_t op_I2M_C_REV;
 extern const tele_op_t op_I2M_C_ROT;
 extern const tele_op_t op_I2M_CC;
