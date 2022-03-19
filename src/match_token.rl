@@ -837,9 +837,14 @@
         "W/T.CLEARTAPE"   => { MATCH_OP(E_OP_WS_T_CLEARTAPE ); };
 
         # i2c2midi
+        "I2M.PANIC"       => { MATCH_OP(E_OP_I2M_PANIC ); };
         "I2M.CH"          => { MATCH_OP(E_OP_I2M_CH ); };
         "I2M.TIME"        => { MATCH_OP(E_OP_I2M_TIME ); };
+        "I2M.T"           => { MATCH_OP(E_OP_I2M_T ); };
         "I2M.SHIFT"       => { MATCH_OP(E_OP_I2M_SHIFT ); };
+        "I2M.S"           => { MATCH_OP(E_OP_I2M_S ); };
+        "I2M.MIN"         => { MATCH_OP(E_OP_I2M_MIN ); };
+        "I2M.MAX"         => { MATCH_OP(E_OP_I2M_MAX ); };
         "I2M.NOTE"        => { MATCH_OP(E_OP_I2M_NOTE ); };
         "I2M.N"           => { MATCH_OP(E_OP_I2M_N ); };
         "I2M.NOTE.O"      => { MATCH_OP(E_OP_I2M_NOTE_O ); };
@@ -849,17 +854,18 @@
         "I2M.REP"         => { MATCH_OP(E_OP_I2M_REP ); };
         "I2M.RAT"         => { MATCH_OP(E_OP_I2M_RAT ); };
         "I2M.C"           => { MATCH_OP(E_OP_I2M_C ); };
+        "I2M.CHORD"       => { MATCH_OP(E_OP_I2M_CHORD ); };
         "I2M.C.ADD"       => { MATCH_OP(E_OP_I2M_C_ADD ); };
-        "I2M.C.+"         => { MATCH_OP(E_OP_I2M_C_PLUS ); };
+        "I2M.C+"          => { MATCH_OP(E_OP_I2M_C_PLUS ); };
         "I2M.C.RM"        => { MATCH_OP(E_OP_I2M_C_RM ); };
-        "I2M.C.-"         => { MATCH_OP(E_OP_I2M_C_MINUS ); };
+        "I2M.C-"          => { MATCH_OP(E_OP_I2M_C_MINUS ); };
         "I2M.C.CLR"       => { MATCH_OP(E_OP_I2M_C_CLR ); };
         "I2M.C.L"         => { MATCH_OP(E_OP_I2M_C_L ); };
         "I2M.C.INV"       => { MATCH_OP(E_OP_I2M_C_INV ); };
         "I2M.C.INS"       => { MATCH_OP(E_OP_I2M_C_INS ); };
         "I2M.C.DEL"       => { MATCH_OP(E_OP_I2M_C_DEL ); };
         "I2M.C.SET"       => { MATCH_OP(E_OP_I2M_C_SET ); };
-        "I2M.C.STRUM"     => { MATCH_OP(E_OP_I2M_C_STRUM ); };
+        "I2M.C.STR"       => { MATCH_OP(E_OP_I2M_C_STR ); };
         "I2M.C.REV"       => { MATCH_OP(E_OP_I2M_C_REV ); };
         "I2M.C.ROT"       => { MATCH_OP(E_OP_I2M_C_ROT ); };
         "I2M.CC"          => { MATCH_OP(E_OP_I2M_CC ); };
