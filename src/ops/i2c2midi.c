@@ -19,8 +19,8 @@ static void op_I2M_MAX_get(const void *data, scene_state_t *ss, exec_state_t *es
 static void op_I2M_MAX_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NOTE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NOTE_O_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_N2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_NO2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_NC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_NOC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
@@ -43,9 +43,9 @@ static void op_I2M_C_ROT_set(const void *data, scene_state_t *ss, exec_state_t *
 static void op_I2M_C_REV_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_REV_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_CC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_CC2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_CCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_CCV_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_CCV2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_CCVC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_CC_OFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_CC_OFF_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_CC_SLEW_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
@@ -90,8 +90,8 @@ const tele_op_t op_I2M_NOTE      = MAKE_GET_OP(I2M.NOTE, op_I2M_NOTE_get, 2, fal
 const tele_op_t op_I2M_N         = MAKE_ALIAS_OP(I2M.N, op_I2M_NOTE_get, NULL, 2, false);
 const tele_op_t op_I2M_NOTE_O    = MAKE_GET_OP(I2M.NOTE.O, op_I2M_NOTE_O_get, 1, false);
 const tele_op_t op_I2M_NO        = MAKE_ALIAS_OP(I2M.NO, op_I2M_NOTE_O_get, NULL, 1, false);
-const tele_op_t op_I2M_N2        = MAKE_GET_OP(I2M.N2, op_I2M_N2_get, 3, false);
-const tele_op_t op_I2M_NO2       = MAKE_GET_OP(I2M.NO2, op_I2M_NO2_get, 2, false);
+const tele_op_t op_I2M_NC        = MAKE_GET_OP(I2M.NC, op_I2M_NC_get, 3, false);
+const tele_op_t op_I2M_NOC       = MAKE_GET_OP(I2M.NOC, op_I2M_NOC_get, 2, false);
 const tele_op_t op_I2M_REP       = MAKE_GET_SET_OP(I2M.REP, op_I2M_REP_get, op_I2M_REP_set, 0, true);
 const tele_op_t op_I2M_RAT       = MAKE_GET_SET_OP(I2M.RAT, op_I2M_RAT_get, op_I2M_RAT_set, 0, true);
 const tele_op_t op_I2M_C         = MAKE_GET_OP(I2M.C, op_I2M_C_get, 3, false);
@@ -110,9 +110,9 @@ const tele_op_t op_I2M_C_STR     = MAKE_GET_SET_OP(I2M.C.STR, op_I2M_C_STR_get, 
 const tele_op_t op_I2M_C_ROT     = MAKE_GET_SET_OP(I2M.C.ROT, op_I2M_C_ROT_get, op_I2M_C_ROT_set, 1, true);
 const tele_op_t op_I2M_C_REV     = MAKE_GET_SET_OP(I2M.C.REV, op_I2M_C_REV_get, op_I2M_C_REV_set, 1, true);
 const tele_op_t op_I2M_CC        = MAKE_GET_OP(I2M.CC, op_I2M_CC_get, 2, false);
-const tele_op_t op_I2M_CC2       = MAKE_GET_OP(I2M.CC2, op_I2M_CC2_get, 3, false);
+const tele_op_t op_I2M_CCC       = MAKE_GET_OP(I2M.CCC, op_I2M_CCC_get, 3, false);
 const tele_op_t op_I2M_CCV       = MAKE_GET_OP(I2M.CCV, op_I2M_CCV_get, 2, false);
-const tele_op_t op_I2M_CCV2      = MAKE_GET_OP(I2M.CCV2, op_I2M_CCV2_get, 3, false);
+const tele_op_t op_I2M_CCVC      = MAKE_GET_OP(I2M.CCVC, op_I2M_CCVC_get, 3, false);
 const tele_op_t op_I2M_CC_OFF    = MAKE_GET_SET_OP(I2M.CC.OFF, op_I2M_CC_OFF_get, op_I2M_CC_OFF_set, 1, true);
 const tele_op_t op_I2M_CC_SLEW   = MAKE_GET_SET_OP(I2M.CC.SLEW, op_I2M_CC_SLEW_get, op_I2M_CC_SLEW_set, 1, true);
 const tele_op_t op_I2M_CC_SET    = MAKE_GET_OP(I2M.CC.SET, op_I2M_CC_SET_get, 2, false);
@@ -286,7 +286,7 @@ static void op_I2M_NOTE_O_get(const void *data, scene_state_t *ss, exec_state_t 
     SEND_B2(21, midi_channel, note);
 }
 
-static void op_I2M_N2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_NC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 note = cs_pop(cs);
     s16 velocity = cs_pop(cs);
@@ -296,7 +296,7 @@ static void op_I2M_N2_get(const void *data, scene_state_t *ss, exec_state_t *es,
     SEND_B3(20, channel - 1, note, velocity);
 }
 
-static void op_I2M_NO2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_NOC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 note = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(channel, 1, MAX_CHANNEL);
@@ -444,7 +444,7 @@ static void op_I2M_CC_get(const void *data, scene_state_t *ss, exec_state_t *es,
     SEND_B4(40, midi_channel, controller, cc >> 7, cc & 0x7f);
 }
 
-static void op_I2M_CC2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_CCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 controller = cs_pop(cs);
     s16 cc = cs_pop(cs);
@@ -463,7 +463,7 @@ static void op_I2M_CCV_get(const void *data, scene_state_t *ss, exec_state_t *es
     SEND_B4(40, midi_channel, controller, cc >> 7, cc & 0x7f);
 }
 
-static void op_I2M_CCV2_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_CCVC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 controller = cs_pop(cs);
     s16 cc = cs_pop(cs);
