@@ -871,18 +871,23 @@
         "I2M.N"           => { MATCH_OP(E_OP_I2M_N ); };
         "I2M.NOTE.O"      => { MATCH_OP(E_OP_I2M_NOTE_O ); };
         "I2M.NO"          => { MATCH_OP(E_OP_I2M_NO ); };
-        "I2M.NC"          => { MATCH_OP(E_OP_I2M_NC ); };
-        "I2M.NOC"         => { MATCH_OP(E_OP_I2M_NOC ); };
+        "I2M.NT"          => { MATCH_OP(E_OP_I2M_NT ); };
+        "I2M.N#"          => { MATCH_OP(E_OP_I2M_N_POUND ); };
+        "I2M.NO#"         => { MATCH_OP(E_OP_I2M_NO_POUND ); };
+        "I2M.NT#"          => { MATCH_OP(E_OP_I2M_NT_POUND ); };
         "I2M.REP"         => { MATCH_OP(E_OP_I2M_REP ); };
         "I2M.RAT"         => { MATCH_OP(E_OP_I2M_RAT ); };
         "I2M.C"           => { MATCH_OP(E_OP_I2M_C ); };
         "I2M.CHORD"       => { MATCH_OP(E_OP_I2M_CHORD ); };
+        "I2M.C#"          => { MATCH_OP(E_OP_I2M_C_POUND ); };
         "I2M.C.ADD"       => { MATCH_OP(E_OP_I2M_C_ADD ); };
         "I2M.C+"          => { MATCH_OP(E_OP_I2M_C_PLUS ); };
         "I2M.C.RM"        => { MATCH_OP(E_OP_I2M_C_RM ); };
         "I2M.C-"          => { MATCH_OP(E_OP_I2M_C_MINUS ); };
         "I2M.C.CLR"       => { MATCH_OP(E_OP_I2M_C_CLR ); };
         "I2M.C.L"         => { MATCH_OP(E_OP_I2M_C_L ); };
+        "I2M.C.SC"        => { MATCH_OP(E_OP_I2M_C_SC ); };
+        "I2M.C.B"         => { MATCH_OP(E_OP_I2M_C_B ); };
         "I2M.C.INV"       => { MATCH_OP(E_OP_I2M_C_INV ); };
         "I2M.C.INS"       => { MATCH_OP(E_OP_I2M_C_INS ); };
         "I2M.C.DEL"       => { MATCH_OP(E_OP_I2M_C_DEL ); };
@@ -890,10 +895,17 @@
         "I2M.C.STR"       => { MATCH_OP(E_OP_I2M_C_STR ); };
         "I2M.C.REV"       => { MATCH_OP(E_OP_I2M_C_REV ); };
         "I2M.C.ROT"       => { MATCH_OP(E_OP_I2M_C_ROT ); };
+        "I2M.C.TRP"       => { MATCH_OP(E_OP_I2M_C_TRP ); };
+        "I2M.C.DIS"       => { MATCH_OP(E_OP_I2M_C_DIS ); };
+        "I2M.C.REF"       => { MATCH_OP(E_OP_I2M_C_REF ); };
+        "I2M.C.VCUR"      => { MATCH_OP(E_OP_I2M_C_VCUR ); };
+        "I2M.C.V~"        => { MATCH_OP(E_OP_I2M_C_VTILDE ); };
+        "I2M.C.TCUR"      => { MATCH_OP(E_OP_I2M_C_TCUR ); };
+        "I2M.C.T~"        => { MATCH_OP(E_OP_I2M_C_TTILDE ); };
         "I2M.CC"          => { MATCH_OP(E_OP_I2M_CC ); };
-        "I2M.CCC"         => { MATCH_OP(E_OP_I2M_CCC ); };
+        "I2M.CC#"         => { MATCH_OP(E_OP_I2M_CC_POUND ); };
         "I2M.CCV"         => { MATCH_OP(E_OP_I2M_CCV ); };
-        "I2M.CCVC"        => { MATCH_OP(E_OP_I2M_CCVC ); };
+        "I2M.CCV#"        => { MATCH_OP(E_OP_I2M_CCV_POUND ); };
         "I2M.CC.OFF"      => { MATCH_OP(E_OP_I2M_CC_OFF ); };
         "I2M.CC.SLEW"     => { MATCH_OP(E_OP_I2M_CC_SLEW ); };
         "I2M.CC.SET"      => { MATCH_OP(E_OP_I2M_CC_SET ); };
@@ -921,7 +933,7 @@
         "I2M.Q.LO"        => { MATCH_OP(E_OP_I2M_Q_LO ); };
         "I2M.Q.LC"        => { MATCH_OP(E_OP_I2M_Q_LC ); };
         "I2M.Q.LCC"       => { MATCH_OP(E_OP_I2M_Q_LCC ); };
-
+        
         # seed
         "SEED"        => { MATCH_OP(E_OP_SEED); };
         "RAND.SEED"      => { MATCH_OP(E_OP_RAND_SEED); };

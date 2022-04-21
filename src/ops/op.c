@@ -283,19 +283,21 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     
     // i2c2midi
     &op_I2M_CH, &op_I2M_TIME, &op_I2M_T, &op_I2M_SHIFT, &op_I2M_S, &op_I2M_NOTE,
-    &op_I2M_N, &op_I2M_NOTE_O, &op_I2M_NO, &op_I2M_NC, &op_I2M_NOC,
+    &op_I2M_N, &op_I2M_NOTE_O, &op_I2M_NO, &op_I2M_N_POUND, &op_I2M_NO_POUND,
     &op_I2M_PANIC, &op_I2M_REP, &op_I2M_RAT, &op_I2M_C, &op_I2M_C_ADD,
     &op_I2M_C_PLUS, &op_I2M_C_RM, &op_I2M_C_MINUS, &op_I2M_C_CLR, &op_I2M_C_L,
     &op_I2M_C_INV, &op_I2M_C_INS, &op_I2M_C_DEL, &op_I2M_C_SET, &op_I2M_C_STR,
-    &op_I2M_C_REV, &op_I2M_C_ROT, &op_I2M_CC, &op_I2M_CCC, &op_I2M_CCV,
-    &op_I2M_CCVC, &op_I2M_CC_OFF, &op_I2M_CC_SLEW, &op_I2M_CC_SET, &op_I2M_NRPN,
-    &op_I2M_NRPN_OFF, &op_I2M_NRPN_SLEW, &op_I2M_NRPN_SET, &op_I2M_PRG,
-    &op_I2M_PB, &op_I2M_AT, &op_I2M_CLK, &op_I2M_START, &op_I2M_STOP,
-    &op_I2M_CONT, &op_I2M_Q_CH, &op_I2M_Q_LATCH, &op_I2M_Q_NOTE, &op_I2M_Q_N,
-    &op_I2M_Q_VEL, &op_I2M_Q_V, &op_I2M_Q_CC, &op_I2M_Q_LCH, &op_I2M_Q_LN,
-    &op_I2M_Q_LV, &op_I2M_Q_LO, &op_I2M_Q_LC, &op_I2M_Q_LCC, &op_I2M_CHORD,
-    &op_I2M_MIN, &op_I2M_MAX,
-    
+    &op_I2M_C_REV, &op_I2M_C_ROT, &op_I2M_CC, &op_I2M_CC_POUND, &op_I2M_CCV,
+    &op_I2M_CCV_POUND, &op_I2M_CC_OFF, &op_I2M_CC_SLEW, &op_I2M_CC_SET,
+    &op_I2M_NRPN, &op_I2M_NRPN_OFF, &op_I2M_NRPN_SLEW, &op_I2M_NRPN_SET,
+    &op_I2M_PRG, &op_I2M_PB, &op_I2M_AT, &op_I2M_CLK, &op_I2M_START,
+    &op_I2M_STOP, &op_I2M_CONT, &op_I2M_Q_CH, &op_I2M_Q_LATCH, &op_I2M_Q_NOTE,
+    &op_I2M_Q_N, &op_I2M_Q_VEL, &op_I2M_Q_V, &op_I2M_Q_CC, &op_I2M_Q_LCH,
+    &op_I2M_Q_LN, &op_I2M_Q_LV, &op_I2M_Q_LO, &op_I2M_Q_LC, &op_I2M_Q_LCC,
+    &op_I2M_CHORD, &op_I2M_MIN, &op_I2M_MAX, &op_I2M_C_TRP, &op_I2M_C_DIS,
+    &op_I2M_C_REF, &op_I2M_C_SC, &op_I2M_C_VCUR, &op_I2M_C_VTILDE,
+    &op_I2M_C_TCUR, &op_I2M_C_TTILDE, &op_I2M_C_B, &op_I2M_NT, &op_I2M_C_POUND,
+    &op_I2M_NT_POUND, 
 
     // seed
     &op_SEED, &op_RAND_SEED, &op_SYM_RAND_SD, &op_SYM_R_SD, &op_TOSS_SEED,
