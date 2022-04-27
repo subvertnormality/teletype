@@ -420,7 +420,7 @@ static void op_I2M_C_POUND_get(const void *data, scene_state_t *ss, exec_state_t
     RETURN_IF_OUT_OF_RANGE(channel, 1, MAX_CHANNEL);
     RETURN_IF_OUT_OF_RANGE(note, 0, 127);
     CLAMP_TO_RANGE(velocity, 0, 127);
-    SEND_B4(30, channel, chord, note, velocity);
+    SEND_B4(30, channel - 1, chord, note, velocity);
 }
 
 static void op_I2M_C_RM_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
