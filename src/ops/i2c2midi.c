@@ -393,7 +393,7 @@ static void op_I2M_NT_POUND_get(const void *data, scene_state_t *ss, exec_state_
     RETURN_IF_OUT_OF_RANGE(note, 0, 127);
     RETURN_IF_OUT_OF_RANGE(duration, 0, 32767);
     CLAMP_TO_RANGE(velocity, 0, 127);
-    SEND_B5(23, channel, note, velocity, duration >> 8, duration & 0xff);
+    SEND_B5(23, channel - 1, note, velocity, duration >> 8, duration & 0xff);
 }
 
 static void op_I2M_C_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
