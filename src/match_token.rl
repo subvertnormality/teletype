@@ -861,6 +861,7 @@
         # i2c2midi
         "I2M.PANIC"       => { MATCH_OP(E_OP_I2M_PANIC ); };
         "I2M.CH"          => { MATCH_OP(E_OP_I2M_CH ); };
+        "I2M.#"           => { MATCH_OP(E_OP_I2M_POUND ); };
         "I2M.TIME"        => { MATCH_OP(E_OP_I2M_TIME ); };
         "I2M.T"           => { MATCH_OP(E_OP_I2M_T ); };
         "I2M.SHIFT"       => { MATCH_OP(E_OP_I2M_SHIFT ); };
@@ -907,12 +908,19 @@
         "I2M.CCV"         => { MATCH_OP(E_OP_I2M_CCV ); };
         "I2M.CCV#"        => { MATCH_OP(E_OP_I2M_CCV_POUND ); };
         "I2M.CC.OFF"      => { MATCH_OP(E_OP_I2M_CC_OFF ); };
+        "I2M.CC.OFF#"     => { MATCH_OP(E_OP_I2M_CC_OFF_POUND ); };
         "I2M.CC.SLEW"     => { MATCH_OP(E_OP_I2M_CC_SLEW ); };
+        "I2M.CC.SLEW#"    => { MATCH_OP(E_OP_I2M_CC_SLEW_POUND ); };
         "I2M.CC.SET"      => { MATCH_OP(E_OP_I2M_CC_SET ); };
+        "I2M.CC.SET#"     => { MATCH_OP(E_OP_I2M_CC_SET_POUND ); };
         "I2M.NRPN"        => { MATCH_OP(E_OP_I2M_NRPN ); };
+        "I2M.NRPN#"       => { MATCH_OP(E_OP_I2M_NRPN_POUND ); };
         "I2M.NRPN.OFF"    => { MATCH_OP(E_OP_I2M_NRPN_OFF ); };
+        "I2M.NRPN.OFF#"   => { MATCH_OP(E_OP_I2M_NRPN_OFF_POUND ); };
         "I2M.NRPN.SLEW"   => { MATCH_OP(E_OP_I2M_NRPN_SLEW ); };
+        "I2M.NRPN.SLEW#"  => { MATCH_OP(E_OP_I2M_NRPN_SLEW_POUND ); };
         "I2M.NRPN.SET"    => { MATCH_OP(E_OP_I2M_NRPN_SET ); };
+        "I2M.NRPN.SET#"   => { MATCH_OP(E_OP_I2M_NRPN_SET_POUND ); };
         "I2M.PRG"         => { MATCH_OP(E_OP_I2M_PRG ); };
         "I2M.PB"          => { MATCH_OP(E_OP_I2M_PB ); };
         "I2M.AT"          => { MATCH_OP(E_OP_I2M_AT ); };
@@ -921,6 +929,7 @@
         "I2M.STOP"        => { MATCH_OP(E_OP_I2M_STOP ); };
         "I2M.CONT"        => { MATCH_OP(E_OP_I2M_CONT ); };
         "I2M.Q.CH"        => { MATCH_OP(E_OP_I2M_Q_CH ); };
+        "I2M.Q.#"         => { MATCH_OP(E_OP_I2M_Q_POUND ); };
         "I2M.Q.LATCH"     => { MATCH_OP(E_OP_I2M_Q_LATCH ); };
         "I2M.Q.NOTE"      => { MATCH_OP(E_OP_I2M_Q_NOTE ); };
         "I2M.Q.N"         => { MATCH_OP(E_OP_I2M_Q_N ); };
