@@ -298,7 +298,10 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_I2M_CHORD, &op_I2M_MIN, &op_I2M_MAX, &op_I2M_C_TRP, &op_I2M_C_DIS,
     &op_I2M_C_REF, &op_I2M_C_SC, &op_I2M_C_VCUR, &op_I2M_C_VTILDE,
     &op_I2M_C_TCUR, &op_I2M_C_TTILDE, &op_I2M_C_B, &op_I2M_NT, &op_I2M_C_POUND,
-    &op_I2M_NT_POUND, 
+    &op_I2M_NT_POUND, &op_I2M_CC_OFF_POUND, &op_I2M_CC_SLEW_POUND,
+    &op_I2M_CC_SET_POUND, &op_I2M_NRPN_POUND, &op_I2M_NRPN_OFF_POUND,
+    &op_I2M_NRPN_SLEW_POUND, &op_I2M_NRPN_SET_POUND, &op_I2M_POUND,
+    &op_I2M_Q_POUND,
 
     // seed
     &op_SEED, &op_RAND_SEED, &op_SYM_RAND_SD, &op_SYM_R_SD, &op_TOSS_SEED,
