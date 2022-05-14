@@ -842,10 +842,18 @@
         "I2M.#"           => { MATCH_OP(E_OP_I2M_POUND ); };
         "I2M.TIME"        => { MATCH_OP(E_OP_I2M_TIME ); };
         "I2M.T"           => { MATCH_OP(E_OP_I2M_T ); };
+        "I2M.T#"          => { MATCH_OP(E_OP_I2M_T_POUND ); };
         "I2M.SHIFT"       => { MATCH_OP(E_OP_I2M_SHIFT ); };
         "I2M.S"           => { MATCH_OP(E_OP_I2M_S ); };
+        "I2M.S#"          => { MATCH_OP(E_OP_I2M_S_POUND ); };
         "I2M.MIN"         => { MATCH_OP(E_OP_I2M_MIN ); };
+        "I2M.MIN#"        => { MATCH_OP(E_OP_I2M_MIN_POUND ); };
         "I2M.MAX"         => { MATCH_OP(E_OP_I2M_MAX ); };
+        "I2M.MAX#"        => { MATCH_OP(E_OP_I2M_MAX_POUND ); };
+        "I2M.REP"         => { MATCH_OP(E_OP_I2M_REP ); };
+        "I2M.REP#"        => { MATCH_OP(E_OP_I2M_REP_POUND ); };
+        "I2M.RAT"         => { MATCH_OP(E_OP_I2M_RAT ); };
+        "I2M.RAT#"        => { MATCH_OP(E_OP_I2M_RAT_POUND ); };
         "I2M.NOTE"        => { MATCH_OP(E_OP_I2M_NOTE ); };
         "I2M.N"           => { MATCH_OP(E_OP_I2M_N ); };
         "I2M.NOTE.O"      => { MATCH_OP(E_OP_I2M_NOTE_O ); };
@@ -854,8 +862,6 @@
         "I2M.N#"          => { MATCH_OP(E_OP_I2M_N_POUND ); };
         "I2M.NO#"         => { MATCH_OP(E_OP_I2M_NO_POUND ); };
         "I2M.NT#"          => { MATCH_OP(E_OP_I2M_NT_POUND ); };
-        "I2M.REP"         => { MATCH_OP(E_OP_I2M_REP ); };
-        "I2M.RAT"         => { MATCH_OP(E_OP_I2M_RAT ); };
         "I2M.C"           => { MATCH_OP(E_OP_I2M_C ); };
         "I2M.CHORD"       => { MATCH_OP(E_OP_I2M_CHORD ); };
         "I2M.C#"          => { MATCH_OP(E_OP_I2M_C_POUND ); };
