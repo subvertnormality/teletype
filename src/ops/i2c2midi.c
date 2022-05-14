@@ -11,20 +11,30 @@ static void op_I2M_CH_get(const void *data, scene_state_t *ss, exec_state_t *es,
 static void op_I2M_CH_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_TIME_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_TIME_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_TIME_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_TIME_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_SHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_SHIFT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_SHIFT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_SHIFT_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_MIN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_MIN_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_MAX_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_MAX_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_REP_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_REP_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_RAT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_RAT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_RAT_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NOTE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NOTE_O_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_N_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NO_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_NT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
-static void op_I2M_RAT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_ADD_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
@@ -96,14 +106,20 @@ static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *
 const tele_op_t op_I2M_PANIC           = MAKE_GET_OP(I2M.PANIC, op_I2M_PANIC_get, 0, false);
 const tele_op_t op_I2M_CH              = MAKE_GET_SET_OP(I2M.CH, op_I2M_CH_get, op_I2M_CH_set, 0, true);
 const tele_op_t op_I2M_POUND           = MAKE_ALIAS_OP(I2M.#, op_I2M_CH_get, op_I2M_CH_set, 0, true);
-const tele_op_t op_I2M_TIME            = MAKE_GET_SET_OP(I2M.TIME, op_I2M_TIME_get, op_I2M_TIME_set, 1, true);
-const tele_op_t op_I2M_T               = MAKE_ALIAS_OP(I2M.T, op_I2M_TIME_get, op_I2M_TIME_set, 1, true);
-const tele_op_t op_I2M_SHIFT           = MAKE_GET_SET_OP(I2M.SHIFT, op_I2M_SHIFT_get, op_I2M_SHIFT_set, 1, true);
-const tele_op_t op_I2M_S               = MAKE_ALIAS_OP(I2M.S, op_I2M_SHIFT_get, op_I2M_SHIFT_set, 1, true);
-const tele_op_t op_I2M_REP             = MAKE_GET_SET_OP(I2M.REP, op_I2M_REP_get, op_I2M_REP_set, 1, true);
-const tele_op_t op_I2M_RAT             = MAKE_GET_SET_OP(I2M.RAT, op_I2M_RAT_get, op_I2M_RAT_set, 1, true);
-const tele_op_t op_I2M_MIN             = MAKE_GET_OP(I2M.MIN, op_I2M_MIN_get, 3, false);
-const tele_op_t op_I2M_MAX             = MAKE_GET_OP(I2M.MAX, op_I2M_MAX_get, 3, false);
+const tele_op_t op_I2M_TIME            = MAKE_GET_SET_OP(I2M.TIME, op_I2M_TIME_get, op_I2M_TIME_set, 0, true);
+const tele_op_t op_I2M_T               = MAKE_ALIAS_OP(I2M.T, op_I2M_TIME_get, op_I2M_TIME_set, 0, true);
+const tele_op_t op_I2M_T_POUND         = MAKE_GET_SET_OP(I2M.T#, op_I2M_TIME_POUND_get, op_I2M_TIME_POUND_set, 1, true);
+const tele_op_t op_I2M_SHIFT           = MAKE_GET_SET_OP(I2M.SHIFT, op_I2M_SHIFT_get, op_I2M_SHIFT_set, 0, true);
+const tele_op_t op_I2M_S               = MAKE_ALIAS_OP(I2M.S, op_I2M_SHIFT_get, op_I2M_SHIFT_set, 0, true);
+const tele_op_t op_I2M_S_POUND         = MAKE_GET_SET_OP(I2M.S#, op_I2M_SHIFT_POUND_get, op_I2M_SHIFT_POUND_set, 1, true);
+const tele_op_t op_I2M_MIN             = MAKE_GET_OP(I2M.MIN, op_I2M_MIN_get, 2, false);
+const tele_op_t op_I2M_MIN_POUND       = MAKE_GET_OP(I2M.MIN#, op_I2M_MIN_POUND_get, 3, false);
+const tele_op_t op_I2M_MAX             = MAKE_GET_OP(I2M.MAX, op_I2M_MAX_get, 2, false);
+const tele_op_t op_I2M_MAX_POUND       = MAKE_GET_OP(I2M.MAX#, op_I2M_MAX_POUND_get, 3, false);
+const tele_op_t op_I2M_REP             = MAKE_GET_SET_OP(I2M.REP, op_I2M_REP_get, op_I2M_REP_set, 0, true);
+const tele_op_t op_I2M_REP_POUND       = MAKE_GET_SET_OP(I2M.REP#, op_I2M_REP_POUND_get, op_I2M_REP_POUND_set, 1, true);
+const tele_op_t op_I2M_RAT             = MAKE_GET_SET_OP(I2M.RAT, op_I2M_RAT_get, op_I2M_RAT_set, 0, true);
+const tele_op_t op_I2M_RAT_POUND       = MAKE_GET_SET_OP(I2M.RAT#, op_I2M_RAT_POUND_get, op_I2M_RAT_POUND_set, 1, true);
 const tele_op_t op_I2M_NOTE            = MAKE_GET_OP(I2M.NOTE, op_I2M_NOTE_get, 2, false);
 const tele_op_t op_I2M_N               = MAKE_ALIAS_OP(I2M.N, op_I2M_NOTE_get, NULL, 2, false);
 const tele_op_t op_I2M_NOTE_O          = MAKE_GET_OP(I2M.NOTE.O, op_I2M_NOTE_O_get, 1, false);
@@ -274,6 +290,17 @@ static void op_I2M_CH_set(const void *data, scene_state_t *ss, exec_state_t *es,
 }
 
 static void op_I2M_TIME_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_B(1, midi_channel);
+    RECEIVE_AND_PUSH_S16;
+}
+
+static void op_I2M_TIME_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 time = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(time, 0, 32767);
+    SEND_B3(2, midi_channel, time >> 8, time & 0xff);
+}
+
+static void op_I2M_TIME_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     if (channel < 0 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
@@ -283,7 +310,7 @@ static void op_I2M_TIME_get(const void *data, scene_state_t *ss, exec_state_t *e
     RECEIVE_AND_PUSH_S16;
 }
 
-static void op_I2M_TIME_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_TIME_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 time = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(channel, 0, MAX_CHANNEL);
@@ -292,6 +319,17 @@ static void op_I2M_TIME_set(const void *data, scene_state_t *ss, exec_state_t *e
 }
 
 static void op_I2M_SHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_B(3, midi_channel);
+    RECEIVE_AND_PUSH_S8;
+}
+
+static void op_I2M_SHIFT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 shift = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(shift, -127, 127);
+    SEND_B2(4, midi_channel, shift);
+}
+
+static void op_I2M_SHIFT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     if (channel < 0 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
@@ -301,7 +339,7 @@ static void op_I2M_SHIFT_get(const void *data, scene_state_t *ss, exec_state_t *
     RECEIVE_AND_PUSH_S8;
 }
 
-static void op_I2M_SHIFT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_SHIFT_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 shift = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(channel, 0, MAX_CHANNEL);
@@ -310,6 +348,13 @@ static void op_I2M_SHIFT_set(const void *data, scene_state_t *ss, exec_state_t *
 }
 
 static void op_I2M_MIN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 note = cs_pop(cs);
+    s16 mode = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(note, 0, 127);
+    SEND_B3(10, midi_channel, note, mode);
+}
+
+static void op_I2M_MIN_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 note = cs_pop(cs);
     s16 mode = cs_pop(cs);
@@ -319,6 +364,13 @@ static void op_I2M_MIN_get(const void *data, scene_state_t *ss, exec_state_t *es
 }
 
 static void op_I2M_MAX_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 note = cs_pop(cs);
+    s16 mode = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(note, 0, 127);
+    SEND_B3(12, midi_channel, note, mode);
+}
+
+static void op_I2M_MAX_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 note = cs_pop(cs);
     s16 mode = cs_pop(cs);
@@ -328,6 +380,16 @@ static void op_I2M_MAX_get(const void *data, scene_state_t *ss, exec_state_t *es
 }
 
 static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_B(5, midi_channel);
+    RECEIVE_AND_PUSH_S16;
+}
+
+static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 rep = cs_pop(cs);
+    SEND_B3(6, midi_channel, rep >> 8, rep & 0xff);
+}
+
+static void op_I2M_REP_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     if (channel < 0 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
@@ -337,7 +399,7 @@ static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es
     RECEIVE_AND_PUSH_S16;
 }
 
-static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_REP_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 rep = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(channel, 0, MAX_CHANNEL);
@@ -345,6 +407,16 @@ static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es
 }
 
 static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_B(7, midi_channel);
+    RECEIVE_AND_PUSH_S16;
+}
+
+static void op_I2M_RAT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 rat = cs_pop(cs);
+    SEND_B3(8, midi_channel, rat >> 8, rat & 0xff);
+}
+
+static void op_I2M_RAT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     if (channel < 0 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
@@ -354,7 +426,7 @@ static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es
     RECEIVE_AND_PUSH_S16;
 }
 
-static void op_I2M_RAT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+static void op_I2M_RAT_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
     s16 rat = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(channel, 0, MAX_CHANNEL);
