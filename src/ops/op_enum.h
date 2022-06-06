@@ -875,6 +875,8 @@ typedef enum {
     E_OP_I2M_MAX_POUND,
     E_OP_I2M_REP_POUND,
     E_OP_I2M_RAT_POUND,
+    E_OP_I2M_C_DIR,
+    E_OP_I2M_TEST,
     E_OP_SEED,
     E_OP_RAND_SEED,
     E_OP_SYM_RAND_SD,
