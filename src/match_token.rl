@@ -908,6 +908,7 @@
         "I2M.C.TRP"       => { MATCH_OP(E_OP_I2M_C_TRP ); };
         "I2M.C.DIS"       => { MATCH_OP(E_OP_I2M_C_DIS ); };
         "I2M.C.REF"       => { MATCH_OP(E_OP_I2M_C_REF ); };
+        "I2M.C.DIR"       => { MATCH_OP(E_OP_I2M_C_DIR ); };
         "I2M.C.VCUR"      => { MATCH_OP(E_OP_I2M_C_VCUR ); };
         "I2M.C.V~"        => { MATCH_OP(E_OP_I2M_C_VTILDE ); };
         "I2M.C.TCUR"      => { MATCH_OP(E_OP_I2M_C_TCUR ); };
@@ -951,6 +952,7 @@
         "I2M.Q.LO"        => { MATCH_OP(E_OP_I2M_Q_LO ); };
         "I2M.Q.LC"        => { MATCH_OP(E_OP_I2M_Q_LC ); };
         "I2M.Q.LCC"       => { MATCH_OP(E_OP_I2M_Q_LCC ); };
+        "I2M.TEST"        => { MATCH_OP(E_OP_I2M_TEST ); };
         
         # seed
         "SEED"        => { MATCH_OP(E_OP_SEED); };

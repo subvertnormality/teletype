@@ -49,6 +49,7 @@ extern const tele_op_t op_I2M_C_ROT;
 extern const tele_op_t op_I2M_C_TRP;
 extern const tele_op_t op_I2M_C_DIS;
 extern const tele_op_t op_I2M_C_REF;
+extern const tele_op_t op_I2M_C_DIR;
 extern const tele_op_t op_I2M_C_VCUR;
 extern const tele_op_t op_I2M_C_VTILDE;
 extern const tele_op_t op_I2M_C_TCUR;
@@ -92,5 +93,6 @@ extern const tele_op_t op_I2M_Q_LV;
 extern const tele_op_t op_I2M_Q_LO;
 extern const tele_op_t op_I2M_Q_LC;
 extern const tele_op_t op_I2M_Q_LCC;
+extern const tele_op_t op_I2M_TEST;
 
 #endif

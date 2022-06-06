@@ -55,6 +55,7 @@ static void op_I2M_C_REV_get(const void *data, scene_state_t *ss, exec_state_t *
 static void op_I2M_C_TRP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_DIS_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_REF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_C_DIR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_VCUR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_C_TCUR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_CC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
@@ -102,6 +103,7 @@ static void op_I2M_Q_LV_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_Q_LO_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_Q_LC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
 const tele_op_t op_I2M_PANIC           = MAKE_GET_OP(I2M.PANIC, op_I2M_PANIC_get, 0, false);
 const tele_op_t op_I2M_CH              = MAKE_GET_SET_OP(I2M.CH, op_I2M_CH_get, op_I2M_CH_set, 0, true);
@@ -149,6 +151,7 @@ const tele_op_t op_I2M_C_REV           = MAKE_GET_OP(I2M.C.REV, op_I2M_C_REV_get
 const tele_op_t op_I2M_C_TRP           = MAKE_GET_OP(I2M.C.TRP, op_I2M_C_TRP_get, 2, false);
 const tele_op_t op_I2M_C_DIS           = MAKE_GET_OP(I2M.C.DIS, op_I2M_C_DIS_get, 3, false);
 const tele_op_t op_I2M_C_REF           = MAKE_GET_OP(I2M.C.REF, op_I2M_C_REF_get, 3, false);
+const tele_op_t op_I2M_C_DIR           = MAKE_GET_OP(I2M.C.DIR, op_I2M_C_DIR_get, 2, false);
 const tele_op_t op_I2M_C_VCUR          = MAKE_GET_OP(I2M.C.VCUR, op_I2M_C_VCUR_get, 4, false);
 const tele_op_t op_I2M_C_VTILDE        = MAKE_ALIAS_OP(I2M.C.V~, op_I2M_C_VCUR_get, NULL, 4, false);
 const tele_op_t op_I2M_C_TCUR          = MAKE_GET_OP(I2M.C.TCUR, op_I2M_C_TCUR_get, 4, false);
@@ -192,6 +195,7 @@ const tele_op_t op_I2M_Q_LV            = MAKE_GET_OP(I2M.Q.LV, op_I2M_Q_LV_get, 
 const tele_op_t op_I2M_Q_LO            = MAKE_GET_OP(I2M.Q.LO, op_I2M_Q_LO_get, 0, true);
 const tele_op_t op_I2M_Q_LC            = MAKE_GET_OP(I2M.Q.LC, op_I2M_Q_LC_get, 0, true);
 const tele_op_t op_I2M_Q_LCC           = MAKE_GET_OP(I2M.Q.LCC, op_I2M_Q_LCC_get, 0, true);
+const tele_op_t op_I2M_TEST            = MAKE_GET_OP(I2M.TEST, op_I2M_TEST_get, 2, false);
 
 // clang-format on
 
@@ -624,6 +628,12 @@ static void op_I2M_C_REF_get(const void *data, scene_state_t *ss, exec_state_t *
     SEND_B3(162, chord, value, point);
 }
 
+static void op_I2M_C_DIR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 chord = cs_pop(cs);
+    s16 dir = cs_pop(cs);
+    SEND_B2(165, chord, dir);
+}
+
 static void op_I2M_C_VCUR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 chord = cs_pop(cs);
     s16 curve = cs_pop(cs);
@@ -1022,4 +1032,10 @@ static void op_I2M_Q_LC_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     SEND_CMD(135);
     RECEIVE_AND_PUSH_S8;
+}
+
+static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 value1 = cs_pop(cs);
+    s16 value2 = cs_pop(cs);
+    SEND_B3(255, value1, value2 >> 8, value2 & 0xff);
 }
