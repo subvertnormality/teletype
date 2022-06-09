@@ -294,19 +294,19 @@ static void op_I2M_CH_set(const void *data, scene_state_t *ss, exec_state_t *es,
 }
 
 static void op_I2M_TIME_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(1, midi_channel);
+    SEND_B(1, midi_channel + 1);
     RECEIVE_AND_PUSH_S16;
 }
 
 static void op_I2M_TIME_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 time = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(time, 0, 32767);
-    SEND_B3(2, midi_channel, time >> 8, time & 0xff);
+    SEND_B3(2, midi_channel + 1, time >> 8, time & 0xff);
 }
 
 static void op_I2M_TIME_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
-    if (channel < 0 || channel > MAX_CHANNEL) {
+    if (channel < 1 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
         return;
     }
@@ -323,19 +323,19 @@ static void op_I2M_TIME_POUND_set(const void *data, scene_state_t *ss, exec_stat
 }
 
 static void op_I2M_SHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(3, midi_channel);
+    SEND_B(3, midi_channel + 1);
     RECEIVE_AND_PUSH_S8;
 }
 
 static void op_I2M_SHIFT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 shift = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(shift, -127, 127);
-    SEND_B2(4, midi_channel, shift);
+    SEND_B2(4, midi_channel + 1, shift);
 }
 
 static void op_I2M_SHIFT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
-    if (channel < 0 || channel > MAX_CHANNEL) {
+    if (channel < 1 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
         return;
     }
@@ -355,7 +355,7 @@ static void op_I2M_MIN_get(const void *data, scene_state_t *ss, exec_state_t *es
     s16 note = cs_pop(cs);
     s16 mode = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(note, 0, 127);
-    SEND_B3(10, midi_channel, note, mode);
+    SEND_B3(10, midi_channel + 1, note, mode);
 }
 
 static void op_I2M_MIN_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
@@ -371,7 +371,7 @@ static void op_I2M_MAX_get(const void *data, scene_state_t *ss, exec_state_t *es
     s16 note = cs_pop(cs);
     s16 mode = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(note, 0, 127);
-    SEND_B3(12, midi_channel, note, mode);
+    SEND_B3(12, midi_channel + 1, note, mode);
 }
 
 static void op_I2M_MAX_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
@@ -384,18 +384,18 @@ static void op_I2M_MAX_POUND_get(const void *data, scene_state_t *ss, exec_state
 }
 
 static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(5, midi_channel);
+    SEND_B(5, midi_channel + 1);
     RECEIVE_AND_PUSH_S16;
 }
 
 static void op_I2M_REP_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 rep = cs_pop(cs);
-    SEND_B3(6, midi_channel, rep >> 8, rep & 0xff);
+    SEND_B3(6, midi_channel + 1, rep >> 8, rep & 0xff);
 }
 
 static void op_I2M_REP_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
-    if (channel < 0 || channel > MAX_CHANNEL) {
+    if (channel < 1 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
         return;
     }
@@ -411,18 +411,18 @@ static void op_I2M_REP_POUND_set(const void *data, scene_state_t *ss, exec_state
 }
 
 static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(7, midi_channel);
+    SEND_B(7, midi_channel + 1);
     RECEIVE_AND_PUSH_S16;
 }
 
 static void op_I2M_RAT_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 rat = cs_pop(cs);
-    SEND_B3(8, midi_channel, rat >> 8, rat & 0xff);
+    SEND_B3(8, midi_channel + 1, rat >> 8, rat & 0xff);
 }
 
 static void op_I2M_RAT_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 channel = cs_pop(cs);
-    if (channel < 0 || channel > MAX_CHANNEL) {
+    if (channel < 1 || channel > MAX_CHANNEL) {
         cs_push(cs, 0);
         return;
     }
