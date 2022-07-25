@@ -103,6 +103,22 @@ static void op_I2M_Q_LV_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_Q_LO_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_Q_LC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_R_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_L_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_START_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_END_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_DIR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_SPE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_FB_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_NSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_VSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_TSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_NOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_VOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_TOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_CLR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_B_MODE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
 const tele_op_t op_I2M_PANIC           = MAKE_GET_OP(I2M.PANIC, op_I2M_PANIC_get, 0, false);
@@ -195,6 +211,22 @@ const tele_op_t op_I2M_Q_LV            = MAKE_GET_OP(I2M.Q.LV, op_I2M_Q_LV_get, 
 const tele_op_t op_I2M_Q_LO            = MAKE_GET_OP(I2M.Q.LO, op_I2M_Q_LO_get, 0, true);
 const tele_op_t op_I2M_Q_LC            = MAKE_GET_OP(I2M.Q.LC, op_I2M_Q_LC_get, 0, true);
 const tele_op_t op_I2M_Q_LCC           = MAKE_GET_OP(I2M.Q.LCC, op_I2M_Q_LCC_get, 0, true);
+const tele_op_t op_I2M_B_R             = MAKE_GET_OP(I2M.B.R, op_I2M_B_R_get, 1, false);
+const tele_op_t op_I2M_B_L             = MAKE_GET_OP(I2M.B.L, op_I2M_B_L_get, 1, false);
+const tele_op_t op_I2M_B_START         = MAKE_GET_OP(I2M.B.START, op_I2M_B_START_get, 1, false);
+const tele_op_t op_I2M_B_END           = MAKE_GET_OP(I2M.B.END, op_I2M_B_END_get, 1, false);
+const tele_op_t op_I2M_B_DIR           = MAKE_GET_OP(I2M.B.DIR, op_I2M_B_DIR_get, 1, false);
+const tele_op_t op_I2M_B_SPE           = MAKE_GET_OP(I2M.B.SPE, op_I2M_B_SPE_get, 1, false);
+const tele_op_t op_I2M_B_FB            = MAKE_GET_OP(I2M.B.FB, op_I2M_B_FB_get, 1, false);
+const tele_op_t op_I2M_B_NSHIFT        = MAKE_GET_OP(I2M.B.NSHIFT, op_I2M_B_NSHIFT_get, 1, false);
+const tele_op_t op_I2M_B_VSHIFT        = MAKE_GET_OP(I2M.B.VSHIFT, op_I2M_B_VSHIFT_get, 1, false);
+const tele_op_t op_I2M_B_TSHIFT        = MAKE_GET_OP(I2M.B.TSHIFT, op_I2M_B_TSHIFT_get, 1, false);
+const tele_op_t op_I2M_B_NOFF          = MAKE_GET_OP(I2M.B.NOFF, op_I2M_B_NOFF_get, 1, false);
+const tele_op_t op_I2M_B_VOFF          = MAKE_GET_OP(I2M.B.VOFF, op_I2M_B_VOFF_get, 1, false);
+const tele_op_t op_I2M_B_TOFF          = MAKE_GET_OP(I2M.B.TOFF, op_I2M_B_TOFF_get, 1, false);
+const tele_op_t op_I2M_B_CLR           = MAKE_GET_OP(I2M.B.CLR, op_I2M_B_CLR_get, 0, false);
+const tele_op_t op_I2M_B_MODE          = MAKE_GET_OP(I2M.B.MODE, op_I2M_B_MODE_get, 1, false);
+
 const tele_op_t op_I2M_TEST            = MAKE_GET_OP(I2M.TEST, op_I2M_TEST_get, 2, false);
 
 // clang-format on
@@ -209,7 +241,7 @@ static u8 d[7];
     d[0] = cmd; \
     tele_ii_tx(I2C2MIDI, d, 1);
 
-#define SEND_B(cmd, b) \
+#define SEND_B1(cmd, b) \
     d[0] = cmd; \
     d[1] = b;   \
     tele_ii_tx(I2C2MIDI, d, 2);
@@ -294,7 +326,7 @@ static void op_I2M_CH_set(const void *data, scene_state_t *ss, exec_state_t *es,
 }
 
 static void op_I2M_TIME_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(1, midi_channel + 1);
+    SEND_B1(1, midi_channel + 1);
     RECEIVE_AND_PUSH_S16;
 }
 
@@ -310,7 +342,7 @@ static void op_I2M_TIME_POUND_get(const void *data, scene_state_t *ss, exec_stat
         cs_push(cs, 0);
         return;
     }
-    SEND_B(1, channel);
+    SEND_B1(1, channel);
     RECEIVE_AND_PUSH_S16;
 }
 
@@ -323,7 +355,7 @@ static void op_I2M_TIME_POUND_set(const void *data, scene_state_t *ss, exec_stat
 }
 
 static void op_I2M_SHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(3, midi_channel + 1);
+    SEND_B1(3, midi_channel + 1);
     RECEIVE_AND_PUSH_S8;
 }
 
@@ -339,7 +371,7 @@ static void op_I2M_SHIFT_POUND_get(const void *data, scene_state_t *ss, exec_sta
         cs_push(cs, 0);
         return;
     }
-    SEND_B(3, channel);
+    SEND_B1(3, channel);
     RECEIVE_AND_PUSH_S8;
 }
 
@@ -384,7 +416,7 @@ static void op_I2M_MAX_POUND_get(const void *data, scene_state_t *ss, exec_state
 }
 
 static void op_I2M_REP_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(5, midi_channel + 1);
+    SEND_B1(5, midi_channel + 1);
     RECEIVE_AND_PUSH_S16;
 }
 
@@ -399,7 +431,7 @@ static void op_I2M_REP_POUND_get(const void *data, scene_state_t *ss, exec_state
         cs_push(cs, 0);
         return;
     }
-    SEND_B(5, channel);
+    SEND_B1(5, channel);
     RECEIVE_AND_PUSH_S16;
 }
 
@@ -411,7 +443,7 @@ static void op_I2M_REP_POUND_set(const void *data, scene_state_t *ss, exec_state
 }
 
 static void op_I2M_RAT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_B(7, midi_channel + 1);
+    SEND_B1(7, midi_channel + 1);
     RECEIVE_AND_PUSH_S16;
 }
 
@@ -426,7 +458,7 @@ static void op_I2M_RAT_POUND_get(const void *data, scene_state_t *ss, exec_state
         cs_push(cs, 0);
         return;
     }
-    SEND_B(7, channel);
+    SEND_B1(7, channel);
     RECEIVE_AND_PUSH_S16;
 }
 
@@ -527,12 +559,12 @@ static void op_I2M_C_RM_get(const void *data, scene_state_t *ss, exec_state_t *e
 
 static void op_I2M_C_CLR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 chord = cs_pop(cs);
-    SEND_B(33, chord);
+    SEND_B1(33, chord);
 }
 
 static void op_I2M_C_L_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 chord = cs_pop(cs);
-    SEND_B(34, chord);
+    SEND_B1(34, chord);
     RECEIVE_AND_PUSH_S8;
 }
 
@@ -544,7 +576,7 @@ static void op_I2M_C_L_set(const void *data, scene_state_t *ss, exec_state_t *es
 
 static void op_I2M_C_SC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 chord = cs_pop(cs);
-    SEND_B(157, chord);
+    SEND_B1(157, chord);
     RECEIVE_AND_PUSH_S8;
 }
 
@@ -978,7 +1010,7 @@ static void op_I2M_Q_CH_set(const void *data, scene_state_t *ss, exec_state_t *e
 
 static void op_I2M_Q_LATCH_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 latch = cs_pop(cs);
-    SEND_B(100, latch);
+    SEND_B1(100, latch);
 }
 
 static void op_I2M_Q_NOTE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
@@ -1032,6 +1064,93 @@ static void op_I2M_Q_LC_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     SEND_CMD(135);
     RECEIVE_AND_PUSH_S8;
+}
+
+static void op_I2M_B_R_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 on = cs_pop(cs);
+    SEND_B1(180, on ? 1 : 0);
+}
+
+static void op_I2M_B_L_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 length = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(length, 0, 32767);
+    SEND_B2(181, length >> 8, length & 0xff);
+}
+
+static void op_I2M_B_START_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 start = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(start, 0, 32767);
+    SEND_B2(182, start >> 8, start & 0xff);
+}
+
+static void op_I2M_B_END_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 end = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(end, 0, 32767);
+    SEND_B2(183, end >> 8, end & 0xff);
+}
+
+static void op_I2M_B_DIR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 dir = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(dir, 0, 2);
+    SEND_B1(184, dir);
+}
+
+static void op_I2M_B_SPE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 speed = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(speed, 1, 32767);
+    SEND_B2(185, speed >> 8, speed & 0xff);
+}
+
+static void op_I2M_B_FB_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 fb = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(fb, 0, 255);
+    SEND_B1(186, fb);
+}
+
+static void op_I2M_B_NSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 nshift = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(nshift, 0, 127);
+    SEND_B1(187, nshift);
+}
+
+static void op_I2M_B_VSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 vshift = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(vshift, 0, 127);
+    SEND_B1(188, vshift);
+}
+
+static void op_I2M_B_TSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 tshift = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(tshift, 0, 32767);
+    SEND_B2(189, tshift >> 8, tshift & 0xff);
+}
+
+static void op_I2M_B_NOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 noff = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(noff, 0, 127);
+    SEND_B1(190, noff);
+}
+
+static void op_I2M_B_VOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 voff = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(voff, 0, 127);
+    SEND_B1(191, voff);
+}
+
+static void op_I2M_B_TOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 toff = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(toff, 0, 32767);
+    SEND_B2(192, toff >> 8, toff & 0xff);
+}
+
+static void op_I2M_B_CLR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_CMD(193);
+}
+
+static void op_I2M_B_MODE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    s16 mode = cs_pop(cs);
+    RETURN_IF_OUT_OF_RANGE(mode, 0, 1);
+    SEND_B1(194, mode);
 }
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
