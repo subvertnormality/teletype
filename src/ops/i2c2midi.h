@@ -93,6 +93,22 @@ extern const tele_op_t op_I2M_Q_LV;
 extern const tele_op_t op_I2M_Q_LO;
 extern const tele_op_t op_I2M_Q_LC;
 extern const tele_op_t op_I2M_Q_LCC;
+extern const tele_op_t op_I2M_B_R;
+extern const tele_op_t op_I2M_B_L;
+extern const tele_op_t op_I2M_B_START;
+extern const tele_op_t op_I2M_B_END;
+extern const tele_op_t op_I2M_B_DIR;
+extern const tele_op_t op_I2M_B_SPE;
+extern const tele_op_t op_I2M_B_FB;
+extern const tele_op_t op_I2M_B_NSHIFT;
+extern const tele_op_t op_I2M_B_VSHIFT;
+extern const tele_op_t op_I2M_B_TSHIFT;
+extern const tele_op_t op_I2M_B_NOFF;
+extern const tele_op_t op_I2M_B_VOFF;
+extern const tele_op_t op_I2M_B_TOFF;
+extern const tele_op_t op_I2M_B_CLR;
+extern const tele_op_t op_I2M_B_MODE;
+
 extern const tele_op_t op_I2M_TEST;
 
 #endif
