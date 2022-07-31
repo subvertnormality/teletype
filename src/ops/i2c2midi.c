@@ -1109,37 +1109,37 @@ static void op_I2M_B_FB_get(const void *data, scene_state_t *ss, exec_state_t *e
 
 static void op_I2M_B_NSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 nshift = cs_pop(cs);
-    RETURN_IF_OUT_OF_RANGE(nshift, 0, 127);
+    RETURN_IF_OUT_OF_RANGE(nshift, -127, 127);
     SEND_B1(187, nshift);
 }
 
 static void op_I2M_B_VSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 vshift = cs_pop(cs);
-    RETURN_IF_OUT_OF_RANGE(vshift, 0, 127);
+    RETURN_IF_OUT_OF_RANGE(vshift, -127, 127);
     SEND_B1(188, vshift);
 }
 
 static void op_I2M_B_TSHIFT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 tshift = cs_pop(cs);
-    RETURN_IF_OUT_OF_RANGE(tshift, 0, 32767);
+    RETURN_IF_OUT_OF_RANGE(tshift, -16384, 16383);
     SEND_B2(189, tshift >> 8, tshift & 0xff);
 }
 
 static void op_I2M_B_NOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 noff = cs_pop(cs);
-    RETURN_IF_OUT_OF_RANGE(noff, 0, 127);
+    RETURN_IF_OUT_OF_RANGE(noff, -127, 127);
     SEND_B1(190, noff);
 }
 
 static void op_I2M_B_VOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 voff = cs_pop(cs);
-    RETURN_IF_OUT_OF_RANGE(voff, 0, 127);
+    RETURN_IF_OUT_OF_RANGE(voff, -127, 127);
     SEND_B1(191, voff);
 }
 
 static void op_I2M_B_TOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 toff = cs_pop(cs);
-    RETURN_IF_OUT_OF_RANGE(toff, 0, 32767);
+    RETURN_IF_OUT_OF_RANGE(toff, -16384, 16383);
     SEND_B2(192, toff >> 8, toff & 0xff);
 }
 
