@@ -174,8 +174,8 @@ const tele_op_t op_I2M_C_VCUR          = MAKE_GET_OP(I2M.C.VCUR, op_I2M_C_VCUR_g
 const tele_op_t op_I2M_C_VTILDE        = MAKE_ALIAS_OP(I2M.C.V~, op_I2M_C_VCUR_get, NULL, 4, false);
 const tele_op_t op_I2M_C_TCUR          = MAKE_GET_OP(I2M.C.TCUR, op_I2M_C_TCUR_get, 4, false);
 const tele_op_t op_I2M_C_TTILDE        = MAKE_ALIAS_OP(I2M.C.T~, op_I2M_C_TCUR_get, NULL, 4, false);
-const tele_op_t op_I2M_C_QN            = MAKE_GET_OP(I2M.C.QN, op_I2M_C_QN_get, 4, true);
-const tele_op_t op_I2M_C_QV            = MAKE_GET_OP(I2M.C.QV, op_I2M_C_QV_get, 4, true);
+const tele_op_t op_I2M_C_QN            = MAKE_GET_OP(I2M.C.QN, op_I2M_C_QN_get, 3, true);
+const tele_op_t op_I2M_C_QV            = MAKE_GET_OP(I2M.C.QV, op_I2M_C_QV_get, 3, true);
 const tele_op_t op_I2M_CC              = MAKE_GET_OP(I2M.CC, op_I2M_CC_get, 2, false);
 const tele_op_t op_I2M_CC_POUND        = MAKE_GET_OP(I2M.CC#, op_I2M_CC_POUND_get, 3, false);
 const tele_op_t op_I2M_CCV             = MAKE_GET_OP(I2M.CCV, op_I2M_CCV_get, 2, false);
@@ -689,14 +689,13 @@ static void op_I2M_C_TCUR_get(const void *data, scene_state_t *ss, exec_state_t 
 static void op_I2M_C_QN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 chord = cs_pop(cs);
     s16 note = cs_pop(cs);
-    s16 velocity = cs_pop(cs);
     s16 index = cs_pop(cs);
-    if (note < 0 || note > 127 || velocity < 0 || velocity > 127) {
+    if (note < 0 || note > 127) {
         cs_push(cs, 0);
         return;
     }
     
-    SEND_B4(166, chord, note, velocity, index);
+    SEND_B3(166, chord, note, index);
     d[0] = d[1] = 0;
     tele_ii_rx(I2C2MIDI, d, 2);
     s16 qn = (d[0] << 8) | d[1];
@@ -705,15 +704,14 @@ static void op_I2M_C_QN_get(const void *data, scene_state_t *ss, exec_state_t *e
 
 static void op_I2M_C_QV_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     s16 chord = cs_pop(cs);
-    s16 note = cs_pop(cs);
     s16 velocity = cs_pop(cs);
     s16 index = cs_pop(cs);
-    if (note < 0 || note > 127 || velocity < 0 || velocity > 127) {
+    if (velocity < 0 || velocity > 127) {
         cs_push(cs, 0);
         return;
     }
     
-    SEND_B4(167, chord, note, velocity, index);
+    SEND_B3(167, chord, velocity, index);
     d[0] = d[1] = 0;
     tele_ii_rx(I2C2MIDI, d, 2);
     s16 qv = (d[0] << 8) | d[1];
