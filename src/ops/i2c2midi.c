@@ -3,6 +3,8 @@
 #include "helpers.h"
 #include "teletype.h"
 #include "teletype_io.h"
+#include "table.h"
+#include <stdlib.h>  // abs
 
 // clang-format off
 
@@ -120,6 +122,7 @@ static void op_I2M_B_VOFF_get(const void *data, scene_state_t *ss, exec_state_t 
 static void op_I2M_B_TOFF_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_B_CLR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_B_MODE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
@@ -230,6 +233,8 @@ const tele_op_t op_I2M_B_VOFF          = MAKE_GET_OP(I2M.B.VOFF, op_I2M_B_VOFF_g
 const tele_op_t op_I2M_B_TOFF          = MAKE_GET_OP(I2M.B.TOFF, op_I2M_B_TOFF_get, 1, false);
 const tele_op_t op_I2M_B_CLR           = MAKE_GET_OP(I2M.B.CLR, op_I2M_B_CLR_get, 0, false);
 const tele_op_t op_I2M_B_MODE          = MAKE_GET_OP(I2M.B.MODE, op_I2M_B_MODE_get, 1, false);
+const tele_op_t op_I2M_S_QT            = MAKE_GET_OP(I2M.S.QT, op_I2M_S_QT_get, 1, true);
+const tele_op_t op_I2M_QT              = MAKE_ALIAS_OP(I2M.QT, op_I2M_S_QT_get, NULL, 1, true);
 
 const tele_op_t op_I2M_TEST            = MAKE_GET_OP(I2M.TEST, op_I2M_TEST_get, 2, false);
 
@@ -312,7 +317,39 @@ static u8 d[7];
     if (value < min) value = min; \
     else if (value > max) value = max;
 
-    
+//horribly hacky duplication
+static int16_t quantize_to_bitmask_scale(int16_t scale_bits, int16_t transpose,
+                                         int16_t v_in) {
+    // accepts 12-bit scale mask and a pitch voltage. transpose is voltage for
+    // scale offset. returns nearest pitch voltage in scale.
+    if (scale_bits == 0) { return v_in; }  // no active scale bits
+    int16_t sign = (v_in < 0) ? -1 : 1;
+    v_in = (v_in < 0) ? -v_in : v_in;
+    transpose = transpose % table_n[12];
+
+    if (v_in >= table_n[127]) { return table_n[127] * sign; }
+
+    int16_t octave_in = v_in / table_n[12];
+    int16_t semitones_in = v_in % table_n[12];
+
+    int16_t dist_nearest = INT16_MAX;
+    int16_t note_nearest = INT16_MAX;
+    int16_t try_note, try_distance;
+    for (int16_t i = 0; i < 12; i++) {
+        if (scale_bits & (1 << i)) {
+            for (int16_t j = -2; j <= 2; j++) {
+                try_note = table_n[i] + transpose + (j * table_n[12]);
+                try_distance = abs(try_note - semitones_in);
+                if (try_distance < dist_nearest) {
+                    dist_nearest = try_distance;
+                    note_nearest = try_note;
+                }
+            }
+        }
+    }
+    return (note_nearest + table_n[octave_in * 12]) * sign;
+}
+
 //implementation
 
 static void op_I2M_PANIC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
@@ -1187,6 +1224,17 @@ static void op_I2M_B_MODE_get(const void *data, scene_state_t *ss, exec_state_t 
     s16 mode = cs_pop(cs);
     RETURN_IF_OUT_OF_RANGE(mode, 0, 1);
     SEND_B1(194, mode);
+}
+
+static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_CMD(210);
+    int16_t v_in = cs_pop(cs);
+
+    d[0] = d[1] = 0; \
+    tele_ii_rx(I2C2MIDI, d, 2); \
+    int16_t scaleMask = (d[0] << 8) | d[1];
+
+    cs_push(cs, quantize_to_bitmask_scale(scaleMask, 0, v_in));
 }
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
