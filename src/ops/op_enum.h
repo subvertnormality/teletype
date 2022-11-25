@@ -873,6 +873,7 @@ typedef enum {
     E_OP_I2M_C_QV,
     E_OP_I2M_TEST,
     E_OP_I2M_S_QT,
+    E_OP_I2M_QT,
     E_OP_SEED,
     E_OP_RAND_SEED,
     E_OP_SYM_RAND_SD,
