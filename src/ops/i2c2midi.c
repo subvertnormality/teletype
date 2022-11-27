@@ -1230,18 +1230,17 @@ static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *e
     SEND_CMD(210);
     int16_t v_in = cs_pop(cs);
 
-    d[0] = d[1] = 0; \
-    tele_ii_rx(I2C2MIDI, d, 2); \
-    int16_t scaleMask = ((d[0] << 8) + d[1]);
-    cs_push(cs, quantize_to_bitmask_scale(bit_reverse(scaleMask, 16) >> 4, 0, v_in));
+    d[0] = d[1] = d[2] = 0; \
+    tele_ii_rx(I2C2MIDI, d, 3); \
+
+    int16_t transpose = table_n[(abs(d[0] - 64))];
+    int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;
+    int16_t scaleMask = ((d[1] << 8) + d[2]);
+    cs_push(cs, quantize_to_bitmask_scale((bit_reverse(scaleMask, 16) >> 4), 0, v_in) + (transpose * sign));
 }
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_CMD(210);
-    int16_t v_in = cs_pop(cs);
-
-    d[0] = d[1] = 0; \
-    tele_ii_rx(I2C2MIDI, d, 2); \
-    int16_t scaleMask = ((d[0] << 8) + d[1]);
-    cs_push(cs, bit_reverse(scaleMask, 16) >> 4);
+    s16 value1 = cs_pop(cs);
+    s16 value2 = cs_pop(cs);
+    SEND_B3(255, value1, value2 >> 8, value2 & 0xff);
 }
