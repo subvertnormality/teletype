@@ -6,6 +6,7 @@
 #include "ops/ansible.h"
 #include "ops/controlflow.h"
 #include "ops/crow.h"
+#include "ops/cvm.h"
 #include "ops/delay.h"
 #include "ops/disting.h"
 #include "ops/earthsea.h"
@@ -282,6 +283,9 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_EX_M_CC_POUND,
     &op_EX_LP_REVQ,
     
+    // CVM-8
+    &op_CVM,
+
     // i2c2midi
     &op_I2M_CH, &op_I2M_TIME, &op_I2M_T, &op_I2M_SHIFT, &op_I2M_S, &op_I2M_NOTE,
     &op_I2M_N, &op_I2M_NOTE_O, &op_I2M_NO, &op_I2M_N_POUND, &op_I2M_NO_POUND,
@@ -306,8 +310,8 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_I2M_B_R, &op_I2M_B_L, &op_I2M_B_START, &op_I2M_B_END, &op_I2M_B_DIR,
     &op_I2M_B_SPE, &op_I2M_B_FB, &op_I2M_B_NSHIFT, &op_I2M_B_VSHIFT,
     &op_I2M_B_TSHIFT, &op_I2M_B_NOFF, &op_I2M_B_VOFF, &op_I2M_B_TOFF,
-    &op_I2M_B_CLR, &op_I2M_B_MODE, &op_I2M_C_QN, &op_I2M_C_QV,
-    &op_I2M_TEST, &op_I2M_S_QT, &op_I2M_QT,
+    &op_I2M_B_CLR, &op_I2M_B_MODE, &op_I2M_C_QN, &op_I2M_C_QV, &op_I2M_S_QT,
+
 
     // seed
     &op_SEED, &op_RAND_SEED, &op_SYM_RAND_SD, &op_SYM_R_SD, &op_TOSS_SEED,
