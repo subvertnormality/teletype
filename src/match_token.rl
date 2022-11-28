@@ -805,6 +805,9 @@
         "EX.ZO1"      => { MATCH_OP(E_OP_EX_ZO1); };
         "EX.ZO2"      => { MATCH_OP(E_OP_EX_ZO2); };
 
+        # cvm-8
+        "CVM"         => { MATCH_OP(E_OP_CVM); };
+
         # w/s
         "W/S.PITCH"    => { MATCH_OP(E_OP_WS_S_PITCH); };
         "W/S.VEL"      => { MATCH_OP(E_OP_WS_S_VEL); };
@@ -967,10 +970,7 @@
         "I2M.B.CLR"       => { MATCH_OP(E_OP_I2M_B_CLR ); };
         "I2M.B.MODE"      => { MATCH_OP(E_OP_I2M_B_MODE ); };
         "I2M.S.QT"        => { MATCH_OP(E_OP_I2M_S_QT ); };
-        "I2M.QT"          => { MATCH_OP(E_OP_I2M_S_QT ); };
-        
-        "I2M.TEST"        => { MATCH_OP(E_OP_I2M_TEST ); };
-        
+
         # seed
         "SEED"        => { MATCH_OP(E_OP_SEED); };
         "RAND.SEED"      => { MATCH_OP(E_OP_RAND_SEED); };
