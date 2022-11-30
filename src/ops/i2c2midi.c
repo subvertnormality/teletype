@@ -107,6 +107,7 @@ static void op_I2M_Q_LV_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_Q_LO_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_Q_LC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_Q_BPM_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_B_R_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_B_L_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_B_START_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
@@ -218,6 +219,7 @@ const tele_op_t op_I2M_Q_LV            = MAKE_GET_OP(I2M.Q.LV, op_I2M_Q_LV_get, 
 const tele_op_t op_I2M_Q_LO            = MAKE_GET_OP(I2M.Q.LO, op_I2M_Q_LO_get, 0, true);
 const tele_op_t op_I2M_Q_LC            = MAKE_GET_OP(I2M.Q.LC, op_I2M_Q_LC_get, 0, true);
 const tele_op_t op_I2M_Q_LCC           = MAKE_GET_OP(I2M.Q.LCC, op_I2M_Q_LCC_get, 0, true);
+const tele_op_t op_I2M_Q_BPM           = MAKE_GET_OP(I2M.Q.BPM, op_I2M_Q_BPM_get, 0, true);
 const tele_op_t op_I2M_B_R             = MAKE_GET_OP(I2M.B.R, op_I2M_B_R_get, 1, false);
 const tele_op_t op_I2M_B_L             = MAKE_GET_OP(I2M.B.L, op_I2M_B_L_get, 1, false);
 const tele_op_t op_I2M_B_START         = MAKE_GET_OP(I2M.B.START, op_I2M_B_START_get, 1, false);
@@ -1135,6 +1137,11 @@ static void op_I2M_Q_LC_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_Q_LCC_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
     SEND_CMD(135);
     RECEIVE_AND_PUSH_S8;
+}
+
+static void op_I2M_Q_BPM_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_CMD(145);
+    RECEIVE_AND_PUSH_S16;
 }
 
 static void op_I2M_B_R_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {

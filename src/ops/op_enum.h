@@ -849,6 +849,7 @@ typedef enum {
     E_OP_I2M_Q_LO,
     E_OP_I2M_Q_LC,
     E_OP_I2M_Q_LCC,
+    E_OP_I2M_Q_BPM,
     E_OP_I2M_CHORD,
     E_OP_I2M_MIN,
     E_OP_I2M_MAX,

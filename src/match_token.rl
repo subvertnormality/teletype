@@ -957,6 +957,7 @@
         "I2M.Q.LO"        => { MATCH_OP(E_OP_I2M_Q_LO ); };
         "I2M.Q.LC"        => { MATCH_OP(E_OP_I2M_Q_LC ); };
         "I2M.Q.LCC"       => { MATCH_OP(E_OP_I2M_Q_LCC ); };
+        "I2M.Q.BPM"       => { MATCH_OP(E_OP_I2M_Q_BPM ); };
         "I2M.B.R"         => { MATCH_OP(E_OP_I2M_B_R ); };
         "I2M.B.L"         => { MATCH_OP(E_OP_I2M_B_L ); };
         "I2M.B.START"     => { MATCH_OP(E_OP_I2M_B_START ); };
