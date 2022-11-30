@@ -297,7 +297,7 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_I2M_PRG, &op_I2M_PB, &op_I2M_AT, &op_I2M_CLK, &op_I2M_START,
     &op_I2M_STOP, &op_I2M_CONT, &op_I2M_Q_CH, &op_I2M_Q_LATCH, &op_I2M_Q_NOTE,
     &op_I2M_Q_N, &op_I2M_Q_VEL, &op_I2M_Q_V, &op_I2M_Q_CC, &op_I2M_Q_LCH,
-    &op_I2M_Q_LN, &op_I2M_Q_LV, &op_I2M_Q_LO, &op_I2M_Q_LC, &op_I2M_Q_LCC,
+    &op_I2M_Q_LN, &op_I2M_Q_LV, &op_I2M_Q_LO, &op_I2M_Q_LC, &op_I2M_Q_LCC, &op_I2M_Q_BPM,
     &op_I2M_CHORD, &op_I2M_MIN, &op_I2M_MAX, &op_I2M_C_TRP, &op_I2M_C_DIS,
     &op_I2M_C_REF, &op_I2M_C_SC, &op_I2M_C_VCUR, &op_I2M_C_VTILDE,
     &op_I2M_C_TCUR, &op_I2M_C_TTILDE, &op_I2M_C_B, &op_I2M_NT, &op_I2M_C_POUND,
