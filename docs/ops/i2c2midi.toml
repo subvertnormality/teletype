@@ -4,7 +4,6 @@ prototype_set = "I2M.CH x"
 aliases = ["I2M.#"]
 short = "Get or set MIDI channel x (1..16 for TRS, 17..32 for USB) for MIDI out."
 
-
 ["I2M.TIME"]
 prototype = "I2M.TIME"
 prototype_set = "I2M.TIME x"
@@ -144,7 +143,7 @@ The length of a chord changes automatically each time a note is added or removed
 
 ["I2M.C.SC"]
 prototype = "I2M.C.SC x y"
-short = "Set scale for chord x (0..8) based on chord y (0..8). 
+short = "Set scale for chord x (0..8) based on chord y (0..8)."
 description = """
 Setting a scale for a chord comes in handy when using chord transformations that introduce new notes, like I2M.C.TRP, I2M.C.DIS or I2M.C.REF. Use y = 0 to remove the scale. Use x = 0 to set scale for all chords.
 """
@@ -264,7 +263,7 @@ Keep in mind that changing the direction only affects notes that have been alrea
 
 ["I2M.B.SPE"]
 prototype = "I2M.B.SPE x"
-short = "Set the playing speed x (1..32767) of the buffer. x = 100 is equivalent to "normal speed", x = 50 means double the speed, x = 200 means half the speed, etc."
+short = "Set the playing speed x (1..32767) of the buffer. x = 100 is equivalent to \"normal speed\", x = 50 means double the speed, x = 200 means half the speed, etc."
 description = """
 Of course, all values in between can be chosen. Keep in mind that changing the speed only affects notes that have been already recorded to the buffer before the change in speed; all notes recorded afterwards are recorded relative to the new speed. Default is x = 100.
 """
@@ -292,7 +291,7 @@ E.g. with a velocity shift setting of x = -10, a recorded note with velocity 110
 
 ["I2M.B.TSHIFT"]
 prototype = "I2M.B.TSHIFT x"
-short = "Set the note duration shift ("time shift") of recorded notes to x ms (-16384..16383). With each buffer iteration, this value gets added accumulatively to the original note duration."
+short = "Set the note duration shift (\"time shift\") of recorded notes to x ms (-16384..16383). With each buffer iteration, this value gets added accumulatively to the original note duration."
 description = """
 E.g. with a duration shift setting of x = 100, a recorded note with duration 200 will be played with duration 300 during the first buffer iteration, with duration 400 during the second iteration, etc. Default is x = 0.
 """
@@ -313,7 +312,7 @@ E.g. with a velocity offset setting of x = -50, a recorded note with velocity 12
 
 ["I2M.B.TOFF"]
 prototype = "I2M.B.TOFF x"
-short = "Set the note duration offset ("time offset") of recorded notes to x ms (-16384..16383). This value gets added once to the original note duration and is then kept for all buffer iterations."
+short = "Set the note duration offset (\"time offset\") of recorded notes to x ms (-16384..16383). This value gets added once to the original note duration and is then kept for all buffer iterations."
 description = """
 E.g. with a duration offset setting of x = -50, a recorded note with duration 200 will be played with duration 150 for all buffer iterations. Default is x = 0.
 """
@@ -457,7 +456,6 @@ short = "Get the note number (0..127) of the latest Note Off received via MIDI i
 ["I2M.Q.LC"]
 prototype = "I2M.Q.LC"
 short = "Get the latest controller number (0..127) received via MIDI in."
-
 
 
 ["I2M.Q.LCC"]
