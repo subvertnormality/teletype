@@ -41,13 +41,13 @@ prototype = "I2M.REP"
 prototype_set = "I2M.REP x"
 short = "Get current repetition / Set repetition of MIDI notes to `x` repetitions (1..127)."
 description = """
-Set `x = 1` for no repetitions. Default is `x = 1`. Use `I2M.REP#` to add channel parameter .
+Set `x = 1` for no repetitions. Default is `x = 1`. Use `I2M.REP#` to add channel parameter.
 """
 
 
 ["I2M.RAT"]
 prototype = "I2M.RAT"
-prototype_set = "I2M.RAT `x`"
+prototype_set = "I2M.RAT x"
 short = "Get current ratcheting / Set ratcheting of MIDI notes to `x` ratchets (1..127)."
 description = """
 Set `x = 1` for no ratcheting. Default is `x = 1`. Use `I2M.RAT#` to add channel parameter.
