@@ -280,7 +280,6 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     &op_EX_PRE1, &op_EX_PRE2, &op_EX_SAVE1, &op_EX_SAVE2, &op_EX_Z1, &op_EX_Z2,
     &op_EX_ZO1, &op_EX_ZO2, &op_EX_M_N_POUND, &op_EX_M_NO_POUND,
     &op_EX_M_CC_POUND,
-    &op_EX_LP_REVQ,
     
     // CVM-8
     &op_CVM,
