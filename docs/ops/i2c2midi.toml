@@ -467,3 +467,7 @@ short = "Get the latest controller value (0..127) received via MIDI in."
 prototype = "I2M.S.QT"
 aliases = ["I2M.QT"]
 short = "Quantisises a V/OCT value to the scale, degree and transpotion currently set on a linked Sinfonion."
+
+["I2M.S.RN"]
+prototype = "I2M.S.RN"
+short = "Gets the current root note from the Sinfonion."

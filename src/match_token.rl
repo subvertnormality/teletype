@@ -974,6 +974,7 @@
         "I2M.B.CLR"       => { MATCH_OP(E_OP_I2M_B_CLR ); };
         "I2M.B.MODE"      => { MATCH_OP(E_OP_I2M_B_MODE ); };
         "I2M.S.QT"        => { MATCH_OP(E_OP_I2M_S_QT ); };
+        "I2M.S.RN"        => { MATCH_OP(E_OP_I2M_S_RN ); };
 
         # seed
         "SEED"        => { MATCH_OP(E_OP_SEED); };
