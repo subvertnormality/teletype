@@ -124,6 +124,7 @@ static void op_I2M_B_TOFF_get(const void *data, scene_state_t *ss, exec_state_t 
 static void op_I2M_B_CLR_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_B_MODE_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_S_RN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
@@ -236,7 +237,7 @@ const tele_op_t op_I2M_B_TOFF          = MAKE_GET_OP(I2M.B.TOFF, op_I2M_B_TOFF_g
 const tele_op_t op_I2M_B_CLR           = MAKE_GET_OP(I2M.B.CLR, op_I2M_B_CLR_get, 0, false);
 const tele_op_t op_I2M_B_MODE          = MAKE_GET_OP(I2M.B.MODE, op_I2M_B_MODE_get, 1, false);
 const tele_op_t op_I2M_S_QT            = MAKE_GET_OP(I2M.S.QT, op_I2M_S_QT_get, 1, true);
-
+const tele_op_t op_I2M_S_RN            = MAKE_GET_OP(I2M.S.RN, op_I2M_S_RN_get, 0, true);
 
 // clang-format on
 
@@ -1245,4 +1246,9 @@ static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *e
     int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;
     int16_t scaleMask = ((d[1] << 8) + d[2]);
     cs_push(cs, quantize_to_bitmask_scale((bit_reverse(scaleMask, 16) >> 4), 0, v_in) + (transpose * sign));
+}
+
+static void op_I2M_S_RN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_CMD(211);
+    RECEIVE_AND_PUSH_S8;
 }
