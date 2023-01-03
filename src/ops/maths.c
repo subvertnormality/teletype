@@ -5,6 +5,7 @@
 #include "chaos.h"
 #include "drum_helpers.h"
 #include "euclidean/euclidean.h"
+#include "drum_helpers.h"
 #include "helpers.h"
 #include "random.h"
 #include "table.h"
@@ -139,12 +140,12 @@ static void op_ER_get(const void *data, scene_state_t *ss, exec_state_t *es,
                       command_state_t *cs);
 static void op_NR_get(const void *data, scene_state_t *ss, exec_state_t *es,
                       command_state_t *cs);
-static void op_DR_T_get(const void *data, scene_state_t *ss, exec_state_t *es,
-                        command_state_t *cs);
-static void op_DR_P_get(const void *data, scene_state_t *ss, exec_state_t *es,
-                        command_state_t *cs);
-static void op_DR_V_get(const void *data, scene_state_t *ss, exec_state_t *es,
-                        command_state_t *cs);
+static void op_D_TR_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                      command_state_t *cs);
+static void op_D_P_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                      command_state_t *cs);
+static void op_D_V_get(const void *data, scene_state_t *ss, exec_state_t *es,
+                      command_state_t *cs);
 static void op_BPM_get(const void *data, scene_state_t *ss, exec_state_t *es,
                        command_state_t *cs);
 static void op_BIT_OR_get(const void *data, scene_state_t *ss, exec_state_t *es,
@@ -245,9 +246,9 @@ const tele_op_t op_V     = MAKE_GET_OP(V       , op_V_get       , 1, true);
 const tele_op_t op_VV    = MAKE_GET_OP(VV      , op_VV_get      , 1, true);
 const tele_op_t op_ER    = MAKE_GET_OP(ER      , op_ER_get      , 3, true);
 const tele_op_t op_NR    = MAKE_GET_OP(NR      , op_NR_get      , 4, true);
-const tele_op_t op_DR_T  = MAKE_GET_OP(DR.T    , op_DR_T_get    , 5, true);
-const tele_op_t op_DR_P  = MAKE_GET_OP(DR.P    , op_DR_P_get    , 3, true);
-const tele_op_t op_DR_V  = MAKE_GET_OP(DR.V    , op_DR_V_get    , 2, true);
+const tele_op_t op_D_TR  = MAKE_GET_OP(D.TR    , op_D_TR_get    , 5, true);
+const tele_op_t op_D_P  = MAKE_GET_OP(D.P    , op_D_P_get    , 3, true);
+const tele_op_t op_D_V  = MAKE_GET_OP(D.V    , op_D_V_get    , 2, true);
 const tele_op_t op_BPM   = MAKE_GET_OP(BPM     , op_BPM_get     , 1, true);
 const tele_op_t op_BIT_OR  = MAKE_GET_OP(|, op_BIT_OR_get  , 2, true);
 const tele_op_t op_BIT_AND = MAKE_GET_OP(&, op_BIT_AND_get, 2, true);
@@ -1092,8 +1093,8 @@ static void op_NR_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
     cs_push(cs, bit_status);
 }
 
-static void op_DR_T_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
-                        exec_state_t *NOTUSED(es), command_state_t *cs) {
+static void op_D_TR_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
+                      exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t bank = cs_pop(cs);
     int16_t pattern1 = cs_pop(cs);
     int16_t pattern2 = cs_pop(cs);
@@ -1102,16 +1103,16 @@ static void op_DR_T_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
     cs_push(cs, tresillo(bank, pattern1, pattern2, len, step));
 }
 
-static void op_DR_P_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
-                        exec_state_t *NOTUSED(es), command_state_t *cs) {
+static void op_D_P_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
+                      exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t bank = cs_pop(cs);
     int16_t pattern = cs_pop(cs);
     int16_t step = cs_pop(cs);
     cs_push(cs, drum(bank, pattern, step));
 }
 
-static void op_DR_V_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
-                        exec_state_t *NOTUSED(es), command_state_t *cs) {
+static void op_D_V_get(const void *NOTUSED(data), scene_state_t *NOTUSED(ss),
+                      exec_state_t *NOTUSED(es), command_state_t *cs) {
     int16_t pattern = cs_pop(cs);
     int16_t step = cs_pop(cs);
     cs_push(cs, velocity(pattern, step));
