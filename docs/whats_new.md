@@ -9,6 +9,7 @@
 - **FIX**: `PROB 100` would execute only 99.01% of the time.
 - **FIX**: some `G.FDR` configurations caused incorrect rendering in grid visualizer
 - **FIX**: fix `EX.LP` not returning correct values
+- **FIX**: fix `QT.B` handling of negative voltage input
 - **IMP**: scene load/save code refactor, add scene load/save tests
 - **IMP**: fader ops now support up to four faderbanks
 - **NEW**: new Disting EX ops: dual algorithms, `EX.M.N#`, `EX.M.NO#`, `EX.M.CC#`
