@@ -61,6 +61,22 @@ TR.PULSE A
 #I
 L A B: TR.TIME I 40
 
+#S
+
+#T
+
+#U
+
+#V
+
+#W
+
+#X
+
+#Y
+
+#Z
+
 #P
 8	8	8	8
 1	1	1	1

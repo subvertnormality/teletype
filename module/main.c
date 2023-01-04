@@ -404,8 +404,12 @@ void handler_PollADC(int32_t data) {
         uint8_t preset = adc[1] >> 6;
         uint8_t deadzone = preset & 1;
         preset >>= 1;
-        if (!deadzone || abs(preset - get_preset()) > 1)
+
+        if (!deadzone || abs(preset - get_preset()) > 1) {
+            // atte: stop selection at SCENE_SLOTS, was hardcoded to 32...
+            preset = (preset < SCENE_SLOTS ? preset : (SCENE_SLOTS - 1));
             process_preset_r_preset(preset);
+        }
     }
     else {
         ss_set_param(&scene_state, adc[1] << 2);
@@ -884,11 +888,22 @@ bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
         run_script(&scene_state, k - HID_F1);
         return true;
     }
+    // shift-<F1> through <F8>: run scripts (11-18)
+    else if (mod_only_shift(m) && k >= HID_F1 && k <= HID_F8) {
+        run_script(&scene_state, k - HID_F1 + 10);
+        return true;
+    }
     // alt-<F1> through alt-<F8>: edit corresponding script
     // alt-<F9>: edit metro script
     // alt-<F10>: edit init script
     else if (mod_only_alt(m) && k >= HID_F1 && k <= HID_F10) {
         set_edit_mode_script(k - HID_F1);
+        set_mode(M_EDIT);
+        return true;
+    }
+    // alt-shift-<F1> through shift-alt-<F8>: edit scripts (11-18)
+    else if (mod_only_shift_alt(m) && k >= HID_F1 && k <= HID_F8) {
+        set_edit_mode_script(k - HID_F1 + 10);
         set_mode(M_EDIT);
         return true;
     }

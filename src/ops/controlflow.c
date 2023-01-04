@@ -255,7 +255,7 @@ static void op_SCRIPT_get(const void *NOTUSED(data), scene_state_t *ss,
 static void op_SCRIPT_set(const void *NOTUSED(data), scene_state_t *ss,
                           exec_state_t *es, command_state_t *cs) {
     uint16_t a = cs_pop(cs) - 1;
-    if (a > INIT_SCRIPT || a < TT_SCRIPT_1) return;
+    if (a > TT_SCRIPT_18 || a < TT_SCRIPT_1) return;
 
     es_push(es);
     // an overflow causes all future SCRIPT calls to fail
@@ -284,7 +284,7 @@ static void op_SCRIPT_POL_set(const void *NOTUSED(data), scene_state_t *ss,
     }
     else {
         uint8_t s = a - 1;
-        if (s >= TT_SCRIPT_1 && s <= TT_SCRIPT_8) {
+        if (s >= TT_SCRIPT_1 && s <= TT_SCRIPT_18) {
             ss_set_script_pol(ss, s, pol);
         }
     }

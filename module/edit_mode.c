@@ -402,13 +402,80 @@ uint8_t screen_refresh_edit() {
 
     if (dirty & D_INPUT) {
         bool muted = false;
-        char prefix = script + '1';
+        // char prefix = script + '1';
+        char prefix[3] = "  ";
         if (script == METRO_SCRIPT) {
-            prefix = 'M';
+            // prefix = 'M';
+            strcpy(prefix, "M");
             muted = !scene_state.variables.m_act;
         }
         else if (script == INIT_SCRIPT)
-            prefix = 'I';
+            // prefix = 'I';
+            strcpy(prefix, "I");
+        else if (script == TT_SCRIPT_1) {
+            strcpy(prefix, "1");
+        }
+        else if (script == TT_SCRIPT_2) {
+            strcpy(prefix, "2");
+        }
+        else if (script == TT_SCRIPT_3) {
+            strcpy(prefix, "3");
+        }
+        else if (script == TT_SCRIPT_4) {
+            strcpy(prefix, "4");
+        }
+        else if (script == TT_SCRIPT_5) {
+            strcpy(prefix, "5");
+        }
+        else if (script == TT_SCRIPT_6) {
+            strcpy(prefix, "6");
+        }
+        else if (script == TT_SCRIPT_7) {
+            strcpy(prefix, "7");
+        }
+        else if (script == TT_SCRIPT_8) {
+            strcpy(prefix, "8");
+        }
+        else if (script == TT_SCRIPT_11) {
+            // prefix = 'A';
+            strcpy(prefix, "11");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_12) {
+            // prefix = 'B';
+            strcpy(prefix, "12");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_13) {
+            // prefix = 'C';
+            strcpy(prefix, "13");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_14) {
+            // prefix = 'D';
+            strcpy(prefix, "14");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_15) {
+            // prefix = 'E';
+            strcpy(prefix, "15");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_16) {
+            // prefix = 'F';
+            strcpy(prefix, "16");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_17) {
+            // prefix = 'H';
+            strcpy(prefix, "17");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_18) {
+            // prefix = 'J';
+            strcpy(prefix, "18");
+            muted = true;
+        }
         else if (script <= TT_SCRIPT_8)
             muted = ss_get_mute(&scene_state, script);
 
@@ -418,7 +485,7 @@ uint8_t screen_refresh_edit() {
             region_fill(&line[7], 0);
 
         char script_no[2] = { prefix, '\0' };
-        font_string_region_clip(&line[7], script_no, 0, 0, muted ? 4 : 15, 0);
+        font_string_region_clip(&line[7], prefix, 0, 0, muted ? 4 : 15, 0);
 
         screen_dirty |= (1 << 7);
         dirty &= ~D_INPUT;

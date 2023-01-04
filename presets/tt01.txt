@@ -73,6 +73,22 @@ CV.SLEW 2 1000
 TR.PULSE D
 CV.SLEW 3 5
 
+#S
+
+#T
+
+#U
+
+#V
+
+#W
+
+#X
+
+#Y
+
+#Z
+
 #P
 0	0	0	0
 1	1	1	1
