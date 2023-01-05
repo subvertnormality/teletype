@@ -24,29 +24,10 @@ static int get_bit(const char* a, int k) {
     return (byte & (1 << bit_index)) != 0;
 }
 
-
-// 8 / 3 3 2
-// 16/ 6 6 4
-// 24 / 9 9 6
-// 32/ 12 12 8
-// 40 / 15 15 10
-// 48 / 18 18 12
-// 56 / 21 21 14
-// 64/ 24 24 16
-
-// banks
-// 0: increasing intensity random
-// 1: BD
-// 2: SD
-// 3: CH
-// 4: OH/CY
-
-
-
 int tresillo(int bank, int pattern1, int pattern2, int len, int step) {
 
     if (len < 8) return 0;
-    if (step < 1) return 0;
+    if (step < 0) return 0;
 
     const char* table1;
     const char* table2;
@@ -83,22 +64,21 @@ int tresillo(int bank, int pattern1, int pattern2, int len, int step) {
     int multiplier = len / 8;
 
     int three = 3 * multiplier;
-    int wrapped_step = wrap(step, 1, multiplier * 8);
+    int wrapped_step = wrap(step, 0, multiplier * 8 - 1);
 
-    
-    if (wrapped_step <= three) {
-        return get_bit(table1, wrapped_step - 1);
-    } else if (wrapped_step <= three * 2) {
-        return get_bit(table1, wrapped_step - three - 1);
+
+    if (wrapped_step <= three - 1) { return get_bit(table1, wrapped_step); }
+    else if (wrapped_step <= three * 2 - 1) {
+        return get_bit(table1, wrapped_step - three);
     }
 
-    return get_bit(table2, wrapped_step - (three * 2) - 1);  
+    return get_bit(table2, wrapped_step - (three * 2));
 }
 
 int drum(int bank, int pattern, int step) {
 
     if (bank < 0 || bank > 4) return 0;
-    if (step < 1) return 0;
+    if (step < 0) return 0;
 
     const char* table;
 
@@ -125,17 +105,16 @@ int drum(int bank, int pattern, int step) {
             break;
     }
 
-    int wrapped_step = wrap(step, 1, 16);
+    int wrapped_step = wrap(step, 0, 15);
 
-    return get_bit(table, wrapped_step - 1);  
+    return get_bit(table, wrapped_step);
 }
 
 int velocity(int pattern, int step) {
-
-    if (step < 1) return 0;
+    if (step < 0) return 0;
     if (pattern < 0 || pattern > 9) return 0;
 
-    const uint8_t* table = table_vel_helper[pattern];
-    int wrapped_step = wrap(step, 1, 16);
-    return table[wrapped_step - 1];
+    const uint16_t* table = table_vel_helper[pattern];
+    int wrapped_step = wrap(step, 0, 15);
+    return table[wrapped_step];
 }
