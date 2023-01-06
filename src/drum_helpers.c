@@ -1,9 +1,10 @@
 #include "drum_helpers.h"
-#include "table.h"
+
 #include <stdio.h>
 
-static int wrap(int const k, int const lower_bound, int const upper_bound)
-{
+#include "table.h"
+
+static int wrap(int const k, int const lower_bound, int const upper_bound) {
     int range = upper_bound - lower_bound + 1;
     int kx = ((k - lower_bound) % range);
     if (kx < 0)
@@ -25,42 +26,38 @@ static int get_bit(const char* a, int k) {
 }
 
 int tresillo(int bank, int pattern1, int pattern2, int len, int step) {
-
+    if (bank < 0 || bank > 4) return 0;
     if (len < 8) return 0;
     if (step < 0) return 0;
+    if (pattern1 > 215 || pattern2 > 215) return 0;
 
     const char* table1;
     const char* table2;
 
     switch (bank) {
-        case 0: 
-            if (pattern1 > 32 || pattern2 > 32 ) return 0;
+        case 0:
             table1 = table_t_r_e[pattern1];
             table2 = table_t_r_e[pattern2];
             break;
         case 1:
-            if (pattern1 > 215 || pattern2 > 215 ) return 0;
             table1 = table_dr_bd[pattern1];
             table2 = table_dr_bd[pattern2];
             break;
         case 2:
-            if (pattern1 > 215 || pattern2 > 215 ) return 0;
             table1 = table_dr_sd[pattern1];
             table2 = table_dr_sd[pattern2];
             break;
         case 3:
-            if (pattern1 > 215 || pattern2 > 215 ) return 0;
             table1 = table_dr_ch[pattern1];
             table2 = table_dr_ch[pattern2];
             break;
         case 4:
-            if (pattern1 > 215 || pattern2 > 215 ) return 0;
             table1 = table_dr_oh[pattern1];
             table2 = table_dr_oh[pattern2];
             break;
     }
 
-    
+
     int multiplier = len / 8;
 
     int three = 3 * multiplier;
@@ -76,31 +73,26 @@ int tresillo(int bank, int pattern1, int pattern2, int len, int step) {
 }
 
 int drum(int bank, int pattern, int step) {
-
     if (bank < 0 || bank > 4) return 0;
     if (step < 0) return 0;
+    if (pattern > 215) return 0;
 
     const char* table;
 
     switch (bank) {
-        case 0: 
-            if (pattern > 32) return 0;
+        case 0:
             table = table_t_r_e[pattern];
             break;
         case 1:
-            if (pattern > 215) return 0;
             table = table_dr_bd[pattern];
             break;
         case 2:
-            if (pattern > 215) return 0;
             table = table_dr_sd[pattern];
             break;
         case 3:
-            if (pattern > 215) return 0;
             table = table_dr_ch[pattern];
             break;
         case 4:
-            if (pattern > 215) return 0;
             table = table_dr_oh[pattern];
             break;
     }
