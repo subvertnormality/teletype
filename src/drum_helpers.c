@@ -15,7 +15,7 @@ static int wrap(int const k, int const lower_bound, int const upper_bound) {
 
 
 static char get_byte(const char* a, int n) {
-    return a[n / 8];
+    return a[n >> 3];
 }
 
 static int get_bit(const char* a, int k) {
@@ -29,7 +29,7 @@ int tresillo(int bank, int pattern1, int pattern2, int len, int step) {
     if (bank < 0 || bank > 4) return 0;
     if (len < 8) return 0;
     if (step < 0) return 0;
-    if (pattern1 > 215 || pattern2 > 215) return 0;
+    if (pattern1 >= drum_ops_pattern_len || pattern2 >= drum_ops_pattern_len) return 0;
 
     const char* table1;
     const char* table2;
@@ -75,7 +75,7 @@ int tresillo(int bank, int pattern1, int pattern2, int len, int step) {
 int drum(int bank, int pattern, int step) {
     if (bank < 0 || bank > 4) return 0;
     if (step < 0) return 0;
-    if (pattern > 215) return 0;
+    if (pattern >= drum_ops_pattern_len) return 0;
 
     const char* table;
 

@@ -326,11 +326,11 @@ the first two steps of pattern 2 once. A pattern length of 16 will play the firs
 
 ["DR.P"]
 prototype = "DR.P b p s"
-short = "Drum pattern helper, `b` is the drum bank (`0-4`), `p` is the pattern (0-32 for bank 0, 0-215 for the others) and step is the step number (0-15), returns `0` or `1`"
+short = "Drum pattern helper, `b` is the drum bank (`0-4`), `p` is the pattern (0-215) and step is the step number (0-15), returns `0` or `1`"
 description = """
 The drum helper uses preset drum patterns to give 16-step gate patterns. Gates wrap after step 16. Bank 0 is a set of pseudo random gates increasing in density at higher numbered patterns, where pattern 0 is empty,
 and pattern 215 is 1s. Bank 1 is bass drum patterns. Bank 2 is snare drum patterns. Bank 3 is closed hi-hats. Bank 4 is open hi-hits and in some cases cymbals. Bank 1-4 patterns are related to each other (bank 1 pattern 1's bass drum pattern fits bank 2 pattern 1's snare drum pattern). 
-The patterns are from [Paul Wenzel's "Pocket Operations" book]: https://shittyrecording.studio/.
+The patterns are from [Paul Wenzel's "Pocket Operations" book](https://shittyrecording.studio/).
 """
 
 ["DR.V"]

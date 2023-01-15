@@ -169,7 +169,7 @@ const uint16_t table_n_b[] = {
 };
 
 // preset psuedo random bit mask drum notes for TRE
-const char table_t_r_e[216][3] = { { 0, 0, 0 },
+const char table_t_r_e[drum_ops_pattern_len][3] = { { 0, 0, 0 },
                                    { 0b00100000, 0b00000001, 0 },
                                    { 0b01000000, 0b01000000, 0b00010000 },
                                    { 0b00100000, 0b00010000, 0b01000010 },
@@ -388,7 +388,7 @@ const char table_t_r_e[216][3] = { { 0, 0, 0 },
 
 // preset drum patterns from https://shittyrecording.studio/. $20 was donated to the Tree Trust for use of the patterns.
 
-const char table_dr_bd[216][2] = {
+const char table_dr_bd[drum_ops_pattern_len][2] = {
     { 0b10000010, 0 },          { 0b10000000, 0b10000000 },
     { 0b00100010, 0b00100010 }, { 0b10010010, 0b00100000 },
     { 0b10100011, 0b00000010 }, { 0b10000000, 0b00100000 },
@@ -499,7 +499,7 @@ const char table_dr_bd[216][2] = {
     { 0b10000000, 0b10100000 }, { 0b10000000, 0b10000000 }
 };
 
-const char table_dr_sd[216][2] = { { 0b00001000, 0b00001000 },
+const char table_dr_sd[drum_ops_pattern_len][2] = { { 0b00001000, 0b00001000 },
                                    { 0b00001000, 0b00001000 },
                                    { 0, 0 },
                                    { 0b00001000, 0b00001000 },
@@ -716,7 +716,7 @@ const char table_dr_sd[216][2] = { { 0b00001000, 0b00001000 },
                                    { 0b00001000, 0b00100000 } };
 
 
-const char table_dr_ch[216][2] = { { 0, 0 },
+const char table_dr_ch[drum_ops_pattern_len][2] = { { 0, 0 },
                                    { 0b10101010, 0b10101010 },
                                    { 0, 0 },
                                    { 0, 0 },
@@ -933,7 +933,7 @@ const char table_dr_ch[216][2] = { { 0, 0 },
                                    { 0, 0 },
                                    { 0, 0 } };
 
-const char table_dr_oh[216][2] = { { 0, 0 },
+const char table_dr_oh[drum_ops_pattern_len][2] = { { 0, 0 },
                                    { 0, 0 },
                                    { 0, 0 },
                                    { 0, 0 },
