@@ -437,43 +437,63 @@ uint8_t screen_refresh_edit() {
             strcpy(prefix, "8");
         }
         else if (script == TT_SCRIPT_11) {
-            // prefix = 'A';
+            // prefix = 'N';
             strcpy(prefix, "11");
             muted = true;
         }
         else if (script == TT_SCRIPT_12) {
-            // prefix = 'B';
+            // prefix = 'O';
             strcpy(prefix, "12");
             muted = true;
         }
         else if (script == TT_SCRIPT_13) {
-            // prefix = 'C';
+            // prefix = 'Q';
             strcpy(prefix, "13");
             muted = true;
         }
         else if (script == TT_SCRIPT_14) {
-            // prefix = 'D';
+            // prefix = 'R';
             strcpy(prefix, "14");
             muted = true;
         }
         else if (script == TT_SCRIPT_15) {
-            // prefix = 'E';
+            // prefix = 'S';
             strcpy(prefix, "15");
             muted = true;
         }
         else if (script == TT_SCRIPT_16) {
-            // prefix = 'F';
+            // prefix = 'T';
             strcpy(prefix, "16");
             muted = true;
         }
         else if (script == TT_SCRIPT_17) {
-            // prefix = 'H';
+            // prefix = 'U';
             strcpy(prefix, "17");
             muted = true;
         }
         else if (script == TT_SCRIPT_18) {
-            // prefix = 'J';
+            // prefix = 'V';
             strcpy(prefix, "18");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_19) {
+            // prefix = 'W';
+            strcpy(prefix, "19");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_20) {
+            // prefix = 'X';
+            strcpy(prefix, "20");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_21) {
+            // prefix = 'Y';
+            strcpy(prefix, "21");
+            muted = true;
+        }
+        else if (script == TT_SCRIPT_22) {
+            // prefix = 'Z';
+            strcpy(prefix, "22");
             muted = true;
         }
         else if (script <= TT_SCRIPT_8)

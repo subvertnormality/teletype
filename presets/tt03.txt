@@ -56,6 +56,14 @@ P.I ADD P.I RRAND -2 1
 L A D: TR.TIME 30
 L 1 4: CV.SLEW 50
 
+#N
+
+#O
+
+#Q
+
+#R
+
 #S
 
 #T

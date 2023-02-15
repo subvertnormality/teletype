@@ -888,8 +888,8 @@ bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
         run_script(&scene_state, k - HID_F1);
         return true;
     }
-    // shift-<F1> through <F8>: run scripts (11-18)
-    else if (mod_only_shift(m) && k >= HID_F1 && k <= HID_F8) {
+    // shift-<F1> through <F12>: run scripts (11-22)
+    else if (mod_only_shift(m) && k >= HID_F1 && k <= HID_F12) {
         run_script(&scene_state, k - HID_F1 + 10);
         return true;
     }
@@ -901,8 +901,8 @@ bool process_global_keys(uint8_t k, uint8_t m, bool is_held_key) {
         set_mode(M_EDIT);
         return true;
     }
-    // alt-shift-<F1> through shift-alt-<F8>: edit scripts (11-18)
-    else if (mod_only_shift_alt(m) && k >= HID_F1 && k <= HID_F8) {
+    // alt-shift-<F1> through shift-alt-<F12>: edit scripts (11-22)
+    else if (mod_only_shift_alt(m) && k >= HID_F1 && k <= HID_F12) {
         set_edit_mode_script(k - HID_F1 + 10);
         set_mode(M_EDIT);
         return true;

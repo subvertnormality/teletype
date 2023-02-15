@@ -36,7 +36,7 @@ void serialize_scene(tt_serializer_t* stream, scene_state_t* scene,
     }
 
     char input[36];
-    for (int s = 0; s < 18; s++) {
+    for (int s = 0; s < 22; s++) {
         stream->write_char(stream->data, '\n');
         stream->write_char(stream->data, '\n');
         stream->write_char(stream->data, '#');
@@ -45,20 +45,28 @@ void serialize_scene(tt_serializer_t* stream, scene_state_t* scene,
         else if (s == 9)
             stream->write_char(stream->data, 'I');
         else if (s == 10)
-            stream->write_char(stream->data, 'S');
+            stream->write_char(stream->data, 'N');
         else if (s == 11)
-            stream->write_char(stream->data, 'T');
+            stream->write_char(stream->data, 'O');
         else if (s == 12)
-            stream->write_char(stream->data, 'U');
+            stream->write_char(stream->data, 'Q');
         else if (s == 13)
-            stream->write_char(stream->data, 'V');
+            stream->write_char(stream->data, 'R');
         else if (s == 14)
-            stream->write_char(stream->data, 'W');
+            stream->write_char(stream->data, 'S');
         else if (s == 15)
-            stream->write_char(stream->data, 'X');
+            stream->write_char(stream->data, 'T');
         else if (s == 16)
-            stream->write_char(stream->data, 'Y');
+            stream->write_char(stream->data, 'U');
         else if (s == 17)
+            stream->write_char(stream->data, 'V');
+        else if (s == 18)
+            stream->write_char(stream->data, 'W');
+        else if (s == 19)
+            stream->write_char(stream->data, 'X');
+        else if (s == 20)
+            stream->write_char(stream->data, 'Y');
+        else if (s == 21)
             stream->write_char(stream->data, 'Z');
         else
             stream->write_char(stream->data, s + 49);
@@ -147,7 +155,7 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
         c = toupper(stream->read_char(stream->data));
         // stream->print_dbg_char(c);
 
-        if (c == '#' && !(s >= 0 && s <= 17)) {
+        if (c == '#' && !(s >= 0 && s <= 21)) {
             if (!stream->eof(stream->data)) {
                 c = toupper(stream->read_char(stream->data));
                 // stream->print_dbg_char(c);
@@ -156,27 +164,35 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
                     s = 8;
                 else if (c == 'I')
                     s = 9;
-                else if (c == 'S') 
+                else if (c == 'N') 
                     s = 10;
-                else if (c == 'T')
+                else if (c == 'O') 
                     s = 11;
-                else if (c == 'U')
+                else if (c == 'Q') 
                     s = 12;
-                else if (c == 'V')
+                else if (c == 'R') 
                     s = 13;
-                else if (c == 'W')
+                else if (c == 'S') 
                     s = 14;
-                else if (c == 'X')
+                else if (c == 'T')
                     s = 15;
-                else if (c == 'Y')
+                else if (c == 'U')
                     s = 16;
-                else if (c == 'Z')
+                else if (c == 'V')
                     s = 17;
-                else if (c == 'P')
+                else if (c == 'W')
                     s = 18;
+                else if (c == 'X')
+                    s = 19;
+                else if (c == 'Y')
+                    s = 20;
+                else if (c == 'Z')
+                    s = 21;
+                else if (c == 'P')
+                    s = 22;
                 else if (c == 'G') {
                     grid_state = grid_num = grid_count = 0;
-                    s = 19;
+                    s = 23;
                 }
                 else {
                     s = c - 49;
@@ -209,7 +225,7 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
             }
         }
         // SCRIPTS
-        else if (s >= 0 && s <= 17) {
+        else if (s >= 0 && s <= 21) {
             if (c == '\n') {
                 if (p && l < SCRIPT_MAX_COMMANDS) {
                     tele_command_t temp;
@@ -255,7 +271,7 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
         }
         // PATTERNS
         // tele_patterns[]. l wrap start end v[64]
-        else if (s == 18) {
+        else if (s == 22) {
             if (c == '\n' || c == '\t') {
                 if (b < 4) {
                     if (l > 3) {
@@ -296,7 +312,7 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
             }
         }
         // GRID
-        else if (s == 19) {
+        else if (s == 23) {
             deserialize_grid(stream, scene, c);
         }
     }

@@ -53,6 +53,14 @@ CV.SLEW 4 200
 L 1 4: TR I 0
 P.N 0
 
+#N
+
+#O
+
+#Q
+
+#R
+
 #S
 
 #T

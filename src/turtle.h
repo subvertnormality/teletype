@@ -49,6 +49,10 @@ typedef enum {
     TT_SCRIPT_16,
     TT_SCRIPT_17,
     TT_SCRIPT_18,
+    TT_SCRIPT_19,
+    TT_SCRIPT_20,
+    TT_SCRIPT_21,
+    TT_SCRIPT_22,
     TEMP_SCRIPT
 } script_number_t;
 
