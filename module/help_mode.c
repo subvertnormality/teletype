@@ -277,7 +277,7 @@ const char* help4[HELP4_LENGTH] = { "4/16 DATA AND TABLES",
                                     "   S = STEP (0- LENGTH-1)",                                    
                                     "DRUM VELOCITY OP - DR.V",
                                     "DR.V P S",
-                                    "   P = PATTERN (0-9)",
+                                    "   P = PATTERN (0-19)",
                                     "   S = STEP (0-15)"                                     
                                     };
 

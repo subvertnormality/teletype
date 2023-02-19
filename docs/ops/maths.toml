@@ -335,7 +335,7 @@ The patterns are from [Paul Wenzel's "Pocket Operations" book]: https://shittyre
 
 ["DR.V"]
 prototype = "DR.V p s"
-short = "Velocity helper. `p` is the pattern (0-9). `s` is the step number (0-15)"
+short = "Velocity helper. `p` is the pattern (0-19). `s` is the step number (0-15)"
 description = """
 The velocity helper gives velocity values (0-16383) at each step. The values are intended to be used for drum hit velocities. There are 16 steps, which wrap around. Divide by 129 to convert to midi cc values.
 """

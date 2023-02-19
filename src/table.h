@@ -21,6 +21,6 @@ extern const char table_dr_bd[216][2];
 extern const char table_dr_sd[216][2];
 extern const char table_dr_ch[216][2];
 extern const char table_dr_oh[216][2];
-extern const uint16_t table_vel_helper[10][16];
+extern const uint16_t table_vel_helper[20][16];
 
 #endif

@@ -232,7 +232,7 @@ TEST test_velocity_zero() {
     ASSERT(velocity(0, 0) == 10965);
     ASSERT(velocity(0, 4) == 12255);
     ASSERT(velocity(0, 14) == 11610);
-    ASSERT(velocity(0, 15) == 2580);
+    ASSERT(velocity(0, 15) == 3870);
     PASS();
 }
 
