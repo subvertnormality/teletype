@@ -104,7 +104,7 @@ int drum(int bank, int pattern, int step) {
 
 int velocity(int pattern, int step) {
     if (step < 0) return 0;
-    if (pattern < 0 || pattern > 9) return 0;
+    if (pattern < 0 || pattern > 19) return 0;
 
     const uint16_t* table = table_vel_helper[pattern];
     int wrapped_step = wrap(step, 0, 15);
