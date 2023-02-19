@@ -17,7 +17,8 @@
 - **NEW**: new Drum Ops: `DR.T`, `DR.V`, `DR.P`
 - **NEW**: [I2C2MIDI](https://github.com/attowatt/i2c2midi) ops
 - **FIX**: fixes a transcription error  in the SD drum helper patterns
-- **NEW**: Ten new patterns for `DR.V`
+- **NEW**: Ten new patterns for `DR.V`. Optimised old patterns.
+- **FIX**: fix BPM rounding error
 
 ## v4.0.0
 
