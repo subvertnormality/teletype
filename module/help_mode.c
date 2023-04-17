@@ -1398,7 +1398,7 @@ const char* help16[HELP16_LENGTH] = { "16/17 DISTING EX",
                                       "EX.SAVE2 x",
                                       "    SAVE RIGHT PRESET"};
 
-#define HELP17_LENGTH 192
+#define HELP17_LENGTH 198
 const char* help17[HELP17_LENGTH] = { "17/17 I2C2MIDI",
                                       " ",
                                       "I2M.CH x",
@@ -1424,6 +1424,12 @@ const char* help17[HELP17_LENGTH] = { "17/17 I2C2MIDI",
                                       "I2M.RAT x",
                                       "I2M.RAT# ch x",
                                       "    GET/SET NOTE RATCHETING",
+                                      "I2M.MUTE x",
+                                      "I2M.MUTE# ch x",
+                                      "    GET/SET CHANNEL MUTE",
+                                      "I2M.SOLO x",
+                                      "I2M.SOLO# ch x",
+                                      "    GET/SET CHANNEL SOLO",
                                       " ",
                                       "I2M.NOTE x y",
                                       "I2M.N x y",
