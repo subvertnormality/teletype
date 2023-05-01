@@ -116,6 +116,9 @@ const tele_op_t *tele_ops[E_OP__LENGTH] = {
     // controlflow
     &op_SCRIPT, &op_SYM_DOLLAR, &op_SCRIPT_POL, &op_SYM_DOLLAR_POL, &op_KILL,
     &op_SCENE, &op_SCENE_G, &op_SCENE_P, &op_BREAK, &op_BRK, &op_SYNC,
+    &op_SYM_DOLLAR_F, &op_SYM_DOLLAR_F1, &op_SYM_DOLLAR_F2, &op_SYM_DOLLAR_L,
+    &op_SYM_DOLLAR_L1, &op_SYM_DOLLAR_L2, &op_SYM_DOLLAR_S, &op_SYM_DOLLAR_S1,
+    &op_SYM_DOLLAR_S2, &op_I1, &op_I2, &op_FR,
 
     // delay
     &op_DEL_CLR,

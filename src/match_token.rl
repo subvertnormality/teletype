@@ -290,7 +290,7 @@
         "<>"          => { MATCH_OP(E_OP_SYM_LEFT_ANGLED_RIGHT_ANGLED); };
         ">=<"         => { MATCH_OP(E_OP_SYM_RIGHT_ANGLED_EQUAL_LEFT_ANGLED); };
         "<=>"         => { MATCH_OP(E_OP_SYM_LEFT_ANGLED_EQUAL_RIGHT_ANGLED); };
-	"!"           => { MATCH_OP(E_OP_SYM_EXCLAMATION); };
+	    "!"           => { MATCH_OP(E_OP_SYM_EXCLAMATION); };
         "<<"          => { MATCH_OP(E_OP_SYM_LEFT_ANGLED_x2); };
         ">>"          => { MATCH_OP(E_OP_SYM_RIGHT_ANGLED_x2); };
         "<<<"         => { MATCH_OP(E_OP_SYM_LEFT_ANGLED_x3); };
@@ -320,6 +320,18 @@
         "BREAK"       => { MATCH_OP(E_OP_BREAK); };
         "BRK"         => { MATCH_OP(E_OP_BRK); };
         "SYNC"        => { MATCH_OP(E_OP_SYNC); };
+        "$F"          => { MATCH_OP(E_OP_SYM_DOLLAR_F); };
+        "$F1"         => { MATCH_OP(E_OP_SYM_DOLLAR_F1); };
+        "$F2"         => { MATCH_OP(E_OP_SYM_DOLLAR_F2); };
+        "$L"          => { MATCH_OP(E_OP_SYM_DOLLAR_L); };
+        "$L1"         => { MATCH_OP(E_OP_SYM_DOLLAR_L1); };
+        "$L2"         => { MATCH_OP(E_OP_SYM_DOLLAR_L2); };
+        "$S"          => { MATCH_OP(E_OP_SYM_DOLLAR_S); };
+        "$S1"         => { MATCH_OP(E_OP_SYM_DOLLAR_S1); };
+        "$S2"         => { MATCH_OP(E_OP_SYM_DOLLAR_S2); };
+        "I1"          => { MATCH_OP(E_OP_I1); };
+        "I2"          => { MATCH_OP(E_OP_I2); };
+        "FR"          => { MATCH_OP(E_OP_FR); };
 
         # delay
         "DEL.CLR"     => { MATCH_OP(E_OP_DEL_CLR); };

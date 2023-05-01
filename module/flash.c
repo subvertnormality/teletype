@@ -53,7 +53,7 @@ void flash_prepare() {
         int confirm = 1;
         uint32_t counter = 0;
         int toggle = 0;
-#define TIMEOUT 50000
+#define TIMEOUT 100000
         while (confirm == 1 && (++counter < TIMEOUT)) {
             confirm = gpio_get_pin_value(NMI);
             if ((counter % 1000) == 0) {
@@ -126,7 +126,7 @@ void flash_read(uint8_t preset_no, scene_state_t *scene,
            SCENE_TEXT_LINES * SCENE_TEXT_CHARS);
     // need to reset timestamps
     uint32_t ticks = get_ticks();
-    for (size_t i = 0; i < TEMP_SCRIPT; i++)
+    for (size_t i = 0; i < TOTAL_SCRIPT_COUNT; i++)
         scene->scripts[i].last_time = ticks;
     scene->variables.time = 0;
 
