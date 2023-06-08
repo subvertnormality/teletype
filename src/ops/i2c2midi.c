@@ -1390,13 +1390,15 @@ static void op_I2M_SOLO_POUND_set(const void *data, scene_state_t *ss,
 }
 
 static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
-    SEND_CMD(210);	    SEND_CMD(210);
-    int16_t v_in = cs_pop(cs);	    int16_t v_in = cs_pop(cs);
-    d[0] = d[1] = d[2] = 0; \	    d[0] = d[1] = d[2] = 0; \
-    tele_ii_rx(I2C2MIDI, d, 3); \	    tele_ii_rx(I2C2MIDI, d, 3); \
-    int16_t transpose = table_n[(abs(d[0] - 64))];	    int16_t transpose = table_n[(abs(d[0] - 64))];
-    int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;	    int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;
-    int16_t scaleMask = ((d[1] << 8) + d[2]);	    int16_t scaleMask = ((d[1] << 8) + d[2]);
+    SEND_CMD(210);
+    int16_t v_in = cs_pop(cs);
+
+    d[0] = d[1] = d[2] = 0; \
+    tele_ii_rx(I2C2MIDI, d, 3); \
+
+    int16_t transpose = table_n[(abs(d[0] - 64))];
+    int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;
+    int16_t scaleMask = ((d[1] << 8) + d[2]);
     cs_push(cs, quantize_to_bitmask_scale((bit_reverse(scaleMask, 16) >> 4), 0, v_in) + (transpose * sign));
 }
 
