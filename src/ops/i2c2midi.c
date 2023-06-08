@@ -4,6 +4,7 @@
 #include "teletype.h"
 #include "teletype_io.h"
 #include "table.h"
+#include <stdlib.h>  // abs
 
 // clang-format off
 
