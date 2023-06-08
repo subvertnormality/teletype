@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include "teletype.h"
 #include "teletype_io.h"
+#include "table.h"
 
 // clang-format off
 
@@ -331,6 +332,41 @@ static u8 d[7];
     else if (value > max)               \
         value = max;
 
+//horribly hacky duplication
+static int16_t quantize_to_bitmask_scale(int16_t scale_bits, int16_t transpose,
+                                         int16_t v_in) {
+    // accepts 12-bit scale mask and a pitch voltage. transpose is voltage for
+    // scale offset. returns nearest pitch voltage in scale.
+    if (scale_bits == 0) { return v_in; }  // no active scale bits
+	
+	v_in = normalise_value(-table_n[127], table_n[127], 0, v_in);
+	
+    int16_t sign_offset = (v_in < 0) ? 18022 : 0;	//11 octaves
+	v_in = v_in + sign_offset;
+		
+    int16_t octave_in = v_in / table_n[12];
+	if (v_in <= 18021 && v_in >= 18018) { octave_in = 10; }  //fix precision error
+    int16_t semitones_in = v_in % table_n[12];
+    transpose = transpose % table_n[12];
+	
+    int16_t dist_nearest = INT16_MAX;
+    int16_t note_nearest = INT16_MAX;
+    int16_t try_note, try_distance;
+    for (int16_t i = 0; i < 12; i++) {
+        if (scale_bits & (1 << i)) {
+            for (int16_t j = -2; j <= 2; j++) {
+                try_note = table_n[i] + transpose + (j * table_n[12]);
+                try_distance = abs(try_note - semitones_in);
+                if (try_distance < dist_nearest) {
+                    dist_nearest = try_distance;
+                    note_nearest = try_note;
+                }
+            }
+        }
+    }
+	
+    return (note_nearest + table_n[octave_in * 12]) - sign_offset;
+}
 
 // implementation
 
