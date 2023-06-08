@@ -128,6 +128,9 @@ static void op_I2M_SOLO_get(const void *data, scene_state_t *ss, exec_state_t *e
 static void op_I2M_SOLO_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_SOLO_POUND_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 static void op_I2M_SOLO_POUND_set(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+static void op_I2M_S_RN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
+
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs);
 
@@ -242,6 +245,8 @@ const tele_op_t op_I2M_MUTE            = MAKE_GET_SET_OP(I2M.MUTE, op_I2M_MUTE_g
 const tele_op_t op_I2M_MUTE_POUND      = MAKE_GET_SET_OP(I2M.MUTE#, op_I2M_MUTE_POUND_get, op_I2M_MUTE_POUND_set, 1, true);
 const tele_op_t op_I2M_SOLO            = MAKE_GET_SET_OP(I2M.SOLO, op_I2M_SOLO_get, op_I2M_SOLO_set, 0, true);
 const tele_op_t op_I2M_SOLO_POUND      = MAKE_GET_SET_OP(I2M.SOLO#, op_I2M_SOLO_POUND_get, op_I2M_SOLO_POUND_set, 1, true);
+const tele_op_t op_I2M_S_QT            = MAKE_GET_OP(I2M.S.QT, op_I2M_S_QT_get, 1, true);
+const tele_op_t op_I2M_S_RN            = MAKE_GET_OP(I2M.S.RN, op_I2M_S_RN_get, 0, true);
 
 const tele_op_t op_I2M_TEST            = MAKE_GET_OP(I2M.TEST, op_I2M_TEST_get, 2, false);
 
@@ -1383,6 +1388,23 @@ static void op_I2M_SOLO_POUND_set(const void *data, scene_state_t *ss,
     RETURN_IF_OUT_OF_RANGE(value, 0, 127);
     SEND_B2(16, channel, value);
 }
+
+static void op_I2M_S_QT_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_CMD(210);	    SEND_CMD(210);
+    int16_t v_in = cs_pop(cs);	    int16_t v_in = cs_pop(cs);
+    d[0] = d[1] = d[2] = 0; \	    d[0] = d[1] = d[2] = 0; \
+    tele_ii_rx(I2C2MIDI, d, 3); \	    tele_ii_rx(I2C2MIDI, d, 3); \
+    int16_t transpose = table_n[(abs(d[0] - 64))];	    int16_t transpose = table_n[(abs(d[0] - 64))];
+    int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;	    int16_t sign = ((d[0] - 64) < 0) ? -1 : 1;
+    int16_t scaleMask = ((d[1] << 8) + d[2]);	    int16_t scaleMask = ((d[1] << 8) + d[2]);
+    cs_push(cs, quantize_to_bitmask_scale((bit_reverse(scaleMask, 16) >> 4), 0, v_in) + (transpose * sign));
+}
+
+static void op_I2M_S_RN_get(const void *data, scene_state_t *ss, exec_state_t *es, command_state_t *cs) {
+    SEND_CMD(211);
+    RECEIVE_AND_PUSH_S8;
+}
+
 
 static void op_I2M_TEST_get(const void *data, scene_state_t *ss,
                             exec_state_t *es, command_state_t *cs) {

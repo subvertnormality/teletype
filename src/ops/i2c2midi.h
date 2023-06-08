@@ -114,6 +114,8 @@ extern const tele_op_t op_I2M_MUTE;
 extern const tele_op_t op_I2M_MUTE_POUND;
 extern const tele_op_t op_I2M_SOLO;
 extern const tele_op_t op_I2M_SOLO_POUND;
+extern const tele_op_t op_I2M_QT;
+extern const tele_op_t op_I2M_S_RN;
 
 extern const tele_op_t op_I2M_TEST;
 

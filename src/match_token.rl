@@ -988,6 +988,8 @@
         "I2M.MUTE#"        => { MATCH_OP(E_OP_I2M_MUTE_POUND ); };
         "I2M.SOLO"        => { MATCH_OP(E_OP_I2M_SOLO ); };
         "I2M.SOLO#"        => { MATCH_OP(E_OP_I2M_SOLO_POUND ); };
+        "I2M.S.QT"        => { MATCH_OP(E_OP_I2M_S_QT ); };
+        "I2M.S.RN"        => { MATCH_OP(E_OP_I2M_S_RN ); };
 
         "I2M.TEST"        => { MATCH_OP(E_OP_I2M_TEST ); };
         

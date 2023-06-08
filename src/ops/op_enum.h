@@ -916,6 +916,8 @@ typedef enum {
     E_OP_I2M_SOLO,
     E_OP_I2M_SOLO_POUND,
     E_OP_I2M_TEST,
+    E_OP_I2M_S_QT,
+    E_OP_I2M_S_RN,
     E_OP_SEED,
     E_OP_RAND_SEED,
     E_OP_SYM_RAND_SD,
