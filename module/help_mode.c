@@ -120,7 +120,7 @@ const char* help2[HELP2_LENGTH] = { "2/17 VARIABLES",
                                     "PRINT X",
                                     "    GET/PRINT VALUE" };
 
-#define HELP3_LENGTH 74
+#define HELP3_LENGTH 78
 const char* help3[HELP3_LENGTH] = { "3/17 PARAMETERS",
                                     " ",
                                     "TR A-D|SET TR VALUE (0,1)",
@@ -130,6 +130,10 @@ const char* help3[HELP3_LENGTH] = { "3/17 PARAMETERS",
                                     "CV.SET 1-4|SET CV (NO SLEW)",
                                     "CV.GET 1-4|GET CURRENT CV",
                                     "CV.OFF 1-4|ADD CV OFFSET",
+                                    "CV.CAL 1-4 MV1V MV3V",
+                                    "    CALIBRATE CV OUTPUT",
+                                    "CV.CAL.RESET 1-4",
+                                    "    RESET CV OUT CALIBRATION",
                                     " ",
                                     "IN|GET IN JACK VAL",
                                     "IN.SCALE X Y",
@@ -229,7 +233,7 @@ const char* help4[HELP4_LENGTH] = { "4/17 DATA AND TABLES",
                                     "   4 = DORIAN",
                                     "   5 = PHRYGIAN",
                                     "   6 = LYDIAN",
-                                    "   7 = MYXOLIDIAN",
+                                    "   7 = MIXOLYDIAN",
                                     "   8 = LOCRIAN",
                                     "   RETURNS N TABLE VALUE",
                                     "  ",
@@ -272,8 +276,8 @@ const char* help4[HELP4_LENGTH] = { "4/17 DATA AND TABLES",
                                     "  DOR = 1, 1, 0, 2, 1, 6, 0",
                                     "  PHR = 1, 0, 2, 1, 6, 0, 1",
                                     "  LYD = 0, 2, 1, 6, 0, 1, 1",
+                                    "  MIX = 2, 1, 6, 0, 1, 1, 0",
                                     "  LOC = 6, 0, 1, 1, 0, 2, 1",
-                                    "  MYX = 2, 1, 6, 0, 1, 1, 0",
                                     "  RETURNS N TABLE VALUE", 
                                     "   ",
                                     "DRUM PATTERN OP - DR.P",
@@ -1219,7 +1223,7 @@ const char* help15[HELP15_LENGTH] = { "15/17 JUST FRIENDS & W/",
                                       "WS.LOOP X",
                                       "    SET LOOP STATE ON/OFF" };
 
-#define HELP16_LENGTH 190
+#define HELP16_LENGTH 197
 const char* help16[HELP16_LENGTH] = { "16/17 DISTING EX",
                                       "EX",
                                       "    GET CURRENT UNIT",
@@ -1271,12 +1275,19 @@ const char* help16[HELP16_LENGTH] = { "16/17 DISTING EX",
                                       "EX.VOX.O X",
                                       "EX.VO X",
                                       "    SEND NOTE OFF TO VOICE",
+                                      "EX.CH X",
+                                      "EX.# X",
+                                      "    SELECT CHANNEL",
                                       "EX.NOTE X Y",
                                       "EX.N X Y",
                                       "    SEND NOTE",
+                                      "EX.N# X Y Z",
+                                      "    SEND NOTE TO CHANNEL",
                                       "EX.NOTE.O X",
                                       "EX.NO X",
                                       "    SEND NOTE OFF",
+                                      "EX.NO# X Y",
+                                      "    SEND NOTE OFF TO CHANNEL",
                                       "EX.ALLOFF",
                                       "EX.AO",
                                       "    ALL NOTES OFF",
@@ -1711,18 +1722,14 @@ void process_help_keys(uint8_t k, uint8_t m, bool is_held_key) {
     else if (match_ctrl(m, k, HID_F) || match_ctrl(m, k, HID_S)) {
         search_result = SEARCH_RESULT_NONE;
         if (search_mode == SEARCH_MODE_FWD) { search_mode = SEARCH_MODE_NONE; }
-        else {
-            search_mode = SEARCH_MODE_FWD;
-        }
+        else { search_mode = SEARCH_MODE_FWD; }
         dirty = true;
     }
     // C-r: search in reverse
     else if (match_ctrl(m, k, HID_R)) {
         search_result = SEARCH_RESULT_NONE;
         if (search_mode == SEARCH_MODE_REV) { search_mode = SEARCH_MODE_NONE; }
-        else {
-            search_mode = SEARCH_MODE_REV;
-        }
+        else { search_mode = SEARCH_MODE_REV; }
         dirty = true;
     }
     else if (search_mode != SEARCH_MODE_NONE) {

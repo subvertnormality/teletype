@@ -133,6 +133,8 @@ typedef struct {
     int16_t time[DELAY_SIZE];
     uint8_t origin_script[DELAY_SIZE];
     int16_t origin_i[DELAY_SIZE];
+    int16_t origin_fparam1[DELAY_SIZE];
+    int16_t origin_fparam2[DELAY_SIZE];
     uint8_t count;
 } scene_delay_t;
 
@@ -366,6 +368,7 @@ int16_t ss_get_fader_max(scene_state_t *ss, int16_t fader);
 void ss_set_fader_min(scene_state_t *ss, int16_t fader, int16_t min);
 void ss_set_fader_max(scene_state_t *ss, int16_t fader, int16_t max);
 void ss_reset_fader_cal(scene_state_t *ss, int16_t fader);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // EXEC STATE //////////////////////////////////////////////////////////////////

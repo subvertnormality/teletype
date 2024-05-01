@@ -158,6 +158,8 @@
         "CV"          => { MATCH_OP(E_OP_CV); };
         "CV.OFF"      => { MATCH_OP(E_OP_CV_OFF); };
         "CV.SLEW"     => { MATCH_OP(E_OP_CV_SLEW); };
+        "CV.CAL"      => { MATCH_OP(E_OP_CV_CAL); };
+        "CV.CAL.RESET" => { MATCH_OP(E_OP_CV_CAL_RESET); };
         "IN"          => { MATCH_OP(E_OP_IN); };
         "IN.SCALE"    => { MATCH_OP(E_OP_IN_SCALE); };
         "IN.CAL.MIN"  => { MATCH_OP(E_OP_IN_CAL_MIN); };
@@ -738,6 +740,7 @@
         "WS.REC"      => { MATCH_OP(E_OP_WS_REC); };
         "WS.CUE"      => { MATCH_OP(E_OP_WS_CUE); };
         "WS.LOOP"     => { MATCH_OP(E_OP_WS_LOOP); };
+        "W/.SEL"      => { MATCH_OP(E_OP_WS_SEL); };
 
         # disting ex
         "EX"          => { MATCH_OP(E_OP_EX); };
@@ -787,10 +790,14 @@
         "EX.V"        => { MATCH_OP(E_OP_EX_V); };
         "EX.VOX.O"    => { MATCH_OP(E_OP_EX_VOX_O); };
         "EX.VO"       => { MATCH_OP(E_OP_EX_VO); };
+        "EX.CH"       => { MATCH_OP(E_OP_EX_CH); };
+        "EX.#"        => { MATCH_OP(E_OP_EX_POUND); };
         "EX.NOTE"     => { MATCH_OP(E_OP_EX_NOTE); };
         "EX.N"        => { MATCH_OP(E_OP_EX_N); };
+        "EX.N#"       => { MATCH_OP(E_OP_EX_N_POUND); };
         "EX.NOTE.O"   => { MATCH_OP(E_OP_EX_NOTE_O); };
         "EX.NO"       => { MATCH_OP(E_OP_EX_NO); };
+        "EX.NO#"      => { MATCH_OP(E_OP_EX_NO_POUND); };
         "EX.ALLOFF"   => { MATCH_OP(E_OP_EX_ALLOFF); };
         "EX.AO"       => { MATCH_OP(E_OP_EX_AO); };
         "EX.T"        => { MATCH_OP(E_OP_EX_T); };
@@ -824,20 +831,22 @@
         "EX.ZO2"      => { MATCH_OP(E_OP_EX_ZO2); };
 
         # w/s
-        "W/S.PITCH"    => { MATCH_OP(E_OP_WS_S_PITCH); };
-        "W/S.VEL"      => { MATCH_OP(E_OP_WS_S_VEL); };
-        "W/S.VOX"      => { MATCH_OP(E_OP_WS_S_VOX); };
-        "W/S.NOTE"     => { MATCH_OP(E_OP_WS_S_NOTE); };
-        "W/S.AR.MODE"  => { MATCH_OP(E_OP_WS_S_AR_MODE); };
-        "W/S.LPG.TIME" => { MATCH_OP(E_OP_WS_S_LPG_TIME); };
-        "W/S.LPG.SYM"  => { MATCH_OP(E_OP_WS_S_LPG_SYMMETRY); };
-        "W/S.CURVE"    => { MATCH_OP(E_OP_WS_S_CURVE); };
-        "W/S.RAMP"     => { MATCH_OP(E_OP_WS_S_RAMP); };
-        "W/S.FM.INDEX" => { MATCH_OP(E_OP_WS_S_FM_INDEX); };
-        "W/S.FM.RATIO" => { MATCH_OP(E_OP_WS_S_FM_RATIO); };
-        "W/S.FM.ENV"   => { MATCH_OP(E_OP_WS_S_FM_ENV); };
-        "W/S.PATCH"    => { MATCH_OP(E_OP_WS_S_PATCH); };
-        "W/S.VOICES"   => { MATCH_OP(E_OP_WS_S_VOICES); };
+        "W/S.PITCH"      => { MATCH_OP(E_OP_WS_S_PITCH); };
+        "W/S.VEL"        => { MATCH_OP(E_OP_WS_S_VEL); };
+        "W/S.VOX"        => { MATCH_OP(E_OP_WS_S_VOX); };
+        "W/S.NOTE"       => { MATCH_OP(E_OP_WS_S_NOTE); };
+        "W/S.POLY"       => { MATCH_OP(E_OP_WS_S_POLY); };
+        "W/S.POLY.RESET" => { MATCH_OP(E_OP_WS_S_POLY_RESET); };
+        "W/S.AR.MODE"    => { MATCH_OP(E_OP_WS_S_AR_MODE); };
+        "W/S.LPG.TIME"   => { MATCH_OP(E_OP_WS_S_LPG_TIME); };
+        "W/S.LPG.SYM"    => { MATCH_OP(E_OP_WS_S_LPG_SYMMETRY); };
+        "W/S.CURVE"      => { MATCH_OP(E_OP_WS_S_CURVE); };
+        "W/S.RAMP"       => { MATCH_OP(E_OP_WS_S_RAMP); };
+        "W/S.FM.INDEX"   => { MATCH_OP(E_OP_WS_S_FM_INDEX); };
+        "W/S.FM.RATIO"   => { MATCH_OP(E_OP_WS_S_FM_RATIO); };
+        "W/S.FM.ENV"     => { MATCH_OP(E_OP_WS_S_FM_ENV); };
+        "W/S.PATCH"      => { MATCH_OP(E_OP_WS_S_PATCH); };
+        "W/S.VOICES"     => { MATCH_OP(E_OP_WS_S_VOICES); };
 
         # w/d
         "W/D.FBK"       => { MATCH_OP(E_OP_WS_D_FEEDBACK); };
@@ -1062,6 +1071,10 @@
         "JF0"         => { MATCH_MOD(E_MOD_JF0); };
         "JF1"         => { MATCH_MOD(E_MOD_JF1); };
         "JF2"         => { MATCH_MOD(E_MOD_JF2); };
+
+		# w/
+        "W/1"         => { MATCH_MOD(E_MOD_WS1); };
+        "W/2"         => { MATCH_MOD(E_MOD_WS2); };
 
         # crow
         "CROWN"       => { MATCH_MOD(E_MOD_CROWN); };

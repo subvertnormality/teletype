@@ -18,8 +18,8 @@ output `x` to `y`.
 """
 
 ["CV.SET"]
-prototype = "CV.SET x"
-short = "Set CV value"
+prototype = "CV.SET x y"
+short = "Set CV value, ignoring slew"
 description = """
 Set the CV value at output `x` bypassing any slew settings.
 """
@@ -39,6 +39,14 @@ description = """
 Get the slew time in ms associated with CV output `x`. Set the slew time 
 associated with CV output `x` to `y` ms.
 """
+
+[V]
+prototype = "V x"
+short = "converts a voltage to a value usable by the CV outputs (`x` between `0` and `10`)"
+
+[VV]
+prototype = "VV x"
+short = "converts a voltage to a value usable by the CV outputs (`x` between `0` and `1000`, `100` represents 1V)"
 
 ["IN"]
 prototype = "IN"
@@ -63,51 +71,6 @@ Get the value of the PARAM knob. This returns a valuue in the range 0-16383.
 prototype = "PARAM.SCALE min max"
 short = "Set static scaling of the PARAM knob to between `min` and `max`."
 
-["IN.CAL.MIN"]
-prototype = "IN.CAL.MIN"
-short = "Reads the input CV and assigns the voltage to the zero point"
-description = """
-    1. Connect a patch cable from a calibrated voltage source
-    2. Set the voltage source to 0 volts
-    3. Execute IN.CAL.MIN from the live terminal
-    4. Call IN and confirm the 0 result
-"""
-
-["IN.CAL.MAX"]
-prototype = "IN.CAL.MAX"
-short = "Reads the input CV and assigns the voltage to the max point"
-description = """
-    5. Set the voltage source to target maximum voltage (10V)
-    6. Execute IN.CAL.MAX from the live terminal
-    7. Call IN and confirm that the result is 16383
-"""
-
-["IN.CAL.RESET"]
-prototype = "IN.CAL.RESET"
-short = "Resets the input CV calibration"
-
-["PARAM.CAL.MIN"]
-prototype = "PARAM.CAL.MIN"
-short = "Reads the Parameter Knob minimum position and assigns a zero value"
-description = """
-    1. Turn the PARAM knob all the way to the left
-    2. Execute PARAM.CAL.MIN from the live terminal
-    3. Call PARAM and confirm the 0 result
-"""
-
-["PARAM.CAL.MAX"]
-prototype = "PARAM.CAL.MAX"
-short = "Reads the Parameter Knob maximum position and assigns the maximum point"
-description = """
-    4. Turn the knob all the way to the right
-    5. Execute PARAM.CAL.MAX from the live terminal
-    6. Call PARAM and verify that the result is 16383
-"""
-
-["PARAM.CAL.RESET"]
-prototype = "PARAM.CAL.RESET"
-short = "Resets the Parameter Knob calibration"
-
 ["TR"]
 prototype = "TR x"
 prototype_set = "TR x y"
@@ -117,14 +80,12 @@ Get the current state of trigger output `x`. Set the state of trigger
 output `x` to `y` (0-1).
 """
 
-["TR.POL"]
-prototype = "TR.POL x"
-prototype_set = "TR.POL x y"
-short = "Set polarity of trigger output x to y (0-1)"
+["TR.PULSE"]
+prototype = "TR.PULSE x"
+aliases = ["TR.P"]
+short = "Pulse trigger output x"
 description = """
-Get the current polarity of trigger output `x`. Set the polarity of trigger 
-output `x` to `y` (0-1). When TR.POL = 1, the pulse is 0 to 1 then back to 0.
-When TR.POL = 0, the inverse is true, 1 to 0 to 1.
+Pulse trigger output x.
 """
 
 ["TR.TIME"]
@@ -143,12 +104,14 @@ description = """
 Flip the state of trigger output `x`.
 """
 
-["TR.PULSE"]
-prototype = "TR.PULSE x"
-aliases = ["TR.P"]
-short = "Pulse trigger output x"
+["TR.POL"]
+prototype = "TR.POL x"
+prototype_set = "TR.POL x y"
+short = "Set polarity of trigger output x to y (0-1)"
 description = """
-Pulse trigger output x.
+Get the current polarity of trigger output `x`. Set the polarity of trigger 
+output `x` to `y` (0-1). When TR.POL = 1, the pulse is 0 to 1 then back to 0.
+When TR.POL = 0, the inverse is true, 1 to 0 to 1.
 """
 
 ["MUTE"]
@@ -164,14 +127,6 @@ prototype = "STATE x"
 short = "Read the current state of input x"
 description = """
 Read the current state of trigger input `x` (0=low, 1=high). 
-"""
-
-["DEVICE.FLIP"]
-prototype = "DEVICE.FLIP"
-short = "Flip the screen/inputs/outputs"
-description = """
-Flip the screen, the inputs and the outputs. This op is useful if you want to mount your Teletype upside down.
-The new state will be saved to flash. 
 """
 
 ["LIVE.OFF"]
