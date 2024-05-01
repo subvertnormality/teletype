@@ -27,15 +27,6 @@
 - **NEW**: new op: `SCALE0` / `SCL0`
 - **NEW**: new ops: `$F`, `$F1`, `$F2`, `$L`, `$L1`, `$L2`, `$S`, `$S1`, `$S2`, `I1`, `I2`, `FR`
 - **NEW**: new op: `CV.GET`
-- **NEW**: basic menu for reading/writing scenes when a USB stick is inserted
-- **NEW**: new ops: `CV.CAL` and `CV.CAL.RESET` to calibrate CV outputs
-- **FIX**: N.CS scales 7 & 8 were incorrectly swapped; make them consistent with N.S and docs
-- **FIX**: libavr32 update: support CDC grid size detection (e.g. zero), increase HID message buffer
-- **NEW**: new Disting EX ops: `EX.CH`, `EX.#`, `EX.N#`, `EX.NO#`
-- **NEW**: apply VCV Rack compatibility patches, so branches off main can be used in both hardware and software
-- **FIX**: update Disting EX looper ops to work with Disting EX firmware 1.23+
-- **NEW**: new dual W/ ops: `W/.SEL`, `W/S.POLY`, `W/S.POLY.RESET`, `W/1`, `W/2`
-- **NEW**: split cheatsheets into separate PDFs for core ops and i2c
 
 ## v4.0.0
 

@@ -169,7 +169,9 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
             prev_cr = 0;
             continue;
         }
-        else { prev_cr = 0; }
+        else {
+            prev_cr = 0;
+        }
 
         if (c == '#' && new_line) {
             s = STATE_POUND;
@@ -200,9 +202,11 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
                 script = INIT_SCRIPT;
                 s2 = STATE_SCRIPT;
             }
-            else if (c == 'P') { s2 = STATE_PATTERNS; }
+            else if (c == 'P') {
+                s2 = STATE_PATTERNS;
+            }
             else if (c == 'G') {
-                grid_state = grid_count = 0;
+                grid_state = grid_num = grid_count = 0;
                 s2 = STATE_GRID;
             }
             else {
@@ -210,7 +214,9 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
                 if (script < 0 || script >= EDITABLE_SCRIPT_COUNT) {
                     script = NO_SCRIPT;
                 }
-                s2 = STATE_SCRIPT;
+                else {
+                    s2 = STATE_SCRIPT;
+                }
             }
 
             l = 0;
@@ -225,9 +231,7 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
         }
 
         if (s == STATE_SCRIPT) {
-            if (script == NO_SCRIPT || script < 0 ||
-                script >= EDITABLE_SCRIPT_COUNT)
-                continue;
+            if (script < 0 || script >= EDITABLE_SCRIPT_COUNT) continue;
 
             if (c != '\n') {
                 if (p < 32) {
@@ -289,10 +293,18 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
                         // stream->print_dbg(" ");
                         // stream->print_dbg_ulong(num);
                     }
-                    else if (l == 0) { ss_set_pattern_len(scene, b, num); }
-                    else if (l == 1) { ss_set_pattern_wrap(scene, b, num); }
-                    else if (l == 2) { ss_set_pattern_start(scene, b, num); }
-                    else if (l == 3) { ss_set_pattern_end(scene, b, num); }
+                    else if (l == 0) {
+                        ss_set_pattern_len(scene, b, num);
+                    }
+                    else if (l == 1) {
+                        ss_set_pattern_wrap(scene, b, num);
+                    }
+                    else if (l == 2) {
+                        ss_set_pattern_start(scene, b, num);
+                    }
+                    else if (l == 3) {
+                        ss_set_pattern_end(scene, b, num);
+                    }
                 }
 
                 b++;
@@ -330,12 +342,6 @@ void deserialize_scene(tt_deserializer_t* stream, scene_state_t* scene,
                 }
             }
             else if (grid_state == 1) {
-                if (c >= '0' && c <= '9') {
-                    grid_num = c - '0';
-                    grid_state = 2;
-                }
-            }
-            else if (grid_state == 2) {
                 if (c >= '0' && c <= '9') {
                     grid_num = grid_num * 10 + c - '0';
                 }

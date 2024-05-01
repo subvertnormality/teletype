@@ -45,49 +45,42 @@ env = jinja2.Environment(
 )
 
 # determines the order in which sections are displayed,
-# last two columns indicates when a column break or page break is inserted _after_ that section
-OPS_SECTIONS = {
-    "core": [
-        ("variables",     "Variables",        True, False),
-        ("hardware",      "Hardware I/O",     False, False),
-        ("pitch",         "Pitch",            True, False),
-        ("rhythm",        "Rhythm",          False, False),
-        ("metronome",     "Metronome",       False, False),
-        ("random",        "Randomness",       True, False),
-        ("controlflow",   "Control flow",    False, False),
-        ("maths",         "Maths",           False, False),
-        ("delay",         "Delay",           False, False),
-        ("stack",         "Stack",            True, False),
-        ("patterns",      "Patterns",         True, False),
-        ("queue",         "Queue",            True, False),
-        ("turtle",        "Turtle",          False,  True),
-        ("grid",          "Grid",             True, False),
-        ("midi_in",       "MIDI In",         False, False),
-        ("calibration",   "Calibration",     False, False)
-    ],
-    "i2c": [
-        ("i2c",           "Generic I2C",    False, False),
-        ("ansible",       "Ansible",        False, False),
-        ("whitewhale",    "White Whale",    False, False),
-        ("meadowphysics", "Meadowphysics",  False, False),
-        ("earthsea",      "Earthsea",        True, False),
-        ("orca",          "Orca",           False, False),
-        ("justfriends",   "Just Friends",    True, False),
-        ("fader",         "Faderbank",      False, False),
-        ("er301",         "ER-301",         False, False),
-        ("telex_i",       "TELEXi",          True, False),
-        ("telex_o",       "TELEXo",          True, False),
-        ("crow",          "Crow",           False, False),
-        ("wslash",        "W/1.0",           True, False),
-        ("wslash_shared", "W/2.0",          False, False),
-        ("wslashtape",    "W/2.0 tape",     False, False),
-        ("wslashdelay",   "W/2.0 delay",     True, False),
-        ("wslashsynth",   "W/2.0 synth",     True, False),
-        ("disting",       "Disting EX",      True, False),
-        ("matrixarchate", "Matrixarchate",  False,  True),
-        ("i2c2midi",      "I2C2MIDI",       False, False)
-    ]
-}
+# final column indicates that a new page is inserted _after_ that section
+OPS_SECTIONS = [
+    ("variables",     "Variables",     False),
+    ("hardware",      "Hardware",      False),
+    ("patterns",      "Patterns",      False),
+    ("controlflow",   "Control flow",  False),
+    ("maths",         "Maths",         False),
+    ("metronome",     "Metronome",     False),
+    ("delay",         "Delay",         False),
+    ("stack",         "Stack",         False),
+    ("queue",         "Queue",         False),
+    ("seed",          "Seed",          False),
+    ("turtle",        "Turtle",        True),
+    ("grid",          "Grid",          True),
+    ("midi_in",       "MIDI In",       True),
+    ("i2c",           "Generic I2C",   True),
+    ("ansible",       "Ansible",       False),
+    ("whitewhale",    "Whitewhale",    False),
+    ("meadowphysics", "Meadowphysics", False),
+    ("earthsea",      "Earthsea",      False),
+    ("orca",          "Orca",          True),
+    ("justfriends",   "Just Friends",  False),
+    ("wslash",        "W/",            False),
+    ("er301",         "ER-301",        False),
+    ("fader",         "Fader",         False),
+    ("matrixarchate", "Matrixarchate", True),
+    ("telex_i",       "TELEXi",        False),
+    ("telex_o",       "TELEXo",        False),
+    ("disting",       "Disting EX",    True),
+    ("wslashdelay",   "W/2.0 delay",   False),
+    ("wslashsynth",   "W/2.0 synth",   False),
+    ("wslashtape",    "W/2.0 tape",    False),
+    ("crow",          "Crow",          True),
+    ("i2c2midi",      "I2C2MIDI",      True)
+]
+
 
 def latex_safe(s):
     # backslash must be first, otherwise it will duplicate itself
@@ -99,13 +92,13 @@ def latex_safe(s):
     return s
 
 
-def cheatsheet_tex(sections):
+def cheatsheet_tex():
     print(f"Using docs directory:     {DOCS_DIR}")
     print(f"Using ops docs directory: {OP_DOCS_DIR}")
     print()
 
     output = VERSION_STR + "\n\n"
-    for (section, title, new_col, new_page) in sections:
+    for (section, title, new_page) in OPS_SECTIONS:
         toml_file = Path(OP_DOCS_DIR, section + ".toml")
         if toml_file.exists() and toml_file.is_file():
             output += f"\\group{{{ title }}}\n\n"
@@ -128,18 +121,16 @@ def cheatsheet_tex(sections):
                 output += "\n\n"
             if new_page:
                 output += "\\pagebreak\n\n"
-            if new_col:
-                output += "\\vfill\\null\n\\columnbreak\n"
     return output
 
 
 def main():
-    if len(sys.argv) != 3:
-        sys.exit("Please supply a cheatsheet category and filename")
+    if len(sys.argv) != 2:
+        sys.exit("Please supply a filename")
 
-    category = sys.argv[1]
-    p = Path(sys.argv[2]).resolve()
-    p.write_text(cheatsheet_tex(OPS_SECTIONS[category]))
+    p = Path(sys.argv[1]).resolve()
+    p.write_text(cheatsheet_tex())
+
 
 if __name__ == "__main__":
     main()
