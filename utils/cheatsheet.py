@@ -78,7 +78,7 @@ OPS_SECTIONS = [
     ("wslashsynth",   "W/2.0 synth",   False),
     ("wslashtape",    "W/2.0 tape",    False),
     ("crow",          "Crow",          True),
-    ("i2c2midi",      "I2C2MIDI",      False)
+    ("i2c2midi",      "I2C2MIDI",      True)
 ]
 
 

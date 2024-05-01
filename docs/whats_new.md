@@ -1,6 +1,6 @@
 # Updates
 
-## v4.0.x
+## v5.0.0
 
 - **FIX**: fix off-by-one error in `P.ROT` understanding of pattern length
 - **FIX**: fix `CROW.Q3` calls `ii.self.query2` instead of `ii.self.query3`
@@ -14,6 +14,17 @@
 - **IMP**: fader ops now support up to four faderbanks
 - **NEW**: new Disting EX ops: dual algorithms, `EX.M.N#`, `EX.M.NO#`, `EX.M.CC#`
 - **FIX**: reset M timer when changing metro rate
+- **NEW**: drum ops: `DR.P`, `DR.V`, `DR.TR`
+- **NEW**: [I2C2MIDI](https://github.com/attowatt/i2c2midi) ops
+- **FIX**: fix BPM rounding error
+- **FIX**: support all line ending types for USB load
+- **FIX**: fix `STATE` not accounting for `DEVICE.FLIP`
+- **FIX**: fix MIDI IN ops channel number being off by 1
+- **FIX**: improve `TR.P` accuracy
+- **FIX**: fix `KILL` not stopping TR pulses in progress
+- **NEW**: new op: `SCALE0` / `SCL0`
+- **NEW**: new ops: `$F`, `$F1`, `$F2`, `$L`, `$L1`, `$L2`, `$S`, `$S1`, `$S2`, `I1`, `I2`, `FR`
+- **NEW**: new op: `CV.GET`
 
 ## v4.0.0
 

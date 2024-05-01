@@ -269,6 +269,11 @@ prototype = "SCALE a b x y i"
 aliases = ["SCL"]
 short = "scale `i` from range `a` to `b` to range `x` to `y`, i.e. `i * (y - x) / (b - a)`"
 
+[SCALE0]
+prototype = "SCALE a b i"
+aliases = ["SCL0"]
+short = "scale `i` from range `0` to `a` to range `0` to `b`"
+
 [ER]
 prototype = "ER f l i"
 short = "Euclidean rhythm, `f` is fill (`1-32`), `l` is length (`1-32`) and `i` is step (any value), returns `0` or `1`"
@@ -335,7 +340,7 @@ The patterns are from [Paul Wenzel's "Pocket Operations" book](https://shittyrec
 
 ["DR.V"]
 prototype = "DR.V p s"
-short = "Velocity helper. `p` is the pattern (0-9). `s` is the step number (0-15)"
+short = "Velocity helper. `p` is the pattern (0-19). `s` is the step number (0-15)"
 description = """
 The velocity helper gives velocity values (0-16383) at each step. The values are intended to be used for drum hit velocities. There are 16 steps, which wrap around. Divide by 129 to convert to midi cc values.
 """
